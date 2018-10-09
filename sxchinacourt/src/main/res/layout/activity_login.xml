@@ -1,0 +1,104 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/login_bg"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                tools:context="org.sxchinacourt.activity.LoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.8">
+
+            <ImageView
+                android:id="@+id/fahui"
+                android:layout_width="90dp"
+                android:layout_height="80dp"
+                android:src="@drawable/fahui"
+                android:layout_marginTop="40dp"
+                android:scaleType="centerInside"
+                android:layout_centerHorizontal="true"
+               />
+
+            <TextView
+                android:id="@+id/court_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/fahui"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="人民法院移动办公系统"
+                android:textColor="#333333"
+                android:layout_marginTop="20dp"
+                android:textSize="@dimen/text_size_super_big"/>
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:id="@+id/login_form"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <RelativeLayout style="@style/rl_container">
+                <EditText
+                    android:id="@+id/et_username"
+                    android:layout_width="250dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:drawableLeft="@mipmap/user_account"
+                    android:drawablePadding="10dp"
+                    android:paddingLeft="20dp" />
+                </RelativeLayout>
+
+
+                <RelativeLayout style="@style/rl_container">
+                <EditText
+                    android:id="@+id/et_password"
+                    android:layout_width="250dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:drawableLeft="@mipmap/user_password"
+                    android:drawablePadding="10dp"
+                    android:inputType="textPassword"
+                    android:paddingLeft="20dp" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/sign_in_button"
+                style="@style/btn_style"
+                android:layout_width="250dp"
+                android:layout_centerVertical="true"
+                android:layout_margin="20dp"
+                android:background="@drawable/btn_bg"
+                android:text="登录" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <org.sxchinacourt.widget.CustomProgress
+        android:id="@+id/login_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+    </org.sxchinacourt.widget.CustomProgress>
+</RelativeLayout>

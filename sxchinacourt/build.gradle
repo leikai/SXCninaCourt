@@ -1,0 +1,90 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao'
+
+
+android {
+    signingConfigs {
+        sxchinacourt {
+            keyAlias 'jinfaoa'
+            keyPassword '1234@5678'
+            storeFile file('e:/workspace/android/SXChinaCourt/jinfaoa.keystore')
+            storePassword '1234@5678'
+            v1SigningEnabled false
+            v2SigningEnabled false
+        }
+    }
+    compileSdkVersion 25
+    buildToolsVersion '28.0.2'
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
+    defaultConfig {
+        applicationId "org.sxchinacourt"
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 12
+        versionName "12"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+//    signingConfigs {
+//        release {
+//            storeFile file("D:\\github_workspace\\SXChinaCourt\\sxchinacourt_keystore.jks")
+//            storePassword "sxchinacourt"
+//            keyAlias "sxchinacourt"
+//            keyPassword "sxchinacourt"
+//        }
+//    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.sxchinacourt
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    //greendao配置
+    greendao {
+        //版本号，升级时可配置
+        schemaVersion 1
+        targetGenDir 'src/main/java'
+    }
+}
+
+dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    implementation 'com.android.support:appcompat-v7:25.0.1'
+    implementation 'com.android.support:design:25.3.1'
+    testImplementation 'junit:junit:4.12'
+    //compile 'com.ashokvarma.android:bottom-navigation-bar:1.3.0'
+    implementation files('libs/ksoap2-android-assembly-3.6.1-jar-with-dependencies.jar')
+    implementation project(':PullToRefreshLibrary')
+    implementation project(':bottom-navigation-bar')
+    implementation files('libs/picasso-2.5.2.jar')
+    implementation 'com.google.android.gms:play-services-appindexing:8.4.0'
+    implementation files('libs/sun.misc.BASE64Decoder.jar')
+    implementation 'com.cjj.materialrefeshlayout:library:1.3.0'
+    implementation 'com.bigkoo:convenientbanner:2.0.5'
+    implementation 'com.google.code.gson:gson:2.2.4'
+    implementation 'com.github.bumptech.glide:glide:4.0.0'
+    implementation files('libs/fastjson-1.2.5.jar')
+    implementation 'com.android.support:recyclerview-v7:25.3.1'
+    implementation files('libs/zixing-core-3.2.0.jar')
+    implementation files('libs/jcore-android-1.1.7.jar')
+    implementation project(':LRecyclerview_library')
+    implementation files('libs/jpush-android-3.0.9.jar')
+    //greendao依赖
+    implementation 'org.greenrobot:greendao:3.2.0'
+    //手势登录
+    implementation 'com.wangnan:gesturelockview:1.0.1'
+    //圆形图片
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+}

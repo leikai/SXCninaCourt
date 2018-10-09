@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg_color">
+    <RelativeLayout
+        android:id="@+id/depositecabinetTask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/rl_taskcabinet_title"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:background="@drawable/cabinet_bg"
+            >
+            <TextView
+                android:id="@+id/tv_scanning_Center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="扫描中心"
+                android:textColor="@color/possible_result_points"
+                android:textSize="28sp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_above="@+id/tv_department"
+
+
+                />
+
+            <TextView
+                android:id="@+id/tv_department"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="山西省晋中市人民法院--信息处"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_below="@+id/rl_taskcabinet_title"
+            >
+            <LinearLayout
+            android:id="@+id/ll_btn_first"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_below="@+id/rl_taskcabinet_title"
+            android:layout_weight="1"
+            >
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    >
+                    <TextView
+                        android:id="@+id/tv_wait_assign_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="#ffffff"
+                        android:background="@drawable/circle_red"
+                        android:layout_above="@+id/btn_wait_assign"
+                        android:layout_centerInParent="true"
+                        android:layout_alignRight="@+id/btn_wait_assign"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="-10dp"
+
+
+                        />
+                    <Button
+                        android:id="@+id/btn_wait_assign"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/list_collection"
+                        android:text="待指派"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:background="@null"
+                        />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    >
+                    <TextView
+                        android:id="@+id/tv_wait_pickup_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="#ffffff"
+                        android:background="@drawable/circle_red"
+                        android:layout_above="@+id/btn_wait_pickup"
+                        android:layout_centerInParent="true"
+                        android:layout_alignRight="@+id/btn_wait_pickup"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="-10dp"
+                        />
+                    <Button
+                        android:id="@+id/btn_wait_pickup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/list_pickup"
+                        android:layout_centerInParent="true"
+                        android:text="待取件"
+                        android:layout_gravity="center"
+                        android:background="@null"
+                        />
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                >
+                <Button
+                    android:id="@+id/btn_deposit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:drawableTop="@drawable/list_collection"
+                    android:text="存件"
+                    android:layout_centerInParent="true"
+                    />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_btn_second"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_below="@+id/ll_btn_first"
+                android:layout_weight="1"
+
+                >
+
+                <Button
+                    android:id="@+id/btn_deposit_file"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:drawableTop="@drawable/list_collection"
+                    android:text="存件记录列表" />
+
+                <Button
+                    android:id="@+id/btn_picked_up"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@+id/btn_wait_pickup"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:drawableTop="@drawable/list_pickup"
+                    android:focusable="false"
+                    android:text="取件记录列表" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+
+
+
+
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

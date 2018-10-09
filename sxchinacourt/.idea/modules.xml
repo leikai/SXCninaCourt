@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../PullToRefreshLibrary/PullToRefreshLibrary.iml" filepath="$PROJECT_DIR$/../PullToRefreshLibrary/PullToRefreshLibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../SXChinaCourt.iml" filepath="$PROJECT_DIR$/../SXChinaCourt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../TVPN/TVPN.iml" filepath="$PROJECT_DIR$/../TVPN/TVPN.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../bottom-navigation-bar/bottom-navigation-bar.iml" filepath="$PROJECT_DIR$/../bottom-navigation-bar/bottom-navigation-bar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../iAppRevisionDemo_V30/iAppRevisionDemo_V30.iml" filepath="$PROJECT_DIR$/../iAppRevisionDemo_V30/iAppRevisionDemo_V30.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../iAppRevisionSimpleDemo/iAppRevisionSimpleDemo.iml" filepath="$PROJECT_DIR$/../iAppRevisionSimpleDemo/iAppRevisionSimpleDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sxchinacourt.iml" filepath="$PROJECT_DIR$/sxchinacourt.iml" />
+    </modules>
+  </component>
+</project>

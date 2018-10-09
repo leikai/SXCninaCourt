@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.sxchinacourt.widget.SwipeMenuView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:paddingBottom="1dp">
+
+    <RelativeLayout
+        android:id="@+id/rl_deposit_content_swipe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+
+        android:layout_marginBottom="8dp"
+        >
+        <TextView
+            android:id="@+id/tv_InitiatorName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="存件人："
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:paddingLeft="4dp"
+            android:layout_marginTop="8dp"
+            />
+        <TextView
+            android:id="@+id/tv_InitiatorName_text_swipe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="无"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:layout_toRightOf="@+id/tv_InitiatorName"
+            android:layout_marginTop="8dp"
+            />
+        <TextView
+            android:id="@+id/tv_RecipientName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_InitiatorName"
+            android:text="文件号："
+            android:textSize="15sp"
+            android:textColor="#000000"
+            android:paddingLeft="4dp"
+            android:layout_marginTop="8dp"
+            />
+        <TextView
+            android:id="@+id/tv_RecipientName_text_swipe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="无"
+            android:textSize="15sp"
+            android:textColor="#000000"
+            android:layout_below="@+id/tv_InitiatorName_text_swipe"
+            android:layout_toRightOf="@+id/tv_RecipientName"
+            android:layout_marginTop="8dp"
+            />
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="柜号："
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:layout_below="@+id/tv_RecipientName"
+            android:paddingLeft="4dp"
+            android:layout_marginTop="8dp"
+            />
+        <TextView
+            android:id="@+id/tv_address_text_swipe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="无："
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:layout_below="@+id/tv_RecipientName_text_swipe"
+            android:layout_toRightOf="@+id/tv_address"
+            android:layout_marginTop="8dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_fileState_swipe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="文件状态"
+            android:textSize="15sp"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/tv_InitiatorName_text_swipe"
+            android:textColor="#000000"
+            android:layout_marginTop="8dp"
+            android:paddingRight="4dp"
+            />
+
+    </RelativeLayout>
+    <Button
+        android:id="@+id/btnAssign"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:background="#d9dee4"
+        android:text="指派"
+        android:textColor="@android:color/white"/>
+
+    <Button
+        android:id="@+id/btnPickUp"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:background="#ecd50a"
+        android:clickable="true"
+        android:text="取件"
+        android:textColor="@android:color/white"/>
+
+    <!--<Button-->
+    <!--android:id="@+id/btnDelete"-->
+    <!--android:layout_width="60dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:background="@color/color_ff4a57"-->
+    <!--android:text="删除"-->
+    <!--android:textColor="@android:color/white"/>-->
+
+</org.sxchinacourt.widget.SwipeMenuView>

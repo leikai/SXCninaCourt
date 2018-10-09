@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    tools:context=".activity.SignOnActivity">
+
+    <RelativeLayout
+        android:id="@+id/rl_hand_gesture_unlock_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/actionBar_height"
+        android:background="#057ad0"
+        android:gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        >
+
+        <LinearLayout
+            android:id="@+id/left_view"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_hand_gesture_unlock_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:drawableLeft="@drawable/ico_back"
+                android:text="返回"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/right_imbt"
+            android:layout_toRightOf="@+id/left_view"
+            android:gravity="center"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="手势登录"
+            android:textColor="#FFFFFFFF"
+            android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/right_imbt"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@null" />
+
+    </RelativeLayout>
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_head_portrait"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_launcher_updata"
+        android:layout_marginTop="60dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rl_hand_gesture_unlock_title"
+        />
+
+    <TextView
+        android:id="@+id/tv_user_accounts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="zhanghao"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_head_portrait"
+        />
+
+
+    <com.wangnan.library.GestureLockView
+        android:id="@+id/glv"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"
+        app:normal_color="#057ad0"
+        app:press_color="#057ad0"
+        app:error_color="#f43355"
+        app:line_thickness="1dp"
+        app:is_use_animation="true"
+        app:animation_scale_mode="reverse"
+        app:is_use_vibrate="true"
+        app:animation_duration="500"
+        app:animation_scale_rate="2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_user_accounts"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+
+
+        />
+
+</android.support.constraint.ConstraintLayout>

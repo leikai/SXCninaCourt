@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <LinearLayout
+        style="@style/createSubTaskItemStyle">
+
+        <TextView
+            android:id="@+id/tv_subTaskExecutorName"
+            style="@style/createSubTaskItemTitleStyle"
+            android:layout_weight="0"
+            android:text="2.执行人"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginLeft="2dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp">
+
+            <TextView
+                android:id="@+id/tv_subTaskExecutor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="marquee"
+                android:maxLines="1"
+                android:textColor="#1e1e1e"
+                android:textSize="@dimen/text_size_normal"/>
+
+            <ImageView
+                android:id="@+id/img_selectSubTaskExecutors"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="0"
+                android:scaleType="centerInside"
+                android:src="@drawable/ico_add"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/contact_item_dividing_line"/>
+
+    <LinearLayout
+        style="@style/createSubTaskItemStyle">
+
+        <TextView
+            style="@style/createSubTaskItemTitleStyle"
+            android:text="开始时间"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginLeft="2dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp">
+
+            <TextView
+                android:id="@+id/tv_subTaskBeginDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="marquee"
+                android:maxLines="1"
+                android:textColor="#1e1e1e"
+                android:textSize="@dimen/text_size_normal"/>
+
+            <ImageView
+                android:id="@+id/img_subTaskBeginDate"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="0"
+                android:scaleType="centerInside"
+                android:src="@drawable/ico_add"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/contact_item_dividing_line"/>
+
+    <LinearLayout
+        style="@style/createSubTaskItemStyle">
+
+        <TextView
+            style="@style/createSubTaskItemTitleStyle"
+            android:text="结束时间"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginLeft="2dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp">
+
+            <TextView
+                android:id="@+id/tv_subTaskEndDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="marquee"
+                android:maxLines="1"
+                android:textColor="#1e1e1e"
+                android:textSize="@dimen/text_size_normal"/>
+
+            <ImageView
+                android:id="@+id/img_subTaskEndDate"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="0"
+                android:scaleType="centerInside"
+                android:src="@drawable/ico_add"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/contact_item_dividing_line"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/createSubTaskItemTitleStyle"
+            android:text="内容："/>
+
+        <EditText
+            android:id="@+id/et_subTaskContent"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginLeft="2dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="top"
+            android:maxLines="5"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="5dp"
+            android:textColor="#1e1e1e"
+            android:textSize="@dimen/text_size_normal"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/contact_item_dividing_line"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/img_deleteSubTask"
+            android:text="删除"
+            android:textColor="#1e1e1e"
+            android:textSize="18sp"/>
+
+        <ImageView
+            android:id="@+id/img_deleteSubTask"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:padding="5dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ico_delete_subtask"/>
+    </RelativeLayout>
+</LinearLayout>

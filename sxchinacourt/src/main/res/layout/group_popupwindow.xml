@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/white_round_rect"
+              android:gravity="center_horizontal"
+              android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/groups"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:divider="@color/contact_item_dividing_line"
+        android:dividerHeight="1dp"
+        android:footerDividersEnabled="true"
+        android:overScrollMode="never"/>
+
+    <Button
+        android:id="@+id/btn_close"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_search_bg"
+        android:text="关闭"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_mid"/>
+</LinearLayout>

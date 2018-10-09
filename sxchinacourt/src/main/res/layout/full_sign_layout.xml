@@ -1,0 +1,20 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <!-- 金格控件 -->
+
+    <com.kinggrid.iapprevision.iAppRevisionView
+        android:id="@+id/full_sign_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    
+    <include
+        android:id="@+id/manager_btn_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        layout="@layout/write_btn_layout" />
+
+</RelativeLayout>

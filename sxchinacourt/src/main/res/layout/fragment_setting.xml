@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/contact_item_dividing_line"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:background="@color/white"
+        android:orientation="vertical"
+        >
+
+        <RelativeLayout
+            android:id="@+id/btn_modify_username"
+            android:layout_width="match_parent"
+            android:layout_height="53dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="用户名修改"
+                android:textColor="#1e1e1e"
+                android:textSize="@dimen/text_size_mid"
+                />
+
+            <ImageView
+
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/arrow_right"/>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/contact_item_dividing_line"
+            android:visibility="gone"/>
+        <RelativeLayout
+            android:id="@+id/btn_modify_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="53dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:text="密码修改"
+                android:textColor="#1e1e1e"
+                android:textSize="@dimen/text_size_mid"/>
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginRight="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/enter"/>
+        </RelativeLayout>
+
+        <View style="@style/view_line_height_gray_1" />
+
+        <RelativeLayout
+            android:id="@+id/btn_set_handle_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="53dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:text="设置手势密码"
+                android:textColor="#1e1e1e"
+                android:textSize="@dimen/text_size_mid"/>
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginRight="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/enter"/>
+        </RelativeLayout>
+
+        <View style="@style/view_line_height_gray_1" />
+        <RelativeLayout
+            android:id="@+id/btn_modify_handle_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="53dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:text="手势密码修改"
+                android:textColor="#1e1e1e"
+                android:textSize="@dimen/text_size_mid"/>
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginRight="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/enter"/>
+        </RelativeLayout>
+
+        <View style="@style/view_line_height_gray_1" />
+        <RelativeLayout
+            android:id="@+id/btn_switch_account"
+            android:layout_width="match_parent"
+            android:layout_height="53dp"
+            android:visibility="visible"
+
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:text="切换账号"
+                android:textColor="#1e1e1e"
+                android:textSize="@dimen/text_size_mid"/>
+
+            <ImageView
+
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:src="@mipmap/enter"/>
+
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/contact_item_dividing_line"/>
+
+
+        <RelativeLayout
+            android:id="@+id/btn_msg_reminder"
+            android:layout_width="match_parent"
+            android:layout_height="53dp"
+            android:visibility="gone"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:text="新消息提醒"
+                android:textColor="#1e1e1e"
+                android:textSize="@dimen/text_size_mid"/>
+
+            <ImageView
+
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:src="@mipmap/enter"/>
+        </RelativeLayout>
+
+        <View style="@style/view_line_height_gray_1" />
+
+        <RelativeLayout
+            android:id="@+id/btn_modify_serverip"
+            android:layout_width="match_parent"
+            android:layout_height="53dp"
+            android:visibility="gone"
+
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:text="修改服务器地址"
+                android:textColor="#1e1e1e"
+                android:textSize="@dimen/text_size_mid"/>
+
+            <ImageView
+
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:src="@mipmap/enter"/>
+
+        </RelativeLayout>
+        <View style="@style/view_line_height_gray_1" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/contact_item_dividing_line"/>
+
+    </LinearLayout>
+    <View style="@style/view_line_height_gray_1" />
+
+    <RelativeLayout
+        android:id="@+id/btn_delete_cache"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:background="@color/white"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="清理缓存"
+            android:textColor="#1e1e1e"
+            android:textSize="@dimen/text_size_mid" />
+
+
+
+        <ImageView
+            android:id="@+id/iv_delete_cache"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/enter" />
+        <TextView
+            android:id="@+id/tv_get_data_rubbish"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@id/iv_delete_cache"
+            android:text="0M" />
+    </RelativeLayout>
+
+
+    <View style="@style/view_line_height_gray_1" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center">
+        <Button
+            android:id="@+id/btn_logout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/btn_style"
+            android:text="退出账户"
+            android:background="@drawable/btn_bg"
+            />
+    </LinearLayout>
+</LinearLayout>

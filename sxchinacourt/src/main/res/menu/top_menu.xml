@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/invest_home"
+        android:icon="@mipmap/main_home_nor"
+        android:title="选择法院"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/invest_invest"
+        android:icon="@mipmap/main_school_nor"
+        android:title="选择部门"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/invest_user"
+        android:icon="@mipmap/main_user_nor"
+        android:title="选择人员"
+        app:showAsAction="ifRoom" />
+</menu>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:duration="80" android:drawable="@drawable/custom_progress_icon1" />
+    <item android:duration="80" android:drawable="@drawable/custom_progress_icon2" />
+    <item android:duration="80" android:drawable="@drawable/custom_progress_icon3" />
+    <item android:duration="80" android:drawable="@drawable/custom_progress_icon4" />
+    <item android:duration="80" android:drawable="@drawable/custom_progress_icon5" />
+    <item android:duration="80" android:drawable="@drawable/custom_progress_icon6" />
+    <item android:duration="80" android:drawable="@drawable/custom_progress_icon7" />
+    <item android:duration="80" android:drawable="@drawable/custom_progress_icon8" />
+    <item android:duration="80" android:drawable="@drawable/custom_progress_icon9" />
+    <item android:duration="80" android:drawable="@drawable/custom_progress_icon10" />
+    <item android:duration="80" android:drawable="@drawable/custom_progress_icon11" />
+    <item android:duration="80" android:drawable="@drawable/custom_progress_icon12" />
+</animation-list>
