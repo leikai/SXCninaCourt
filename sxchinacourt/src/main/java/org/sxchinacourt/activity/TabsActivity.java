@@ -28,10 +28,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.webkit.JavascriptInterface;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -45,38 +43,32 @@ import org.sxchinacourt.CApplication;
 import org.sxchinacourt.R;
 import org.sxchinacourt.activity.fragment.AppsManagerFragment;
 import org.sxchinacourt.activity.fragment.BaseFragment;
-import org.sxchinacourt.activity.fragment.ContactsFragment;
 import org.sxchinacourt.activity.fragment.ContactsManagerFragment;
-import org.sxchinacourt.activity.fragment.HomePageFragment;
 import org.sxchinacourt.activity.fragment.HomePageManagerFragment;
 import org.sxchinacourt.activity.fragment.MsgFragment;
 import org.sxchinacourt.activity.fragment.MsgManagerFragment;
 import org.sxchinacourt.activity.fragment.SettingManagerFragment;
 import org.sxchinacourt.bean.DepartmentBean;
-import org.sxchinacourt.bean.UserBean;
 import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.common.Contstants;
 import org.sxchinacourt.util.ExampleUtil;
 import org.sxchinacourt.util.IConstant;
-import org.sxchinacourt.util.PinYin.PinYinUtil;
 import org.sxchinacourt.util.WebServiceUtil;
 import org.sxchinacourt.util.file.FileAccessUtil;
 import org.sxchinacourt.util.network.vpn.LocalVPNService;
 import org.sxchinacourt.widget.CustomActionBar;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
 import static org.sxchinacourt.R.id.bottom_nav_content;
+import static org.sxchinacourt.activity.TagAliasOperatorHelper.ACTION_SET;
+import static org.sxchinacourt.activity.TagAliasOperatorHelper.sequence;
 import static org.sxchinacourt.activity.fragment.TodoTaskListFragment.pageLocationForH5;
 import static org.sxchinacourt.util.IConstant.REVISION_FULL_SIGN;
 import static org.sxchinacourt.util.IConstant.REVISION_GRID_SIGN;
 import static org.sxchinacourt.util.IConstant.REVISION_SIGN;
 import static org.sxchinacourt.util.IConstant.REVISION_WORD_SIGN;
-import static org.sxchinacourt.activity.TagAliasOperatorHelper.ACTION_SET;
-import static org.sxchinacourt.activity.TagAliasOperatorHelper.sequence;
 
 /**
  * Created by baggio on 2017/2/3.
@@ -290,17 +282,17 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
         );//角标
 
         mHomePage = new BottomNavigationItem(R.drawable.icon_nav_home_selected,"首页");
-        mMsgItem = new BottomNavigationItem(R.drawable.icon_nav_news_selected, "消息");
+//        mMsgItem = new BottomNavigationItem(R.drawable.icon_nav_news_selected, "消息");
 //        mMsgItem.setBadgeItem(badgeItem);
         mAppsItem = new BottomNavigationItem(R.drawable.icon_nav_apply_selected, "应用");
         mContactsItem = new BottomNavigationItem(R.drawable.icon_nav_application_selected, "通讯录");
         mSettingItem = new BottomNavigationItem(R.drawable.icon_nav_mine_selected, "我");
         mHomePage.setInactiveIconResource(R.drawable.icon_nav_home_default);
-        mMsgItem.setInactiveIconResource(R.drawable.icon_nav_news_default);
+        //mMsgItem.setInactiveIconResource(R.drawable.icon_nav_news_default);
         mAppsItem.setInactiveIconResource(R.drawable.icon_nav_apply_default);
         mContactsItem.setInactiveIconResource(R.drawable.icon_nav_application_default);
         mSettingItem.setInactiveIconResource(R.drawable.icon_nav_mine_default);
-        mBottomNavigationBarContainer.addItem(mHomePage).addItem(mMsgItem).addItem(mAppsItem).addItem(mContactsItem).addItem(mSettingItem);
+        mBottomNavigationBarContainer.addItem(mHomePage).addItem(mAppsItem).addItem(mContactsItem).addItem(mSettingItem);
         mBottomNavigationBarContainer.initialise();
         mBottomNavigationBarContainer.setTabSelectedListener(this);
         setDefaultFragment();//显示默认的Frag
@@ -318,24 +310,24 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
                 showFragment(mHomePageManagerFragment);
                 bottomNavVarPosition = mBottomNavigationBarContainer.getCurrentSelectedPosition();
                 break;
-            case 1:
+//            case 1:
+////                hideAllFragment();
+////                if (mMsgFragment == null) {
+////                    mMsgFragment = new MsgFragment(TabsActivity.this,R.layout.fragment_msg);
+////                }
+////                showFragment(mMsgFragment);
+////                bottomNavVarPosition = mBottomNavigationBarContainer.getCurrentSelectedPosition();
+//
 //                hideAllFragment();
-//                if (mMsgFragment == null) {
-//                    mMsgFragment = new MsgFragment(TabsActivity.this,R.layout.fragment_msg);
+//                if (mMsgManagerFragment == null) {
+//                    mMsgManagerFragment = new MsgManagerFragment();
 //                }
-//                showFragment(mMsgFragment);
+//                showFragment(mMsgManagerFragment);
 //                bottomNavVarPosition = mBottomNavigationBarContainer.getCurrentSelectedPosition();
-
-                hideAllFragment();
-                if (mMsgManagerFragment == null) {
-                    mMsgManagerFragment = new MsgManagerFragment();
-                }
-                showFragment(mMsgManagerFragment);
-                bottomNavVarPosition = mBottomNavigationBarContainer.getCurrentSelectedPosition();
-
-
-                break;
-            case 2:
+//
+//
+//                break;
+            case 1:
                 if (user.getOrgid() == null){
                     startActivity(new Intent(TabsActivity.this, LoginActivity.class));
                     finish();
@@ -349,7 +341,7 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
                 }
                 mBottomNavigationBarContainer.selectTab(bottomNavVarPosition);
                 break;
-            case 3:
+            case 2:
                 hideAllFragment();
                 if (mContactsManagerFragment == null) {
                     mContactsManagerFragment = new ContactsManagerFragment();
@@ -357,7 +349,7 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
                 showFragment(mContactsManagerFragment);
                 bottomNavVarPosition = mBottomNavigationBarContainer.getCurrentSelectedPosition();
                 break;
-            case 4:
+            case 3:
                 hideAllFragment();;
                 if (mSettingManagerFragment == null) {
                     mSettingManagerFragment = new SettingManagerFragment();
