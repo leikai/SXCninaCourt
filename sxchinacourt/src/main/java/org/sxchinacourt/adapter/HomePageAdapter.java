@@ -1,17 +1,19 @@
 package org.sxchinacourt.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.sxchinacourt.R;
-import org.sxchinacourt.activity.fragment.AppsFragment;
-import org.sxchinacourt.activity.fragment.AppsManagerFragment;
+import org.sxchinacourt.activity.AlreadyWebActivity;
+import org.sxchinacourt.activity.NoticeWebActivity;
+import org.sxchinacourt.activity.TotoWebActivity;
 import org.sxchinacourt.activity.fragment.BaseFragment;
 import org.sxchinacourt.activity.fragment.HomePageFragment;
 import org.sxchinacourt.activity.fragment.HomePageManagerFragment;
@@ -29,8 +31,9 @@ public class HomePageAdapter extends BaseAdapter {
     private final int TYPE_COUNT = 2;
     private HomePageFragment mFragment;
     List<AppBean> mApps;
-
-    public HomePageAdapter(HomePageFragment fragment, List<AppBean> apps) {
+    private  Context context;
+    public HomePageAdapter(Context context,HomePageFragment fragment, List<AppBean> apps) {
+        this.context = context;
         this.mFragment = fragment;
         this.mApps = apps;
     }
@@ -44,26 +47,35 @@ public class HomePageAdapter extends BaseAdapter {
             switch (app.getFragmentIndex()) {
                 case AppBean.FRAGMENT_TO_DO_TASK: {
                     app_type = HomePageManagerFragment.CHILD_TYPE_TODOTASKLIST;
+                    context.startActivity(new Intent(context, TotoWebActivity.class));
                     break;
                 }
                 case AppBean.FRAGMENT_HISTORY_TASK: {
                     app_type = HomePageManagerFragment.CHILD_TYPE_HISTORYTASKLIST;
+                    context.startActivity(new Intent(context, AlreadyWebActivity.class));
                     break;
                 }
                 case AppBean.FRAGMENT_NOTICE_TASK: {
                     app_type = HomePageManagerFragment.CHILD_TYPE_NOTICETASKLIST;
+                    context.startActivity(new Intent(context, NoticeWebActivity.class));
                     break;
                 }
                 case AppBean.FRAGMENT_MANAGER_TASK: {
                     app_type = HomePageManagerFragment.CHILD_TYPE_TASKMANAGER;
+                    bundle.putInt(BaseFragment.PARAM_CHILD_TYPE, app_type);
+                    mFragment.showChildFragment(bundle);
                     break;
                 }
                 case AppBean.FRAGMENT_CABINET_TASK: {
                     app_type = HomePageManagerFragment.CHILD_TYPE_CABINETTASKLIST;
+                    bundle.putInt(BaseFragment.PARAM_CHILD_TYPE, app_type);
+                    mFragment.showChildFragment(bundle);
                     break;
                 }
                 case AppBean.FRAGMENT_MESSAGE_MACHINE: {
                     app_type = HomePageManagerFragment.CHILD_TYPE_MESSAGEMACHINE;
+                    bundle.putInt(BaseFragment.PARAM_CHILD_TYPE, app_type);
+                    mFragment.showChildFragment(bundle);
                     break;
                 }
                 default: {
@@ -72,8 +84,8 @@ public class HomePageAdapter extends BaseAdapter {
                     break;
                 }
             }
-            bundle.putInt(BaseFragment.PARAM_CHILD_TYPE, app_type);
-            mFragment.showChildFragment(bundle);
+//            bundle.putInt(BaseFragment.PARAM_CHILD_TYPE, app_type);
+//            mFragment.showChildFragment(bundle);
         }
     };
 

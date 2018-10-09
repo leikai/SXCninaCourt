@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
@@ -25,7 +22,6 @@ import org.sxchinacourt.R;
 import org.sxchinacourt.activity.CabinetActivity;
 import org.sxchinacourt.activity.LoginActivity;
 import org.sxchinacourt.activity.MachineActivity;
-import org.sxchinacourt.adapter.AppsAdapter;
 import org.sxchinacourt.adapter.FruitAdapter;
 import org.sxchinacourt.adapter.HomePageAdapter;
 import org.sxchinacourt.bean.AppBean;
@@ -61,8 +57,8 @@ public class HomePageFragment extends BaseFragment {
     GridView mAppsGridView;
     HomePageAdapter mAdapter;
     int[] mResourceIdArray = {R.drawable.icon_dbsy, R.drawable.icon_ybsy, R.drawable
-            .icon_wdlc, R.drawable.icon_cjlc};//, R.drawable.app_email_icon
-    String[] mAppNameArray = {"待办事宜", "已办事宜", "通知公告", "任务管理"};//, "收发邮件"
+            .icon_wdlc};//, R.drawable.app_email_icon
+    String[] mAppNameArray = {"待办事宜", "已办事宜", "通知公告"};//, "收发邮件"
     int[] mFragmentIndexArray = {AppBean.FRAGMENT_TO_DO_TASK, AppBean.FRAGMENT_HISTORY_TASK, AppBean
             .FRAGMENT_NOTICE_TASK, AppBean.FRAGMENT_MANAGER_TASK};//, AppBean.FRAGMENT_EMAIL_TASK
 
@@ -116,7 +112,7 @@ public class HomePageFragment extends BaseFragment {
             app.setFragmentIndex(mFragmentIndexArray[i]);
             apps.add(app);
         }
-        mAdapter = new HomePageAdapter(this, apps);
+        mAdapter = new HomePageAdapter(getContext(),this, apps);
         mAppsGridView.setAdapter(mAdapter);
 
         if (user.getOrgid() == null){

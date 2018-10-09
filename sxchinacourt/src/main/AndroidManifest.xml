@@ -276,6 +276,9 @@
         <activity android:name=".activity.ModifyHandlePasswordActivity" />
         <activity android:name=".activity.SignOnActivity" />
         <activity android:name=".activity.SwitchAccountActivity" />
+        <activity android:name=".activity.TotoWebActivity" />
+        <activity android:name=".activity.AlreadyWebActivity" />
+        <activity android:name=".activity.NoticeWebActivity" />
     </application>
 
 </manifest>

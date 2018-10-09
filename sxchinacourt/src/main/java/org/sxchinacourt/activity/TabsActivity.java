@@ -28,6 +28,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -119,7 +120,7 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
 
     private String token;
     private UserNewBean user;
-
+    private long exitTime = 0;
 
 
 
@@ -643,8 +644,20 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
         }
         return alias;
     }
-
-
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+            if((System.currentTimeMillis()-exitTime) > 2000){
+                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+            } else {
+                finish();
+                System.exit(0);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
 
 }
