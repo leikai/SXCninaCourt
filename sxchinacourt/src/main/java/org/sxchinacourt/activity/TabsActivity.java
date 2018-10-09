@@ -350,7 +350,7 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
                 bottomNavVarPosition = mBottomNavigationBarContainer.getCurrentSelectedPosition();
                 break;
             case 3:
-                hideAllFragment();;
+                hideAllFragment();
                 if (mSettingManagerFragment == null) {
                     mSettingManagerFragment = new SettingManagerFragment();
                 }
