@@ -20,21 +20,13 @@ android {
     defaultConfig {
         applicationId "org.sxchinacourt"
         minSdkVersion 15
-        targetSdkVersion 23
+        targetSdkVersion 27
         versionCode 12
         versionName "12"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
-//    signingConfigs {
-//        release {
-//            storeFile file("D:\\github_workspace\\SXChinaCourt\\sxchinacourt_keystore.jks")
-//            storePassword "sxchinacourt"
-//            keyAlias "sxchinacourt"
-//            keyPassword "sxchinacourt"
-//        }
-//    }
     buildTypes {
         release {
             minifyEnabled false

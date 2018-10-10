@@ -479,6 +479,51 @@ public class WebServiceUtil {
         return taskCount;
     }
 
+
+    /**
+     * 获取待办数量
+     *
+     * @param token
+     * @return
+     */
+    public String getTaskCount(String token) {
+//        String serviceUrl = BASE_SERVER_URL + AWSSVC;
+        String methodName = "getTaskCount";
+        SoapObject request = new SoapObject(NAMESPACE_TOKEN, methodName);
+        JSONObject json = new JSONObject();
+        try {
+            json.put("token", token);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        request.addProperty("jsonstr", json.toString());
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.bodyOut = request;
+        envelope.dotNet = true;
+        HttpTransportSE ht;
+        if (IS_HTTP) {
+            ht = new HttpTransportSE(BASE_SERVER_URL_TOKEN);
+        } else {
+            ht = new HttpsTransportSE(mHost, mPort,
+                    WS_OPS, TIMEOUT);
+        }
+        try {
+            ht.call(NAMESPACE_TOKEN + methodName, envelope);
+            if (envelope.getResponse() != null) {
+                SoapObject result = (SoapObject) envelope.bodyIn;
+
+                String resultStr = result.getPropertyAsString("return");
+                if (resultIsNotEmpty(resultStr)) {
+                    return resultStr;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
     public Hashtable<String, Object> getTaskList(String userId, int taskType, String
             workflowGroupName, String
                                                          workflowDefUUID, int start, int limit) {
@@ -2823,6 +2868,94 @@ public class WebServiceUtil {
         }
         return null;
     }
+
+    /**
+     * 登录获取
+     *
+     * @param token
+     * @return
+     */
+    public String getNoticeCount(String token, String state) {
+//        String serviceUrl = BASE_SERVER_URL + AWSSVC;
+        String methodName = "getNoticeCount";
+        SoapObject request = new SoapObject(NAMESPACE_TOKEN, methodName);
+        JSONObject json = new JSONObject();
+        try {
+            json.put("token", token);
+            json.put("qisread", state);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        request.addProperty("jsonstr", json.toString());
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.bodyOut = request;
+        envelope.dotNet = true;
+        HttpTransportSE ht;
+        if (IS_HTTP) {
+            ht = new HttpTransportSE(BASE_SERVER_URL_TOKEN);
+        } else {
+            ht = new HttpsTransportSE(mHost, mPort,
+                    WS_OPS, TIMEOUT);
+        }
+        try {
+            ht.call(NAMESPACE_TOKEN + methodName, envelope);
+            if (envelope.getResponse() != null) {
+                SoapObject result = (SoapObject) envelope.bodyIn;
+
+                String resultStr = result.getPropertyAsString("return");
+                if (resultIsNotEmpty(resultStr)) {
+                    return resultStr;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    /**
+     * 登录获取
+     *
+     * @param token
+     * @return
+     */
+    public String getNoticeList(String token, String state) {
+//        String serviceUrl = BASE_SERVER_URL + AWSSVC;
+        String methodName = "getNoticeList";
+        SoapObject request = new SoapObject(NAMESPACE_TOKEN, methodName);
+        JSONObject json = new JSONObject();
+        try {
+            json.put("token", token);
+            json.put("qisread", state);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        request.addProperty("jsonstr", json.toString());
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.bodyOut = request;
+        envelope.dotNet = true;
+        HttpTransportSE ht;
+        if (IS_HTTP) {
+            ht = new HttpTransportSE(BASE_SERVER_URL_TOKEN);
+        } else {
+            ht = new HttpsTransportSE(mHost, mPort,
+                    WS_OPS, TIMEOUT);
+        }
+        try {
+            ht.call(NAMESPACE_TOKEN + methodName, envelope);
+            if (envelope.getResponse() != null) {
+                SoapObject result = (SoapObject) envelope.bodyIn;
+
+                String resultStr = result.getPropertyAsString("return");
+                if (resultIsNotEmpty(resultStr)) {
+                    return resultStr;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
 
 

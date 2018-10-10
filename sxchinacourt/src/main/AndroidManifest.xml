@@ -279,6 +279,13 @@
         <activity android:name=".activity.TotoWebActivity" />
         <activity android:name=".activity.AlreadyWebActivity" />
         <activity android:name=".activity.NoticeWebActivity" />
+
+        <service
+            android:name=".service.NotificationService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".activity.NotificationActivity"></activity>
     </application>
 
 </manifest>

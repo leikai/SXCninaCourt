@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,11 +16,13 @@ import org.sxchinacourt.CApplication;
 import org.sxchinacourt.R;
 import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.util.WebServiceUtil;
+import org.sxchinacourt.widget.CustomActionBar;
 
 /**
  * @author lk
  */
 public class ModifyHandlePasswordActivity extends AppCompatActivity {
+    private CustomActionBar customActionBar;
     GestureLockView mGestureLockView;
     UserNewBean currentUser;
     TextView mRemind;
@@ -33,6 +36,9 @@ public class ModifyHandlePasswordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_handle_password);
+        getSupportActionBar().hide();
+        customActionBar = (CustomActionBar) findViewById(R.id.customActionBar);
+        customActionBar.setTitle("手势密码修改");
         currentUser = CApplication.getInstance().getCurrentUser();
         mRemind = (TextView)findViewById(R.id.tv_remind);
         mGestureLockView = (GestureLockView) findViewById(R.id.modify_handle_pwd_glv);
@@ -86,7 +92,12 @@ public class ModifyHandlePasswordActivity extends AppCompatActivity {
                 }
             }
         });
-
+        customActionBar.getBackBtnView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
     }
 

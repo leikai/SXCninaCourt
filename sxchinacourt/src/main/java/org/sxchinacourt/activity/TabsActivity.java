@@ -31,6 +31,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.JavascriptInterface;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -52,6 +53,7 @@ import org.sxchinacourt.activity.fragment.SettingManagerFragment;
 import org.sxchinacourt.bean.DepartmentBean;
 import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.common.Contstants;
+import org.sxchinacourt.service.NotificationService;
 import org.sxchinacourt.util.ExampleUtil;
 import org.sxchinacourt.util.IConstant;
 import org.sxchinacourt.util.WebServiceUtil;
@@ -77,20 +79,55 @@ import static org.sxchinacourt.util.IConstant.REVISION_WORD_SIGN;
 
 public class TabsActivity extends AppCompatActivity implements BottomNavigationBar
         .OnTabSelectedListener, View.OnClickListener {
-    public static final int REQUEST_EXTERNAL_STORAGE = 1; //获取存储权限
-    public static final int REQUEST_CALL_PHONE = 2;  //获取拨打电话权限
-    public static final int REQUEST_SEND_SMS = 3;    //获取发送短信权限
+    /**
+     * 获取存储权限
+     */
+    public static final int REQUEST_EXTERNAL_STORAGE = 1;
+    /**
+     * 获取拨打电话权限
+     */
+    public static final int REQUEST_CALL_PHONE = 2;
+    /**
+     * 获取发送短信权限
+     */
+    public static final int REQUEST_SEND_SMS = 3;
+
     private static final int VPN_REQUEST_CODE = 0x0F;
     private boolean waitingForVPNStart;
-    private LinearLayout mBottomNavContent;//内容区域
-    private BottomNavigationBar mBottomNavigationBarContainer;//底部导航栏
-    private BottomNavigationItem mHomePage; //首页
-    private BottomNavigationItem mMsgItem;  //消息tab
-    private BottomNavigationItem mAppsItem;  //应用tab
-    private BottomNavigationItem mContactsItem;  //联系人tab
-    private BottomNavigationItem mSettingItem; //设置tab
+    /**
+     * 内容区域
+     */
+    private LinearLayout mBottomNavContent;
+    /**
+     * 底部导航栏
+     */
+    private BottomNavigationBar mBottomNavigationBarContainer;
+    /**
+     * 首页
+     */
+    private BottomNavigationItem mHomePage;
+    /**
+     * 消息tab
+     */
+    private BottomNavigationItem mMsgItem;
+    /**
+     * 应用tab
+     */
+    private BottomNavigationItem mAppsItem;
+    /**
+     * 联系人tab
+     */
+    private BottomNavigationItem mContactsItem;
+    /**
+     * 设置tab
+     */
+    private BottomNavigationItem mSettingItem;
+
     private BadgeItem badgeItem;
-    private HomePageManagerFragment mHomePageManagerFragment;//首页
+    /**
+     * 首页碎片
+     */
+    private HomePageManagerFragment mHomePageManagerFragment;
     private MsgFragment mMsgFragment;
     private MsgManagerFragment mMsgManagerFragment;
 
@@ -98,12 +135,24 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
     private ContactsManagerFragment mContactsManagerFragment;
     private SettingManagerFragment mSettingManagerFragment;
     private BaseFragment mCurrentFragment;
-    private CustomActionBar mActionBarView;  //自定义actionBar
+    /**
+     * 自定义actionBar
+     */
+    private CustomActionBar mActionBarView;
     private UpdateManager mUpdateManager;
 
-    private RefreshGroupTask mRefreshGroupTask;  //获取联系人分组的请求
-    public static  List<DepartmentBean> mDepartments;//联系人分组集合
-    public static List<UserNewBean> mUsers; // 联系人集合
+    /**
+     * 获取联系人分组的请求
+     */
+    private RefreshGroupTask mRefreshGroupTask;
+    /**
+     * 联系人分组集合
+     */
+    public static  List<DepartmentBean> mDepartments;
+    /**
+     * 联系人集合
+     */
+    public static List<UserNewBean> mUsers;
     //-----------------------推送-----------------------//
     String alias = null;
     boolean isAliasAction = false;
@@ -115,12 +164,18 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
     public static final String KEY_TITLE = "title";
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_EXTRAS = "extras";
-
-    private int bottomNavVarPosition = 0;//获取底部菜单栏目前选择的位置
+    /**
+     * 获取底部菜单栏目前选择的位置
+     */
+    private int bottomNavVarPosition = 0;
 
     private String token;
     private UserNewBean user;
     private long exitTime = 0;
+    /**
+     * 从页面中获取目前H5所在的界面
+     */
+    private static String pageLocationForH5 = "2" ;
 
 
 
@@ -150,23 +205,16 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
         initBottomNavBar();
         createRootDir();
         mUpdateManager = new UpdateManager(this);
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                startVPN();
-//            }
-//        }, 1000);
-//        waitingForVPNStart = false;
-//        LocalBroadcastManager.getInstance(this).registerReceiver(vpnStateReceiver,
-//                new IntentFilter(LocalVPNService.BROADCAST_VPN_STATE));
     }
 
     private BroadcastReceiver vpnStateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (LocalVPNService.BROADCAST_VPN_STATE.equals(intent.getAction())) {
-                if (intent.getBooleanExtra("running", false))
+                if (intent.getBooleanExtra("running", false)){
                     waitingForVPNStart = false;
+                }
+
             }
         }
     };
@@ -180,55 +228,28 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
     }
 
 
-//    @Override
-//    public void onBackPressed() {
-//        if (!mCurrentFragment.onBackPressed()) {
-//            super.onBackPressed();
-//        }
-//    }
-
-
-    /*
-   1：代表处于1级目录下，点击返回直接退出程序
-   2：代表处于2级目录下，点击返回调用碎片管理器的返回键方法，返回1级目录
-   3：代表处于2级目录下，点击返回调用碎片管理器的返回键方法，返回1级目录
-    */
+    /**
+     * 1：代表处于1级目录下，点击返回直接退出程序
+     2：代表处于2级目录下，点击返回调用碎片管理器的返回键方法，返回1级目录
+     3：代表处于2级目录下，点击返回调用碎片管理器的返回键方法，返回1级目录
+     */
     @Override
     public void onBackPressed() {
-//        if ("2".equals(pageLocationForH5)){
-            if (!mCurrentFragment.onBackPressed()) {
-                super.onBackPressed();
-            }
-            Log.e("pageLocationForH5",""+pageLocationForH5);
-//            pageLocationForH5 = "1";
-//        }else {
-//            super.onBackPressed();
-//            pageLocationForH5 = "2";
-//        }
+        if (!mCurrentFragment.onBackPressed()) {
+            super.onBackPressed();
+        }
+        Log.e("pageLocationForH5",""+pageLocationForH5);
+
     }
-
-
-    //    /**
-//     * 拦截手机返回键的处理
-//     * @param keyCode
-//     * @param event
-//     * @return
-//     */
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if(keyCode == KeyEvent.KEYCODE_BACK){
-//            return  true;
-//        }
-//        return  super.onKeyDown(keyCode, event);
-//
-//    }
     private void initView() {
         mBottomNavContent = (LinearLayout) findViewById(bottom_nav_content);
         mBottomNavigationBarContainer = (BottomNavigationBar) findViewById(R.id.bottom_navigation_bar_container);
         mActionBarView.getBackBtnView().setOnClickListener(this);
     }
     private void initData(){
+
         token  = CApplication.getInstance().getCurrentToken();
+        startService(new Intent(TabsActivity.this,NotificationService.class));
         Log.e("取出来的token",""+token);
         if (token ==null){
             AlertDialog.Builder dialog = new AlertDialog.Builder(TabsActivity.this);
@@ -253,50 +274,35 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
         }
         mRefreshGroupTask = new RefreshGroupTask(null);
         mRefreshGroupTask.execute();
-//
+
     }
 
-    /*初始化底部导航栏*/
+    /**
+     * 初始化底部导航栏
+     */
     private void initBottomNavBar() {
-
-        mBottomNavigationBarContainer.setAutoHideEnabled(true);//自动隐藏
-
-        //BottomNavigationBar.MODE_SHIFTING;
-        //BottomNavigationBar.MODE_FIXED;
-        //BottomNavigationBar.MODE_DEFAULT;
+        //自动隐藏
+        mBottomNavigationBarContainer.setAutoHideEnabled(true);
         mBottomNavigationBarContainer.setMode(BottomNavigationBar.MODE_FIXED);
-
-        // BottomNavigationBar.BACKGROUND_STYLE_DEFAULT;
-        // BottomNavigationBar.BACKGROUND_STYLE_RIPPLE
-        // BottomNavigationBar.BACKGROUND_STYLE_STATIC
         mBottomNavigationBarContainer.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
-
-        mBottomNavigationBarContainer.setBarBackgroundColor("#ffffff");//背景颜色
-
-//        mBottomNavigationBarContainer.setInActiveColor(R.color.inactive_color);//未选中时的颜色
-//        mBottomNavigationBarContainer.setActiveColor(R.color.white);//选中时的颜色
-
-
-        badgeItem = new BadgeItem().setBackgroundColor(Color.RED).setText("99").setHideOnSelect(false
-
-
-        );//角标
+        //背景颜色
+        mBottomNavigationBarContainer.setBarBackgroundColor("#ffffff");
+        //角标
+        badgeItem = new BadgeItem().setBackgroundColor(Color.RED).setText("99").setHideOnSelect(false);
 
         mHomePage = new BottomNavigationItem(R.drawable.icon_nav_home_selected,"首页");
-//        mMsgItem = new BottomNavigationItem(R.drawable.icon_nav_news_selected, "消息");
-//        mMsgItem.setBadgeItem(badgeItem);
         mAppsItem = new BottomNavigationItem(R.drawable.icon_nav_apply_selected, "应用");
         mContactsItem = new BottomNavigationItem(R.drawable.icon_nav_application_selected, "通讯录");
         mSettingItem = new BottomNavigationItem(R.drawable.icon_nav_mine_selected, "我");
         mHomePage.setInactiveIconResource(R.drawable.icon_nav_home_default);
-        //mMsgItem.setInactiveIconResource(R.drawable.icon_nav_news_default);
         mAppsItem.setInactiveIconResource(R.drawable.icon_nav_apply_default);
         mContactsItem.setInactiveIconResource(R.drawable.icon_nav_application_default);
         mSettingItem.setInactiveIconResource(R.drawable.icon_nav_mine_default);
         mBottomNavigationBarContainer.addItem(mHomePage).addItem(mAppsItem).addItem(mContactsItem).addItem(mSettingItem);
         mBottomNavigationBarContainer.initialise();
         mBottomNavigationBarContainer.setTabSelectedListener(this);
-        setDefaultFragment();//显示默认的Frag
+        //显示默认的Frag
+        setDefaultFragment();
     }
 
 
@@ -311,23 +317,6 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
                 showFragment(mHomePageManagerFragment);
                 bottomNavVarPosition = mBottomNavigationBarContainer.getCurrentSelectedPosition();
                 break;
-//            case 1:
-////                hideAllFragment();
-////                if (mMsgFragment == null) {
-////                    mMsgFragment = new MsgFragment(TabsActivity.this,R.layout.fragment_msg);
-////                }
-////                showFragment(mMsgFragment);
-////                bottomNavVarPosition = mBottomNavigationBarContainer.getCurrentSelectedPosition();
-//
-//                hideAllFragment();
-//                if (mMsgManagerFragment == null) {
-//                    mMsgManagerFragment = new MsgManagerFragment();
-//                }
-//                showFragment(mMsgManagerFragment);
-//                bottomNavVarPosition = mBottomNavigationBarContainer.getCurrentSelectedPosition();
-//
-//
-//                break;
             case 1:
                 if (user.getOrgid() == null){
                     startActivity(new Intent(TabsActivity.this, LoginActivity.class));
@@ -358,6 +347,8 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
                 showFragment(mSettingManagerFragment);
                 bottomNavVarPosition = mBottomNavigationBarContainer.getCurrentSelectedPosition();
                 break;
+                default:
+                    break;
         }
     }
 
@@ -379,17 +370,13 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
                 mCurrentFragment.onBackPressed();
                 break;
             }
+            default:
+                break;
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == VPN_REQUEST_CODE) {
-//            if (resultCode == RESULT_OK) {
-//                waitingForVPNStart = true;
-//                startService(new Intent(this, LocalVPNService.class));
-//            }
-//        } else
         if (mCurrentFragment != null) {
             mCurrentFragment.onActivityResult(requestCode, resultCode, data);
         }
@@ -434,16 +421,22 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
         }
     }
 
-    /*设置默认Fragment*/
+    /**
+     * 设置默认Fragment
+     */
     private void setDefaultFragment() {
         if (mHomePageManagerFragment == null) {
             mHomePageManagerFragment = new HomePageManagerFragment();
         }
+        //默认显示msgFrag
         showFragment(mHomePageManagerFragment);
-        /*默认显示msgFrag*/
+
     }
 
-    /*添加Frag*/
+    /**
+     * 添加Frag
+     * @param frag
+     */
     private void addFragment(Fragment frag) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (frag != null && !frag.isAdded()) {
@@ -452,7 +445,9 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
         }
     }
 
-    /*隐藏所有fragment*/
+    /**
+     * 隐藏所有fragment
+     */
     private void hideAllFragment() {
         hideFragment(mHomePageManagerFragment);
         hideFragment(mMsgManagerFragment);
@@ -460,7 +455,10 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
         hideFragment(mSettingManagerFragment);
     }
 
-    /*隐藏frag*/
+    /**
+     * 隐藏frag
+     * @param frag
+     */
     private void hideFragment(Fragment frag) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (frag != null && frag.isAdded()) {
@@ -481,7 +479,8 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
      */
     public Action getIndexApiAction() {
         Thing object = new Thing.Builder()
-                .setName("Tabs Page") // TODO: Define a title for the content shown.
+                // TODO: Define a title for the content shown.
+                .setName("Tabs Page")
                 // TODO: Make sure this auto-generated URL is correct.
                 .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
                 .build();
@@ -491,12 +490,6 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
                 .build();
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        if (!mCurrentFragment.onBackPressed()) {
-//            super.onBackPressed();
-//        }
-//    }
     @Override
     public void onStart() {
         super.onStart();
@@ -517,7 +510,9 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
         }
     };
 
-    //请求联系人分组的数据
+    /**
+     * 请求联系人分组的数据
+     */
     private class RefreshGroupTask extends AsyncTask<Void, Void, List<DepartmentBean>> {
         String mDepartmentName;
 
@@ -596,11 +591,6 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
         }
     }
     private void setCostomMsg(String msg){
-//        if (null != tvShowMsg) {
-//            tvShowMsg.setText(msg);
-//            Log.e("msg",""+msg);
-//            tvShowMsg.setVisibility(android.view.View.VISIBLE);
-//        }
     }
     /**
      * 处理tag/alias相关操作的点击
@@ -659,5 +649,19 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
         return super.onKeyDown(keyCode, event);
     }
 
+    /**
+     *  供H5页面调用的方法，目的是：获取现在H5页面处于几级页面下，原生处理返回键功能
+     */
+    public static class TestJavaScriptInterface {
+
+
+        @JavascriptInterface
+        public void getPageLocation(String location) {
+            pageLocationForH5 = location;
+
+            Log.e("location",""+location);
+
+        }
+    }
 
 }
