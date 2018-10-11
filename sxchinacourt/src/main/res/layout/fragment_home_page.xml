@@ -50,13 +50,12 @@
                         />
                 </LinearLayout>
                 
-                <android.support.v7.widget.RecyclerView
+                <org.sxchinacourt.widget.MarqueeView
                     android:id="@+id/home_page_view_wei_door"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="60dp"
                     >
-                </android.support.v7.widget.RecyclerView>
+                </org.sxchinacourt.widget.MarqueeView>
 
                 <View style="@style/view_line_height_gray_5" />
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="10dp">
     <TextView
         android:id="@+id/news_title"
@@ -19,7 +19,7 @@
         android:layout_marginTop="5dp"
         android:singleLine="true"
         android:text="content"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:textColor="@color/black"
         android:textSize="13sp"
         />

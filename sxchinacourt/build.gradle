@@ -87,4 +87,5 @@ dependencies {
     implementation 'com.wangnan:gesturelockview:1.0.1'
     //圆形图片
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'me.bakumon:bulletinview:1.0.0'
 }

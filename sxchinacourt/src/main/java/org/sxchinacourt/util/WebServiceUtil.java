@@ -1,12 +1,9 @@
 package org.sxchinacourt.util;
 
-import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,7 +16,6 @@ import org.ksoap2.transport.HttpsTransportSE;
 import org.sxchinacourt.bean.DepartmentBean;
 import org.sxchinacourt.bean.DepartmentNewBean;
 import org.sxchinacourt.bean.MenuBean;
-import org.sxchinacourt.bean.NewsContentPattsRoot;
 import org.sxchinacourt.bean.OBDataBean;
 import org.sxchinacourt.bean.ProcessOpinion;
 import org.sxchinacourt.bean.RoleBean;
@@ -27,13 +23,11 @@ import org.sxchinacourt.bean.TaskAssignedToMeBean;
 import org.sxchinacourt.bean.TaskBean;
 import org.sxchinacourt.bean.TaskICreatedBean;
 import org.sxchinacourt.bean.UserBean;
-import org.sxchinacourt.bean.UserInfoBean;
 import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.bean.ViewComponents;
 import org.sxchinacourt.cache.CSharedPreferences;
 import org.sxchinacourt.dataparser.ComponentParser;
 import org.sxchinacourt.dataparser.DataParser;
-import org.sxchinacourt.dataparser.UserParser;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -66,7 +60,9 @@ public class WebServiceUtil {
     public static String BASE_MESSAGE_URL ="http://111.53.181.200:8087/Cloud/CloudAppPort?wsdl";//留言机
 
     //----------------------------------------------newOA-------------------------------------//
-    public static String BASE_SERVER_URL_TOKEN = "http://172.16.3.48:6641/mserver/services/bwsSvc?wsdl"; // http
+    //public static String BASE_SERVER_URL_TOKEN = "http://172.16.3.48:6641/mserver/services/bwsSvc?wsdl"; // http
+
+    public static String BASE_SERVER_URL_TOKEN = "http://111.53.181.200:8087/mserver/services/bwsSvc?wsdl";
     //---------------------------------------------finish------------------------------------//
 
 //    //----------------------------------------------newOA——测试-------------------------------------//
@@ -1176,7 +1172,7 @@ public class WebServiceUtil {
         HttpTransportSE ht;
         if (IS_HTTP){
             ht = new HttpTransportSE(BASE_SERVER_URL);
-            Log.e("我是ht1","hhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+
         }else {
             ht = new HttpsTransportSE(mHost, mPort,
                     WS_OPS, TIMEOUT);
@@ -2055,7 +2051,6 @@ public class WebServiceUtil {
             //            headerPropertyArrayList.add(new HeaderProperty("Connection", "close"));
 
             httpTransportSE.call(NAMESPACE + methodName, envelope);
-
 
             //            httpTransportSE.call(null, envelope, headerPropertyArrayList);
             //            System.setProperty("http.keepAlive", "false");
