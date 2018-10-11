@@ -46,6 +46,7 @@ import org.sxchinacourt.R;
 import org.sxchinacourt.activity.fragment.AppsManagerFragment;
 import org.sxchinacourt.activity.fragment.BaseFragment;
 import org.sxchinacourt.activity.fragment.ContactsManagerFragment;
+import org.sxchinacourt.activity.fragment.ContactsNewManagerFragment;
 import org.sxchinacourt.activity.fragment.HomePageManagerFragment;
 import org.sxchinacourt.activity.fragment.MsgFragment;
 import org.sxchinacourt.activity.fragment.MsgManagerFragment;
@@ -135,6 +136,12 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
     private ContactsManagerFragment mContactsManagerFragment;
     private SettingManagerFragment mSettingManagerFragment;
     private BaseFragment mCurrentFragment;
+
+    //联系人Fragment碎片管理器
+    private ContactsNewManagerFragment mContactsNewManagerFragment;
+
+
+
     /**
      * 自定义actionBar
      */
@@ -332,13 +339,23 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
                 mBottomNavigationBarContainer.selectTab(bottomNavVarPosition);
                 break;
             case 2:
+//                hideAllFragment();
+//                if (mContactsManagerFragment == null) {
+//                    mContactsManagerFragment = new ContactsManagerFragment();
+//                }
+//                showFragment(mContactsManagerFragment);
+//                bottomNavVarPosition = mBottomNavigationBarContainer.getCurrentSelectedPosition();
+//                break;
                 hideAllFragment();
-                if (mContactsManagerFragment == null) {
-                    mContactsManagerFragment = new ContactsManagerFragment();
+                //-----------------新通讯录-------------//
+                if (mContactsNewManagerFragment == null) {
+                    mContactsNewManagerFragment = new ContactsNewManagerFragment();
                 }
-                showFragment(mContactsManagerFragment);
+                showFragment(mContactsNewManagerFragment);
+                //---------------finish---------------//
                 bottomNavVarPosition = mBottomNavigationBarContainer.getCurrentSelectedPosition();
                 break;
+
             case 3:
                 hideAllFragment();
                 if (mSettingManagerFragment == null) {
@@ -451,7 +468,7 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
     private void hideAllFragment() {
         hideFragment(mHomePageManagerFragment);
         hideFragment(mMsgManagerFragment);
-        hideFragment(mContactsManagerFragment);
+        hideFragment(mContactsNewManagerFragment);
         hideFragment(mSettingManagerFragment);
     }
 

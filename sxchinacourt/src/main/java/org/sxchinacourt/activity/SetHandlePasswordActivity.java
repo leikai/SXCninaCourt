@@ -38,6 +38,7 @@ public class SetHandlePasswordActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         customActionBar = (CustomActionBar) findViewById(R.id.customActionBar);
         customActionBar.setTitle("设置手势密码");
+        customActionBar.setLogoViewVisible(View.INVISIBLE);
         currentUser = CApplication.getInstance().getCurrentUser();
         mRemind = (TextView)findViewById(R.id.tv_remind);
         mGestureLockView = (GestureLockView) findViewById(R.id.set_handle_pwd_glv);
