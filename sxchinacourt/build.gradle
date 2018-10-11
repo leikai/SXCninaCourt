@@ -27,14 +27,6 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
-//    signingConfigs {
-//        release {
-//            storeFile file("D:\\github_workspace\\SXChinaCourt\\sxchinacourt_keystore.jks")
-//            storePassword "sxchinacourt"
-//            keyAlias "sxchinacourt"
-//            keyPassword "sxchinacourt"
-//        }
-//    }
     buildTypes {
         release {
             minifyEnabled false
@@ -87,5 +79,5 @@ dependencies {
     implementation 'com.wangnan:gesturelockview:1.0.1'
     //圆形图片
     implementation 'de.hdodenhof:circleimageview:2.2.0'
-    implementation 'me.bakumon:bulletinview:1.0.0'
+    implementation 'com.android.support:cardview-v7:27.1.1'
 }

@@ -10,5 +10,18 @@
         <item>用SwipeMenuLayout实现你自己的侧滑</item>
 
     </string-array>
+    <string-array name="courtoa">
+        <item>晋中市中级人民法院</item>
+        <item>寿阳县人民法院</item>
+        <item>榆社县人民法院</item>
+        <item>平遥县人民法院</item>
+        <item>太谷县人民法院</item>
+        <item>和顺县人民法院</item>
+        <item>榆次区人民法院</item>
+        <item>灵石县人民法院</item>
+        <item>左权县人民法院</item>
+        <item>昔阳县人民法院</item>
+        <item>祁县人民法院</item>
+    </string-array>
 
 </resources>

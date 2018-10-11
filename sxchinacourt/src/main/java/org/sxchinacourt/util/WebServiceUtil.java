@@ -475,6 +475,51 @@ public class WebServiceUtil {
         return taskCount;
     }
 
+
+    /**
+     * 获取待办数量
+     *
+     * @param token
+     * @return
+     */
+    public String getTaskCount(String token) {
+//        String serviceUrl = BASE_SERVER_URL + AWSSVC;
+        String methodName = "getTaskCount";
+        SoapObject request = new SoapObject(NAMESPACE_TOKEN, methodName);
+        JSONObject json = new JSONObject();
+        try {
+            json.put("token", token);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        request.addProperty("jsonstr", json.toString());
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.bodyOut = request;
+        envelope.dotNet = true;
+        HttpTransportSE ht;
+        if (IS_HTTP) {
+            ht = new HttpTransportSE(BASE_SERVER_URL_TOKEN);
+        } else {
+            ht = new HttpsTransportSE(mHost, mPort,
+                    WS_OPS, TIMEOUT);
+        }
+        try {
+            ht.call(NAMESPACE_TOKEN + methodName, envelope);
+            if (envelope.getResponse() != null) {
+                SoapObject result = (SoapObject) envelope.bodyIn;
+
+                String resultStr = result.getPropertyAsString("return");
+                if (resultIsNotEmpty(resultStr)) {
+                    return resultStr;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
     public Hashtable<String, Object> getTaskList(String userId, int taskType, String
             workflowGroupName, String
                                                          workflowDefUUID, int start, int limit) {
@@ -721,6 +766,64 @@ public class WebServiceUtil {
 //                                .parser(jsonObj);
 //                        users.add(user);
 //                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 新OA通讯录人员信息
+     * @param token
+     * @param qdeptid
+     * @return
+     */
+    public List<UserNewBean> getNewUserList(String token,  String qorgid,   String qdeptid, String qusername) {
+        List<UserNewBean> users = null;
+        Hashtable<String, Object> hash = new Hashtable<>();
+        String methodName = "getUserList";
+        SoapObject request = new SoapObject(NAMESPACE_TOKEN, methodName);
+        JSONObject json = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(token)) {
+                json.put("token", token);
+            }
+            if (!TextUtils.isEmpty(qorgid)) {
+                json.put("qorgid", qorgid);
+            }
+            if (!TextUtils.isEmpty(qdeptid)) {
+                json.put("qdeptid", qdeptid);
+            }
+            if (!TextUtils.isEmpty(qusername)) {
+                json.put("qusername", qusername);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        request.addProperty("jsonstr", json.toString());
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.bodyOut = request;
+        envelope.dotNet = true;
+        HttpTransportSE ht;
+        if (IS_HTTP) {
+            ht = new HttpTransportSE(BASE_SERVER_URL_TOKEN,3600*1000);
+        } else {
+            ht = new HttpsTransportSE(mHost, mPort,
+                    WS_OPS, TIMEOUT);
+        }
+        try {
+            ht.call(NAMESPACE_TOKEN + methodName, envelope);
+            if (envelope.getResponse() != null) {
+                SoapObject result = (SoapObject) envelope.bodyIn;
+                String resultStr = result.getPropertyAsString("return");
+                if (resultIsNotEmpty(resultStr)) {
+
+                    List<UserNewBean> resps=new ArrayList<UserNewBean>(com.alibaba.fastjson.JSONArray.parseArray(resultStr,UserNewBean.class));
+                    Log.e("人员数据",""+resps.get(0));
+
+                    return resps;
                 }
             }
         } catch (Exception e) {
@@ -2818,6 +2921,94 @@ public class WebServiceUtil {
         }
         return null;
     }
+
+    /**
+     * 登录获取
+     *
+     * @param token
+     * @return
+     */
+    public String getNoticeCount(String token, String state) {
+//        String serviceUrl = BASE_SERVER_URL + AWSSVC;
+        String methodName = "getNoticeCount";
+        SoapObject request = new SoapObject(NAMESPACE_TOKEN, methodName);
+        JSONObject json = new JSONObject();
+        try {
+            json.put("token", token);
+            json.put("qisread", state);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        request.addProperty("jsonstr", json.toString());
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.bodyOut = request;
+        envelope.dotNet = true;
+        HttpTransportSE ht;
+        if (IS_HTTP) {
+            ht = new HttpTransportSE(BASE_SERVER_URL_TOKEN);
+        } else {
+            ht = new HttpsTransportSE(mHost, mPort,
+                    WS_OPS, TIMEOUT);
+        }
+        try {
+            ht.call(NAMESPACE_TOKEN + methodName, envelope);
+            if (envelope.getResponse() != null) {
+                SoapObject result = (SoapObject) envelope.bodyIn;
+
+                String resultStr = result.getPropertyAsString("return");
+                if (resultIsNotEmpty(resultStr)) {
+                    return resultStr;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    /**
+     * 登录获取
+     *
+     * @param token
+     * @return
+     */
+    public String getNoticeList(String token, String state) {
+//        String serviceUrl = BASE_SERVER_URL + AWSSVC;
+        String methodName = "getNoticeList";
+        SoapObject request = new SoapObject(NAMESPACE_TOKEN, methodName);
+        JSONObject json = new JSONObject();
+        try {
+            json.put("token", token);
+            json.put("qisread", state);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        request.addProperty("jsonstr", json.toString());
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.bodyOut = request;
+        envelope.dotNet = true;
+        HttpTransportSE ht;
+        if (IS_HTTP) {
+            ht = new HttpTransportSE(BASE_SERVER_URL_TOKEN);
+        } else {
+            ht = new HttpsTransportSE(mHost, mPort,
+                    WS_OPS, TIMEOUT);
+        }
+        try {
+            ht.call(NAMESPACE_TOKEN + methodName, envelope);
+            if (envelope.getResponse() != null) {
+                SoapObject result = (SoapObject) envelope.bodyIn;
+
+                String resultStr = result.getPropertyAsString("return");
+                if (resultIsNotEmpty(resultStr)) {
+                    return resultStr;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
 
 

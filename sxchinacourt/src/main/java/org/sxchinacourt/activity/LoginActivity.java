@@ -11,37 +11,35 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.provider.SyncStateContract;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.sxchinacourt.CApplication;
 import org.sxchinacourt.R;
 import org.sxchinacourt.bean.TokenRoot;
-import org.sxchinacourt.bean.UserBean;
 import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.common.Contstants;
 import org.sxchinacourt.util.PinYin.SharedPreferencesUtil;
 import org.sxchinacourt.util.WebServiceUtil;
 import org.sxchinacourt.widget.CustomProgress;
+import org.sxchinacourt.activity.SignOnActivity;
+import org.sxchinacourt.activity.TabsActivity;
 
 import static android.Manifest.permission.READ_CONTACTS;
-import static java.security.AccessController.getContext;
 
 /**
  * A login screen that offers login via email/password.
+ * @author lk
  */
 public class LoginActivity extends Activity {
 
@@ -58,16 +56,30 @@ public class LoginActivity extends Activity {
             "foo@example.com:hello", "bar@example.com:world"
     };
     /**
+     * 用户登录任务
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
-
-    // UI references.
+    /**
+     * 输入用户名控件
+     */
     private EditText mUserNameView;
+    /**
+     * 输入密码控件
+     */
     private EditText mPasswordView;
+    /**
+     * 切换手势登录
+     */
+    private TextView tvLoginHandpassword;
+    /**
+     * 等待控件
+     */
     private CustomProgress mProgressView;
     private View mLoginFormView;
     private Context _context;
+
+    private String name1 = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +89,8 @@ public class LoginActivity extends Activity {
         _context = LoginActivity.this;
         mUserNameView = (EditText) findViewById(R.id.et_username);
         mPasswordView = (EditText) findViewById(R.id.et_password);
+        tvLoginHandpassword = (TextView)findViewById(R.id.tv_login_handpassword);
+
         String name = SharedPreferencesUtil.getString(_context ,Contstants.KEY_SP_FILE, Contstants.KEY_SP_LoginName,null);
         mUserNameView.setText(name);
         String pass = SharedPreferencesUtil.getString(_context ,Contstants.KEY_SP_FILE, Contstants.KEY_SP_Password,null);
@@ -88,6 +102,17 @@ public class LoginActivity extends Activity {
                 attemptLogin();
             }
         });
+        tvLoginHandpassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                name1 = mUserNameView.getText().toString().trim();
+                Intent intent = new Intent(LoginActivity.this,SignOnActivity.class);
+                intent.putExtra("userAccount",name1);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = (CustomProgress) findViewById(R.id.login_progress);
     }
@@ -101,7 +126,7 @@ public class LoginActivity extends Activity {
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
             Snackbar.make(mUserNameView,      R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
+                    .setAction(android.R.string.ok, new OnClickListener() {
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
                         public void onClick(View v) {
@@ -239,25 +264,27 @@ public class LoginActivity extends Activity {
             }
             UserNewBean user = new UserNewBean();
             String token = null;
-
             user.setUserName(mUsername);
             user.setUserPassword(mPassword);
-
             String resultStr = WebServiceUtil.getInstance().createSession(user);
             Log.e("resultStr",""+resultStr);
-            if (resultStr!=null){
-                if (!TextUtils.isEmpty(resultStr)) {
-                    TokenRoot resps = JSON.parseObject(resultStr,TokenRoot.class);
-                    if (resps!=null){
-                        Log.e("resps",""+resps.getMsginfo());
+
+            if (!TextUtils.isEmpty(resultStr)) {
+                TokenRoot resps = JSON.parseObject(resultStr,TokenRoot.class);
+                if (resps!=null){
+                    Log.e("resps",""+resps.getMsginfo());
+                    if("登录失败!".equals(resps.getMsg())){
+                        mMessage = resps.getMsginfo();
+                        return false;
+                    }else {
                         token = resps.getMsginfo().substring(10);
                         token = token.substring(0,token.length()-2);
                         Log.e("获取到的Token：",""+token);
                         if (resps.getOpresult()&&resps.getMsg().equals("登录成功!")){
+
                             UserNewBean userInfo = WebServiceUtil.getInstance().getUserInfo(user.getUserName(),null);
-
-                            Contstants.titleName = userInfo.getOrgname();
-
+                            String ceshi = userInfo.getOrgid();
+                            Log.e("ceshi",""+ceshi);
                             user.copyUserInfo(userInfo);
                             CApplication.getInstance().setUser(user);
                             CApplication.getInstance().setToken(token);
@@ -265,48 +292,20 @@ public class LoginActivity extends Activity {
                         }
                         mMessage = resps.getMsg();
                         return false;
-
-                    }else {
-                        mMessage = "网络问题稍后重试";
-                        return false;
                     }
-
-                }
-            }
-            mMessage = "网络问题稍后重试";
-            return false;
-
-
-
-/*
-
-          //  Log.e("aoshdoasjdlasmdal;sdm;asmd;",resultStr.toString());
-            try {
-                if (!TextUtils.isEmpty(resultStr)) {
-                    JSONObject json = new JSONObject(resultStr);
-
-                    if (json.has("success") && json.getBoolean("success")) {
-                        WebServiceUtil.getInstance().getUserInfo(user);
-                        WebServiceUtil.getInstance().getUserDepartmentInfo(user);
-                        WebServiceUtil.getInstance().getUserRoleInfo(user);
-                        CApplication.getInstance().setUser(user);
-                        return true;
-                    }
-                    //密码错误
-                    mMessage = json.getString("msg");
-                    return false;
-                } else {
+                }else {
                     mMessage = "网络问题稍后重试";
                     return false;
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
+
+            }else {
+                CApplication.getInstance().setUser(user);
+                CApplication.getInstance().setToken(token);
+
             }
             CApplication.getInstance().setUser(user);
-            return true;
-            */
-
-//            return true;
+            CApplication.getInstance().setToken(token);
+            return false;
         }
 
         @Override

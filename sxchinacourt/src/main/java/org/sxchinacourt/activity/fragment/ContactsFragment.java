@@ -8,14 +8,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatSpinner;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,10 +29,16 @@ import android.widget.Toast;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
+import org.sxchinacourt.CApplication;
 import org.sxchinacourt.R;
 import org.sxchinacourt.adapter.ContactsAdapter;
+import org.sxchinacourt.adapter.DepartmentAdapter;
+import org.sxchinacourt.adapter.UsersAdapter;
 import org.sxchinacourt.bean.DepartmentBean;
+import org.sxchinacourt.bean.DepartmentNewBean;
 import org.sxchinacourt.bean.UserBean;
+import org.sxchinacourt.bean.UserNewBean;
+import org.sxchinacourt.common.Contstants;
 import org.sxchinacourt.util.PinYin.Characters;
 import org.sxchinacourt.util.PinYin.PinYinUtil;
 import org.sxchinacourt.util.WebServiceUtil;
@@ -51,12 +63,11 @@ import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
  * Created by baggio on 2017/2/3.
  */
 
-public class ContactsFragment extends BaseFragment implements PullToRefreshBase
-        .OnRefreshListener,View.OnClickListener, AdapterView.OnItemClickListener {
+public class ContactsFragment extends BaseFragment{
 
     /*
-文字图片的颜色值
-*/
+    文字图片的颜色值
+     */
     public static final String[] ImageBgColor={
             "#568AAD",
             "#17c295",
@@ -66,23 +77,20 @@ public class ContactsFragment extends BaseFragment implements PullToRefreshBase
             "#568AAD"
     };
 
-    private PullToRefreshListView mContactsListView;     //自带刷新的listview
-    private RefreshContactsTask mRefreshContactsTask;   //获取联系人的请求
-    //private RefreshGroupTask mRefreshGroupTask;  //获取联系人分组的请求
-    private ContactsAdapter mContactsAdapter;    //通讯录中间显示联系人的adapter
-    private CustomProgress mCustomProgress;     //进度条
-    private SideBar mSideBar;
-    private TextView mSideBarTextView;
-    private TextView mGroupNameView;
-    private EditText mKeywordView;
-    private List<DepartmentBean> mDepartments;//联系人分组
-    private List<UserBean> mUsers;
-    private List<UserBean> userList;
-    public  ContactsFragment(){}
-    @SuppressLint("ValidFragment")
-    public ContactsFragment(List<DepartmentBean> lists){
-        this.mDepartments = lists;
-    }
+    private AppCompatSpinner spinnerCourtoa;
+    private AppCompatSpinner spinnerDepartment;
+    private RecyclerView rvUsers;//人员列表
+    private RefreshGroupTask mRefreshGroupTask;
+    private RefreshContactsTask mRefreshContactsTask;
+    private ImageView ivSearch;
+    private EditText etSearch;
+
+    private UserNewBean user;//当前登录人的个人信息
+    private String token;
+    public List<DepartmentNewBean> mDepartments;//联系人分组集合
+    public List<UserNewBean> mUsersList;//联系人分组集合
+
+    private static final String TAG = "Constraints";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,239 +109,244 @@ public class ContactsFragment extends BaseFragment implements PullToRefreshBase
     @Nullable
     @Override
     protected void initFragment(@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mContactsListView = (PullToRefreshListView) mRootView.findViewById(R.id.pull_refresh_list);
-        mContactsListView.setOnItemClickListener(this);
-        mCustomProgress = (CustomProgress) mRootView.findViewById(R.id.loading);
-        mSideBar = (SideBar) mRootView.findViewById(R.id.sideBar);
-        mSideBar.setListView(mContactsListView.getRefreshableView());
-        mSideBarTextView = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.contactlist_index, null);
-        mSideBarTextView.setVisibility(View.INVISIBLE);
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.TYPE_APPLICATION,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
-        WindowManager windowManager = (WindowManager) getActivity().getSystemService(Activity.WINDOW_SERVICE);
-        windowManager.addView(mSideBarTextView, lp);
-        mSideBar.setTextView(mSideBarTextView);
-        mRootView.findViewById(R.id.btn_selectgroup).setOnClickListener(this);
-        mKeywordView = (EditText) mRootView.findViewById(R.id.et_keyword);
-        mKeywordView.addTextChangedListener(mTextWatcher);
-        mGroupNameView = (TextView) mRootView.findViewById(R.id.groupname_tv);
+        spinnerCourtoa = mRootView.findViewById(R.id.spinner_courtoa);
+        spinnerDepartment = mRootView.findViewById(R.id.spinner_department);
+        rvUsers = mRootView.findViewById(R.id.rv_user);
+        ivSearch = mRootView.findViewById(R.id.iv_search);
+        etSearch = mRootView.findViewById(R.id.et_search);
+
     }
 
     protected void initData() {
-        mContactsAdapter = new ContactsAdapter(getContext());
-        mContactsListView.getRefreshableView().setAdapter(mContactsAdapter);
-        mRefreshContactsTask = new RefreshContactsTask(null, null, "全部分组");
-        mRefreshContactsTask.execute();
-
-//        mCustomProgress.start();
-    }
-
-    @Override
-    public void onDestroy() {
-        WindowManager windowManager = (WindowManager) getActivity().getSystemService(Activity.WINDOW_SERVICE);
-        windowManager.removeViewImmediate(mSideBarTextView);
-        super.onDestroy();
-    }
-
-
-    @Override
-    public void onRefresh(PullToRefreshBase refreshView) {
-
-    }
-
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.btn_selectgroup) {  //点击出现联系人分组的下拉按钮
-            if (mDepartments == null) {//如果没有数据
-//                mRefreshGroupTask = new RefreshGroupTask(null);
-//                mRefreshGroupTask.execute();
-                Toast.makeText(getContext(),"没有数据",Toast.LENGTH_SHORT).show();
-            } else {//有数据  popupwindows显示
-                showGroupPopUpWindow();
-            }
-        }
-    }
+        token = CApplication.getInstance().getCurrentToken();
+        user = CApplication.getInstance().getCurrentUser();
 
 
 
-    private void showGroupPopUpWindow() {
-        String[] groupArray = new String[mDepartments.size() + 1];
-        groupArray[0] = "全部分组";
-        for (int i = 0; i < mDepartments.size(); i++) {
-            groupArray[i + 1] = mDepartments.get(i).getDepartmentName();
-        }
-        showGroupPopUpWindow(mRootView.findViewById(R.id.groups_container), groupArray,
-                -30, mGroupClickListener);
-    }
-
-
-    private AdapterView.OnItemClickListener mGroupClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String departmentId = null;
-            String departmentName = "全部分组";
-            if (position > 0) {
-                departmentId = mDepartments.get(position - 1).getId();
-                departmentName = mDepartments.get(position - 1).getDepartmentName();
-
-            }
-
-            try {
-                mRefreshContactsTask = new RefreshContactsTask(null, departmentId,departmentName);   //点击联系人分组中的某一个条目请求炎黄数据
-                mRefreshContactsTask.execute().get(1000, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (TimeoutException e) {
-                mCustomProgress.stop();
-            }
-            hidePopUpWindow();//隐藏popupwindowa
-
-        }
-    };
-
-//重要
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        UserBean user = (UserBean) mContactsAdapter.getItem(position - mContactsListView
-                .getRefreshableView()
-                .getHeaderViewsCount());
-        Bundle bundle = new Bundle();
-        bundle.putInt(BaseFragment.PARAM_CHILD_TYPE, ContactsManagerFragment.CHILD_TYPE_USERINFO);
-        bundle.putSerializable(UserDetailInfoFragment.PARAM_USER, user);
-        mPreFragment.showChildFragment(bundle);
-
-    }
-
-    private class PinyinComparator implements Comparator {
-        @Override
-        public int compare(Object o1, Object o2) {
-            String str1 = PinYinUtil.getPinYin(((UserBean) o1).getUserName())
-                    .toUpperCase();
-            String str2 = PinYinUtil.getPinYin(((UserBean) o2).getUserName())
-                    .toUpperCase();
-            return str1.compareTo(str2);
-        }
-
-    }
-
-    private class AlphabetComparator implements Comparator<UserBean> {
-        private RuleBasedCollator collator;
-
-        public AlphabetComparator() {
-            collator = (RuleBasedCollator) Collator
-                    .getInstance(Locale.CHINA);
-        }
-
-        @Override
-        public int compare(UserBean a1, UserBean a2) {
-            CollationKey c1 = collator.getCollationKey(a1.getUserName());
-            CollationKey c2 = collator.getCollationKey(a2.getUserName());
-            return collator.compare(((CollationKey) c1).getSourceString(),
-                    ((CollationKey) c2).getSourceString());
-        }
-    }
-
-    private TextWatcher mTextWatcher = new TextWatcher() {
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before,
-                                  int count) {
-            try {
-                if (mUsers != null && mUsers.size() > 0) {
-                    List<UserBean> users = mUsers;
-                    if (s.length() > 0) {
-                        for (int i = 0; i < s.length(); i++) {
-                            Characters characters1 = new Characters(s.toString().substring(i, i + 1));
-                            char c = Character.toUpperCase(characters1.getFistChar());
-                            List<UserBean> tUsers = new ArrayList<UserBean>();
-                            for (UserBean user : users) {
-                                try {
-                                    if (user.getUserName().length() >= s.length()) {
-                                        Characters characters2 = new Characters(user.getUserName()
-                                                .substring(i, i + 1));
-                                        if (Character.toUpperCase(characters2
-                                                .getFistChar()) == c) {
-                                            tUsers.add(user);
-                                        }
-                                    }
-                                } catch (Throwable e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            users = tUsers;
-                        }
-                    }
-                    mContactsAdapter.setContacts(users);
-                    mContactsAdapter.notifyDataSetChanged();
-                    mContactsListView.getRefreshableView().setSelection(0);
+        Log.d(TAG, "initData: "+user.getEmpname());
+        spinnerCourtoa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String courtoaName = spinnerCourtoa.getItemAtPosition(position).toString();
+                Log.e("courtoaName",""+courtoaName);
+                if ("晋中市中级人民法院".equals(courtoaName)){
+                    mRefreshGroupTask = new RefreshGroupTask(Contstants.OID_JINZHONG);
                 }
-            } catch (Throwable e) {
-                e.printStackTrace();
+                if ("寿阳县人民法院".equals(courtoaName)){
+                    mRefreshGroupTask = new RefreshGroupTask(Contstants.OID_SHOUYANG);
+                }
+                if ("榆社县人民法院".equals(courtoaName)){
+                    mRefreshGroupTask = new RefreshGroupTask(Contstants.OID_YUSHE);
+                }
+                if ("平遥县人民法院".equals(courtoaName)){
+                    mRefreshGroupTask = new RefreshGroupTask(Contstants.OID_PINGYAO);
+                }
+                if ("太谷县人民法院".equals(courtoaName)){
+                    mRefreshGroupTask = new RefreshGroupTask(Contstants.OID_TAIGU);
+                }
+                if ("和顺县人民法院".equals(courtoaName)){
+                    mRefreshGroupTask = new RefreshGroupTask(Contstants.OID_HESHUN);
+                }
+                if ("榆次区人民法院".equals(courtoaName)){
+                    mRefreshGroupTask = new RefreshGroupTask(Contstants.OID_YUCI);
+                }
+                if ("灵石县人民法院".equals(courtoaName)){
+                    mRefreshGroupTask = new RefreshGroupTask(Contstants.OID_LINGSHI);
+                }
+                if ("左权县人民法院".equals(courtoaName)){
+                    mRefreshGroupTask = new RefreshGroupTask(Contstants.OID_ZUOQUAN);
+                }
+                if ("昔阳县人民法院".equals(courtoaName)){
+                    mRefreshGroupTask = new RefreshGroupTask(Contstants.OID_XIYANG);
+                }
+                if ("祁县人民法院".equals(courtoaName)){
+                    mRefreshGroupTask = new RefreshGroupTask(Contstants.OID_QIXIAN);
+                }
+                mRefreshGroupTask.execute();
+
             }
-        }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    /**
+     * 主线程接收部门数据
+     */
+    private Handler mUpdateGroupsListHandler = new Handler() {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count,
-                                      int after) {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            // TODO Auto-generated method stub
+        public void dispatchMessage(Message msg) {
+            mDepartments = (List<DepartmentNewBean>) msg.obj;
+            DepartmentNewBean departmentNewBean = new DepartmentNewBean();
+            departmentNewBean.setDeptName("所有部门");
+            departmentNewBean.setDeptPid("");
+//            departmentNewBean.setOid("null");
+            mDepartments.add(0,departmentNewBean);
+            setDateToView(mDepartments);
 
         }
     };
 
+    /**
+     * 将显示部门数据
+     * @param mList
+     */
+    private  void  setDateToView(final List<DepartmentNewBean> mList){
+        DepartmentAdapter departmentAdapter = new DepartmentAdapter(getActivity(), mList);
+        //传入的参数分别为 Context , 未选中项的textview , 数据源List
+        spinnerDepartment.setAdapter(departmentAdapter);
+        departmentAdapter.notifyDataSetChanged();
+        spinnerDepartment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String departmentId = mList.get(position).getOid();
+                String departmentName = mList.get(position).getDeptName();
+
+
+                mRefreshContactsTask = new RefreshContactsTask(null,departmentId,departmentName,user.getOrgid());
+                mRefreshContactsTask.execute();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+    }
+
+    /**
+     * 主线程接收人员数据
+     */
     private Handler mUpdateUsersListHandler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
-            mUsers = (List<UserBean>) msg.obj;
+            mUsersList = (List<UserNewBean>) msg.obj;
+            setDataToView();
             String departmentName = msg.getData().getString("departmentName");
-            mGroupNameView.setText(departmentName);
-            mContactsAdapter.setContacts(mUsers);
-            mContactsAdapter.notifyDataSetChanged();
-            mSideBar.setVisibility(View.VISIBLE);
         }
     };
 
-//**    // 请求 所有联系人
-    private class RefreshContactsTask extends AsyncTask<Void, Void, List<UserBean>> {
+    /**
+     * 将人员数据部署到页面
+     */
+    private void setDataToView() {
+        if (mPreFragment == null){
+            mPreFragment = (BaseFragment) getParentFragment();
 
-        String mUserName;
-        String mDepartmentId;
-        String mDepartmentName;
+        }
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        rvUsers.setLayoutManager(layoutManager);
+        UsersAdapter usersAdapter = new UsersAdapter(mUsersList,mPreFragment);
+        rvUsers.setAdapter(usersAdapter);
+        rvUsers.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
+        usersAdapter.notifyDataSetChanged();
 
-        //        long time;
-        public RefreshContactsTask(String userName, String departmentId, String departmentName) {
-            mUserName = userName;
-            mDepartmentId = departmentId;
-            mDepartmentName = departmentName;
+
+        etSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String ceshi  = etSearch.getText().toString().trim();
+                Log.e("ceshi",""+ceshi);
+                mRefreshContactsTask = new RefreshContactsTask(ceshi,null,null,user.getOrgid());
+                mRefreshContactsTask.execute();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+    }
+
+    //请求部门的数据
+    private class RefreshGroupTask extends AsyncTask<Void, Void, List<DepartmentNewBean>> {
+        String mCourtoaName;
+
+        RefreshGroupTask(String courtoaOid) {
+            this.mCourtoaName = courtoaOid;//法院Oid
         }
 
         @Override
         protected void onPreExecute() {
-            mCustomProgress.start();
         }
 
         @Override
-        protected List<UserBean> doInBackground(Void... params) {
-            List<UserBean> users = WebServiceUtil.getInstance().getUserList(mUserName, mDepartmentId);
+        protected List<DepartmentNewBean> doInBackground(Void... params) {
+            Log.e("法院名称",""+mCourtoaName);
+            List<DepartmentNewBean> departments = WebServiceUtil.getInstance().getDepartmentList(token,mCourtoaName);
+            return departments;
+        }
+
+        @Override
+        protected void onPostExecute(List<DepartmentNewBean> departments) {
+            if (departments != null) {
+                Message msg = mUpdateGroupsListHandler.obtainMessage();
+                msg.obj = departments;
+                mUpdateGroupsListHandler.sendMessage(msg);
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+        }
+    }
+
+    //**    // 请求 联系人数据
+    private class RefreshContactsTask extends AsyncTask<Void, Void, List<UserNewBean>> {
+
+        String mUserName = "";
+        String mDepartmentId = "";
+        String mDepartmentName = "";
+        String mCourtId = "";
+
+        //        long time;
+        public RefreshContactsTask(String userName, String departmentId, String departmentName, String orgId) {
+            mUserName = userName;
+            mDepartmentId = departmentId;
+            mDepartmentName = departmentName;
+            mCourtId = orgId;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            // mCustomProgress.start();
+        }
+
+        @Override
+        protected List<UserNewBean> doInBackground(Void... params) {
+            List<UserNewBean> users;
+            Log.e("mUserName",""+mUserName);
+//            if (mUserName == null){
+            users = WebServiceUtil.getInstance().getNewUserList(token,mCourtId,mDepartmentId,mUserName);
+//            }else {
+//                users = WebServiceUtil.getInstance().getNewUserList(token,mUserName,"");
+//            }
+
             if (users != null) {   //如果得到的数据不是空的
-                Collections.sort(users, new PinyinComparator());   //联系人按照顺序排序
+//                Collections.sort(users, new PinyinComparator());   //联系人按照顺序排序
             }
             return users;
         }
 
         @Override
-        protected void onPostExecute(List<UserBean> users) {
-            mRefreshContactsTask = null;
-            mCustomProgress.stop();
+        protected void onPostExecute(List<UserNewBean> users) {
             if (users != null) {
                 Message msg = mUpdateUsersListHandler.obtainMessage();
                 msg.obj = users;
@@ -346,42 +359,18 @@ public class ContactsFragment extends BaseFragment implements PullToRefreshBase
 
         @Override
         protected void onCancelled() {
-            mRefreshContactsTask = null;
+            // mRefreshContactsTask = null;
         }
     }
-   /* //请求联系人分组的数据
-    private class RefreshGroupTask extends AsyncTask<Void, Void, List<DepartmentBean>> {
-        String mDepartmentName;
 
-        RefreshGroupTask(String department) {
-            this.mDepartmentName = department;
-        }
 
-        @Override
-        protected void onPreExecute() {
-            mCustomProgress.start();
-        }
 
-        @Override
-        protected List<DepartmentBean> doInBackground(Void... params) {
-            List<DepartmentBean> departments = WebServiceUtil.getInstance().getDepartmentList(null);
-            return departments;
-        }
 
-        @Override
-        protected void onPostExecute(List<DepartmentBean> departments) {
-            mRefreshContactsTask = null;
-            mCustomProgress.stop();
-            if (departments != null) {
-                Message msg = mUpdateGroupsListHandler.obtainMessage();
-                msg.obj = departments;
-                mUpdateGroupsListHandler.sendMessage(msg);
-            }
-        }
 
-        @Override
-        protected void onCancelled() {
-            mRefreshContactsTask = null;
-        }
-    }*/
+
+    @Override
+    public void onDestroy() {
+
+        super.onDestroy();
+    }
 }

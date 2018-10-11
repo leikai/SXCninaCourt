@@ -31,6 +31,7 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
         getSupportActionBar().hide();
         customActionBar = (CustomActionBar) findViewById(R.id.customActionBar);
         customActionBar.setTitle("修改密码");
+        customActionBar.setLogoViewVisible(View.INVISIBLE);
         customActionBar.getBackBtnView().setOnClickListener(this);
 
         mOldPwdEditView = (EditText) findViewById(R.id.et_old_pwd);

@@ -1,56 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ptr="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/contact_item_dividing_line">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/activity_bg_color"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
-        <include layout="@layout/searchbar_tasktypeselector_layout"></include>
-
-        <RelativeLayout
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="40dp"
 
-            <com.handmark.pulltorefresh.library.PullToRefreshListView
-                android:id="@+id/pull_refresh_list"
+            android:layout_margin="10dp"
+            app:cardCornerRadius="4dp"
+            >
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
-                android:cacheColorHint="#00000000"
-                android:divider="#e3e1dd"
-                android:dividerHeight="1dp"
-                android:fadingEdge="none"
-                android:fastScrollEnabled="false"
-                android:footerDividersEnabled="false"
-                android:headerDividersEnabled="false"
-                android:smoothScrollbar="true"
-                android:overScrollMode="never"
-                ptr:ptrMode="both"
-                ptr:ptrShowIndicator="false"/>
+                android:orientation="horizontal"
+                android:background="#ffffff"
 
-            <org.sxchinacourt.widget.SideBar
-                android:id="@+id/sideBar"
-                android:layout_width="20dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginBottom="10dp"
-                android:layout_marginRight="10dp"
-                android:visibility="gone"/>
-        </RelativeLayout>
+                >
+                <ImageView
+                    android:id="@+id/iv_search"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:src="@mipmap/iv_search_gray"
+                    android:scaleType="centerInside"
+                    />
+                <EditText
+                    android:id="@+id/et_search"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="6"
+                    android:hint="搜索法院、部门、联系人"
+                    android:textSize="12sp"
+                    />
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="vertical"
+            android:background="#ffffff"
+            android:layout_marginBottom="10dp"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                >
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:src="@mipmap/iv_courtoa"
+                    android:padding="15dp"
+                    />
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/spinner_courtoa"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:entries="@array/courtoa"
+                    android:spinnerMode="dropdown"
+                    >
+
+
+                </android.support.v7.widget.AppCompatSpinner>
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                >
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:src="@mipmap/iv_department"
+                    android:padding="15dp"
+                    />
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/spinner_department"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:spinnerMode="dropdown"
+                    android:gravity="left"
+                    android:layout_gravity="left"
+                    >
+
+
+                </android.support.v7.widget.AppCompatSpinner>
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="#ffffff"
+            android:paddingBottom="15dp"
+            >
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_user"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+
+
+
+
     </LinearLayout>
 
-    <org.sxchinacourt.widget.CustomProgress
-        android:id="@+id/loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone">
-    </org.sxchinacourt.widget.CustomProgress>
+
 </RelativeLayout>
