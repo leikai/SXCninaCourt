@@ -1,5 +1,6 @@
 package org.sxchinacourt.service;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -26,6 +27,9 @@ import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * @author lk
+ */
 public class NotificationService extends Service {
     public static final String TAG = "NotificationService";
     String id = "我是通知";
@@ -34,6 +38,7 @@ public class NotificationService extends Service {
     private TimerTask task = null;
     private int beforeNo = 0;
 
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
 
         @Override
@@ -57,18 +62,24 @@ public class NotificationService extends Service {
                                 .setChannelId(id)
                                 .setContentTitle("通知:")
                                 .setContentText("当前您有"+resps+"待办消息,请点击查看详情并尽快办理！")
-//                        .setStyle(new NotificationCompat.BigTextStyle().bigText("通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容"))
-                                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(BitmapFactory.decodeResource(getResources(), R.drawable.cabinet_bg)))//在通知栏里面显示一个大图片
+//                              .setStyle(new NotificationCompat.BigTextStyle().bigText("通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容"))
+//                              .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(BitmapFactory.decodeResource(getResources(), R.drawable.cabinet_bg)))//在通知栏里面显示一个大图片
                                 .setWhen(System.currentTimeMillis())
                                 .setSmallIcon(R.mipmap.ic_launcher_updata)
                                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_updata))
-                                .setContentIntent(pi)//设置点击通知栏跳转到该活动页面
-                                .setAutoCancel(true)//设置自动取消，即当点击该通知的时候自动取消
-                                .setSound(Uri.fromFile(new File("/system/media/audio/ringtones/Luna.ogg")))//设置播放音频
-                                .setVibrate(new long[] {0,1000,1000,1000})//表示开始首先静止0s，震动1s，然后在静止1s，再震动1s  注意：这个功能需要申请权限
-                                .setLights(Color.GREEN,1000,1000)//设置手机LED灯，设置成一闪一闪的效果
+                                //设置点击通知栏跳转到该活动页面
+                                .setContentIntent(pi)
+                                //设置自动取消，即当点击该通知的时候自动取消
+                                .setAutoCancel(true)
+                                //设置播放音频
+                                .setSound(Uri.fromFile(new File("/system/media/audio/ringtones/Luna.ogg")))
+                                //表示开始首先静止0s，震动1s，然后在静止1s，再震动1s  注意：这个功能需要申请权限
+                                .setVibrate(new long[] {0,1000,1000,1000})
+                                //设置手机LED灯，设置成一闪一闪的效果
+                                .setLights(Color.GREEN,1000,1000)
 //                                .setDefaults(NotificationCompat.DEFAULT_ALL)//将通知栏的属性设置成默认属性
-                                .setPriority(NotificationCompat.PRIORITY_MAX)//设置通知的重要性，最高的话可以在弹出一个横幅
+                                //设置通知的重要性，最高的话可以在弹出一个横幅
+                                .setPriority(NotificationCompat.PRIORITY_MAX)
                                 .build();
                     }else {
                         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(NotificationService.this)
@@ -77,13 +88,19 @@ public class NotificationService extends Service {
 //                                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(BitmapFactory.decodeResource(getResources(), R.drawable.cabinet_bg)))//在通知栏里面显示一个大图片
                                 .setWhen(System.currentTimeMillis())
                                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_updata))
-                                .setContentIntent(pi)//设置点击通知栏跳转到该活动页面
-                                .setAutoCancel(true)//设置自动取消，即当点击该通知的时候自动取消
-                                .setSound(Uri.fromFile(new File("/system/media/audio/ringtones/Luna.ogg")))//设置播放音频
-                                .setVibrate(new long[] {0,1000,1000,1000})//表示开始首先静止0s，震动1s，然后在静止1s，再震动1s  注意：这个功能需要申请权限
-                                .setLights(Color.GREEN,1000,1000)//设置手机LED灯，设置成一闪一闪的效果
+                                //设置点击通知栏跳转到该活动页面
+                                .setContentIntent(pi)
+                                //设置自动取消，即当点击该通知的时候自动取消
+                                .setAutoCancel(true)
+                                //设置播放音频
+                                .setSound(Uri.fromFile(new File("/system/media/audio/ringtones/Luna.ogg")))
+                                //表示开始首先静止0s，震动1s，然后在静止1s，再震动1s  注意：这个功能需要申请权限
+                                .setVibrate(new long[] {0,1000,1000,1000})
+                                //设置手机LED灯，设置成一闪一闪的效果
+                                .setLights(Color.GREEN,1000,1000)
 //                                .setDefaults(NotificationCompat.DEFAULT_ALL)//将通知栏的属性设置成默认属性
-                                .setPriority(NotificationCompat.PRIORITY_MAX)//设置通知的重要性，最高的话可以在弹出一个横幅
+                                //设置通知的重要性，最高的话可以在弹出一个横幅
+                                .setPriority(NotificationCompat.PRIORITY_MAX)
                                 .setSmallIcon(R.mipmap.ic_launcher_updata)
                                 .setOngoing(true);
                         notification = notificationBuilder.build();

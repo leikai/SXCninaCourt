@@ -1,8 +1,5 @@
 package org.sxchinacourt.activity.fragment;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.graphics.PixelFormat;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,46 +15,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import org.sxchinacourt.CApplication;
 import org.sxchinacourt.R;
-import org.sxchinacourt.adapter.ContactsAdapter;
 import org.sxchinacourt.adapter.DepartmentAdapter;
 import org.sxchinacourt.adapter.UsersAdapter;
-import org.sxchinacourt.bean.DepartmentBean;
 import org.sxchinacourt.bean.DepartmentNewBean;
-import org.sxchinacourt.bean.UserBean;
 import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.common.Contstants;
-import org.sxchinacourt.util.PinYin.Characters;
-import org.sxchinacourt.util.PinYin.PinYinUtil;
 import org.sxchinacourt.util.WebServiceUtil;
-import org.sxchinacourt.widget.CustomProgress;
-import org.sxchinacourt.widget.SideBar;
-
-import java.text.CollationKey;
-import java.text.Collator;
-import java.text.RuleBasedCollator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 /**
  * Created by baggio on 2017/2/3.
@@ -84,6 +57,7 @@ public class ContactsFragment extends BaseFragment{
     private RefreshContactsTask mRefreshContactsTask;
     private ImageView ivSearch;
     private EditText etSearch;
+    private TextView tvEmpty;
 
     private UserNewBean user;//当前登录人的个人信息
     private String token;
@@ -111,6 +85,7 @@ public class ContactsFragment extends BaseFragment{
     protected void initFragment(@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         spinnerCourtoa = mRootView.findViewById(R.id.spinner_courtoa);
         spinnerDepartment = mRootView.findViewById(R.id.spinner_department);
+        tvEmpty = mRootView.findViewById(R.id.tv_empty);
         rvUsers = mRootView.findViewById(R.id.rv_user);
         ivSearch = mRootView.findViewById(R.id.iv_search);
         etSearch = mRootView.findViewById(R.id.et_search);
@@ -238,12 +213,20 @@ public class ContactsFragment extends BaseFragment{
             mPreFragment = (BaseFragment) getParentFragment();
 
         }
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        rvUsers.setLayoutManager(layoutManager);
-        UsersAdapter usersAdapter = new UsersAdapter(mUsersList,mPreFragment);
-        rvUsers.setAdapter(usersAdapter);
-        rvUsers.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
-        usersAdapter.notifyDataSetChanged();
+        if (mUsersList == null){
+            rvUsers.setVisibility(View.GONE);
+            tvEmpty.setVisibility(View.VISIBLE);
+        }else {
+            rvUsers.setVisibility(View.VISIBLE);
+            tvEmpty.setVisibility(View.GONE);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+            rvUsers.setLayoutManager(layoutManager);
+            UsersAdapter usersAdapter = new UsersAdapter(mUsersList,mPreFragment);
+            rvUsers.setAdapter(usersAdapter);
+            rvUsers.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
+            usersAdapter.notifyDataSetChanged();
+        }
+
 
 
         etSearch.setOnClickListener(new View.OnClickListener() {
@@ -347,14 +330,14 @@ public class ContactsFragment extends BaseFragment{
 
         @Override
         protected void onPostExecute(List<UserNewBean> users) {
-            if (users != null) {
+//            if (users != null) {
                 Message msg = mUpdateUsersListHandler.obtainMessage();
                 msg.obj = users;
                 Bundle bundle = new Bundle();
                 bundle.putString("departmentName", mDepartmentName);
                 msg.setData(bundle);
                 mUpdateUsersListHandler.sendMessage(msg);
-            }
+//            }
         }
 
         @Override

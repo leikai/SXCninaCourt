@@ -293,7 +293,7 @@ public class HomePageFragment extends BaseFragment {
                     }
                     @Override
                     public void onFailure(Exception e) {
-                        Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }

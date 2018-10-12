@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="#ffff"
     android:clipToPadding="true"
     android:fitsSystemWindows="true">
 
@@ -12,7 +12,9 @@
         android:layout_marginLeft="80dp"
         android:layout_marginRight="80dp"
         android:layout_marginTop="34dp"
-        android:src="@mipmap/pic_fabu_top" />
+        android:src="@mipmap/pic_fabu_top"
+        android:visibility="invisible"
+        />
 
     <TableLayout
         android:id="@+id/send_tab_one"
@@ -21,7 +23,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <TableRow>
 

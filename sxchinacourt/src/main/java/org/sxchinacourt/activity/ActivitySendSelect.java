@@ -15,6 +15,9 @@ import android.widget.Toast;
 
 import org.sxchinacourt.R;
 
+/**
+ * @author lk
+ */
 public class ActivitySendSelect extends FragmentActivity implements View.OnClickListener {
 
     private String TAG = "ActivitySendSelect";

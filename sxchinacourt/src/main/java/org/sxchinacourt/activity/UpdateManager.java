@@ -90,11 +90,34 @@ public class UpdateManager {
     private void showNoticeDialog() {
         synchronized (CApplication.getInstance().getBaseContext()) {
             try {
+//                Builder builder = new Builder(
+//                        mActivity);
+//                builder.setTitle("更新");
+//                builder.setMessage("有新版本，是否更新");
+//                builder.setPositiveButton("确定", new OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        showDownloadDialog();
+//                        interceptFlag = false;
+//                        downloadApk();
+//                        dialog.dismiss();
+//                    }
+//                });
+//                builder.setCancelable(false);
+//                noticeDialog = builder.create();
+//                noticeDialog.show();
+
+
                 Builder builder = new Builder(
                         mActivity);
-                builder.setTitle("更新");
-                builder.setMessage("有新版本，是否更新");
+                builder.setTitle("更新提醒");
+                builder.setMessage("有新版本，可自行前往商城进行更新");
                 builder.setPositiveButton("确定", new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                builder.setNegativeButton("更新", new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         showDownloadDialog();
@@ -103,9 +126,12 @@ public class UpdateManager {
                         dialog.dismiss();
                     }
                 });
-                builder.setCancelable(false);
+
+//                builder.setCancelable(false);
                 noticeDialog = builder.create();
                 noticeDialog.show();
+
+
             } catch (Throwable e) {
                 e.printStackTrace();
             }

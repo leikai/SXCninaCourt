@@ -670,8 +670,6 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
      *  供H5页面调用的方法，目的是：获取现在H5页面处于几级页面下，原生处理返回键功能
      */
     public static class TestJavaScriptInterface {
-
-
         @JavascriptInterface
         public void getPageLocation(String location) {
             pageLocationForH5 = location;
