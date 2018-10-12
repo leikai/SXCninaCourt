@@ -50,34 +50,77 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by 殇冰无恨 on 2017/12/9.
+ *
+ * @author 殇冰无恨
+ * @date 2017/12/9
  */
 
 public class HomePageFragment extends BaseFragment {
+    /**
+     * 轮播图控件
+     */
     private ConvenientBanner convenientBanner;
+    /**
+     * 轮播图图片位置集合
+     */
     private ArrayList<Integer> localImages = new ArrayList<Integer>();
+    /**
+     * 微门户列表控件
+     */
     private RecyclerView rvHomepageWeidoorRecycleView;
+    /**
+     * 云柜控件
+     */
     private LinearLayout cabinet;
+    /**
+     * 留言机控件
+     */
     private LinearLayout machine;
+    /**
+     * 机关工作人员请假
+     */
     private LinearLayout leave;
+    /**
+     * 机关合同制工作人员请假
+     */
     private LinearLayout leave_informal;
     private LinearLayout llWeiDoor;
-    //常见用用标题
+    /**
+     * 常见用用标题
+     */
     private LinearLayout llCommonApps;
-    //常见应用内容
+    /**
+     * 常见应用内容
+     */
     private LinearLayout llCommonAppsContent;
+    /**
+     * 晋中中院轮播图地址
+     */
     private static String BASE_SERVER_URL_NEWS = "http://111.53.181.200:6688/mserver/upfile/webimg/";
 
 
-
+    /**
+     *功能控件
+     */
     GridView mAppsGridView;
     HomePageAdapter mAdapter;
+    /**
+     * 待办、已办、通知公告、任务管理图片数组
+     */
     int[] mResourceIdArray = {R.drawable.icon_dbsy, R.drawable.icon_ybsy, R.drawable
             .icon_wdlc};//, R.drawable.app_email_icon
-    String[] mAppNameArray = {"待办事宜", "已办事宜", "通知公告"};//, "收发邮件"
+    /**
+     * 四大功能名称数组
+     */
+    String[] mAppNameArray = {"待办事宜", "已办事宜", "通知公告"};
+    /**
+     * 四大功能碎片
+     */
     int[] mFragmentIndexArray = {AppBean.FRAGMENT_TO_DO_TASK, AppBean.FRAGMENT_HISTORY_TASK, AppBean
-            .FRAGMENT_NOTICE_TASK, AppBean.FRAGMENT_MANAGER_TASK};//, AppBean.FRAGMENT_EMAIL_TASK
-
+            .FRAGMENT_NOTICE_TASK, AppBean.FRAGMENT_MANAGER_TASK};
+    /**
+     * 微门户功能模块数据列表
+     */
     private List<Fruit> fruitList = new ArrayList<>();
     private Context context;
 
@@ -201,26 +244,6 @@ public class HomePageFragment extends BaseFragment {
     }
 
 
-//    //为了方便改写，来实现复杂布局的切换
-//    private class LocalImageHolderView implements Holder<Integer> {
-//        private ImageView imageView;
-//
-//        @Override
-//        public View createView(Context context) {
-//            //你可以通过layout文件来创建，不一定是Image，任何控件都可以进行翻页
-//            imageView = new ImageView(context);
-//            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-//            return imageView;
-//        }
-//
-//        @Override
-//        public void UpdateUI(Context context, int position, Integer data) {
-//            imageView.setImageResource(data);
-//        }
-//    }
-
-
-
     private void getLocalImageYuShe() {
         //获取本地的图片
         for (int position = 10; position < 16; position++) {
@@ -244,20 +267,6 @@ public class HomePageFragment extends BaseFragment {
         mPreFragment.showChildFragment(bundle);
     }
     private void initFruits() {
-
-//        for (int i=0;i<1;i++){
-//            Fruit apple = new Fruit("晋中中院院长史红波带队在最高院考察学习信息化建设工作", R.drawable.weidoor_1);
-//            fruitList.add(apple);
-//            Fruit banana = new Fruit("晋中市龙泉生态牧林庄园和魏某某等34名被告人集资诈骗、非法吸收公众存款、掩饰隐瞒犯罪所得一案一审宣判", R.drawable.weidoor_2);
-//            fruitList.add(banana);
-//            Fruit orange = new Fruit("榆次区人民法院开发区人民法庭正式挂牌运行", R.drawable.weidoor_3);
-//            fruitList.add(orange);
-//            Fruit watermelon = new Fruit("新年伊始，晋中市中级人民法院迎来了“开门红”", R.drawable.weidoor_4);
-//            fruitList.add(watermelon);
-//            Fruit pear = new Fruit("晋中全市法院党建工作会议在榆社召开", R.drawable.weidoor_5);
-//            fruitList.add(pear);
-//
-//        }
 
         new Thread(new Runnable() {
             @Override
@@ -326,6 +335,10 @@ public class HomePageFragment extends BaseFragment {
         GetWebImageTask getWebImageTask = new GetWebImageTask(pp);
         getWebImageTask.execute();
     }
+
+    /**
+     * 任务：获取网站图片
+     */
     private class GetWebImageTask extends AsyncTask<Void,Void,List> {
         private String nums;
         public GetWebImageTask(String nums){

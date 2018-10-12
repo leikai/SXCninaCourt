@@ -24,7 +24,9 @@ import java.util.Hashtable;
 import java.util.List;
 
 /**
- * Created by baggio on 2017/2/16.
+ *
+ * @author baggio
+ * @date 2017/2/16
  */
 
 public class BaseTasksFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {

@@ -28,7 +28,9 @@ import org.sxchinacourt.widget.CustomActionBar;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 /**
- * Created by baggio on 2017/2/7.
+ *
+ * @author baggio
+ * @date 2017/2/7
  */
 
 public class BaseFragment extends Fragment {

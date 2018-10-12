@@ -50,7 +50,9 @@ import java.util.Random;
 import zxing.EncodingHandler;
 
 /**
- * Created by 殇冰无恨 on 2017/10/11.
+ *
+ * @author 殇冰无恨
+ * @date 2017/10/11
  */
 
 public class CabinetTaskListFragment extends BaseFragment implements View.OnClickListener{

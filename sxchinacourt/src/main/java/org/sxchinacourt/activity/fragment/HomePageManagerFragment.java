@@ -35,7 +35,6 @@ public class HomePageManagerFragment extends BaseFragment {
     private NoticeDetailManagerFragment mNoticeDetailManagerFragment;//通知公告
 
     private HistoryTaskListFragment mHistoryTaskListFragment;
-    private NoticeTaskListFragment mNoticeTaskListFragment;
     private NoticeDetailFragment mNoticeDetailFragment;
     private TaskManagerFragment mTaskManagerFragment;
     private BaseFragment mCurChildFragment;
@@ -159,14 +158,14 @@ public class HomePageManagerFragment extends BaseFragment {
 
                 break;
             case CHILD_TYPE_NOTICE_DETAIL:
-                if (mNoticeDetailFragment == null) {
-                    mNoticeDetailFragment = new NoticeDetailFragment();
-                    mNoticeDetailFragment.setPreFragment(mNoticeTaskListFragment);
-                }
-                mNoticeDetailFragment.setArguments(bundle);
-                addChildFragment(mNoticeDetailFragment, R.id.content);
-                hideFragment(mNoticeTaskListFragment);
-                mCurChildFragment = mNoticeDetailFragment;
+//                if (mNoticeDetailFragment == null) {
+//                    mNoticeDetailFragment = new NoticeDetailFragment();
+//                    mNoticeDetailFragment.setPreFragment(mNoticeTaskListFragment);
+//                }
+//                mNoticeDetailFragment.setArguments(bundle);
+//                addChildFragment(mNoticeDetailFragment, R.id.content);
+//                hideFragment(mNoticeTaskListFragment);
+//                mCurChildFragment = mNoticeDetailFragment;
                 break;
             case CHILD_TYPE_TASKMANAGER:
                 if (mTaskManagerFragment == null) {

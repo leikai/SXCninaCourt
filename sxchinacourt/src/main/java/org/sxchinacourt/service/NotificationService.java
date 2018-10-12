@@ -168,7 +168,8 @@ public class NotificationService extends Service {
 
                     }
                 };
-                timer.schedule(task,1000,60000);//半分钟执行一次查询操作,访问一次后台
+                //半分钟执行一次查询操作,访问一次后台
+                timer.schedule(task,1000,60000);
 
 
 

@@ -33,13 +33,15 @@ import java.util.List;
 
 
 /**
- * Created by baggio on 2017/2/3.
+ *
+ * @author baggio
+ * @date 2017/2/3
  */
 
 public class ContactsFragment extends BaseFragment{
 
-    /*
-    文字图片的颜色值
+    /**
+     * 文字图片的颜色值
      */
     public static final String[] ImageBgColor={
             "#568AAD",

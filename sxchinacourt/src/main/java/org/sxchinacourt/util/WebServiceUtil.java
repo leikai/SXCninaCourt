@@ -60,9 +60,9 @@ public class WebServiceUtil {
     public static String BASE_MESSAGE_URL ="http://111.53.181.200:8087/Cloud/CloudAppPort?wsdl";//留言机
 
     //----------------------------------------------newOA-------------------------------------//
-//    public static String BASE_SERVER_URL_TOKEN = "http://172.16.3.48:6641/mserver/services/bwsSvc?wsdl"; // http
+    public static String BASE_SERVER_URL_TOKEN = "http://172.16.3.48:6641/mserver/services/bwsSvc?wsdl"; // http
 
-    public static String BASE_SERVER_URL_TOKEN = "http://111.53.181.200:8087/mserver/services/bwsSvc?wsdl";
+//    public static String BASE_SERVER_URL_TOKEN = "http://111.53.181.200:8087/mserver/services/bwsSvc?wsdl";
     //---------------------------------------------finish------------------------------------//
 
 //    //----------------------------------------------newOA——测试-------------------------------------//
@@ -833,14 +833,13 @@ public class WebServiceUtil {
     }
 
 
-    public boolean changeUserPWD(String userId, String oldPassword, String newPassword) {
+    public boolean changeUserPWD(String userLoginName, String userPwd, String changePWD) {
         String methodName = "changeUserPWD";
-        SoapObject request = new SoapObject(NAMESPACE, methodName);
+        SoapObject request = new SoapObject(NAMESPACE_TOKEN, methodName);
         JSONObject json = new JSONObject();
         try {
-            json.put("userId", userId);
-            json.put("oldPassword", oldPassword);
-            json.put("newPassword", newPassword);
+            json.put("userLoginName", userLoginName);
+            json.put("userPwd", userPwd);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -850,13 +849,13 @@ public class WebServiceUtil {
         envelope.dotNet = true;
         HttpTransportSE ht;
         if (IS_HTTP) {
-            ht = new HttpTransportSE(BASE_SERVER_URL);
+            ht = new HttpTransportSE(BASE_SERVER_URL_TOKEN);
         } else {
             ht = new HttpsTransportSE(mHost, mPort,
                     WS_OPS, TIMEOUT);
         }
         try {
-            ht.call(NAMESPACE + methodName, envelope);
+            ht.call(NAMESPACE_TOKEN + methodName, envelope);
             if (envelope.getResponse() != null) {
                 SoapObject result = (SoapObject) envelope.bodyIn;
                 String resultStr = result.getPropertyAsString("return");

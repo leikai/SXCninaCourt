@@ -99,7 +99,7 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
         protected Boolean doInBackground(Void... voids) {
             UserNewBean user = CApplication.getInstance().getCurrentUser();
             boolean success = WebServiceUtil.getInstance().changeUserPWD(user.getUserName(),
-                    mOldPwd, mNewPwd1);
+                    mNewPwd1, "修改密码");
             return success;
         }
 

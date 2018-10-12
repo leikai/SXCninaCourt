@@ -14,7 +14,9 @@ import org.sxchinacourt.adapter.TasksAdapter;
 import org.sxchinacourt.bean.TaskBean;
 
 /**
- * Created by baggio on 2017/2/7.
+ *
+ * @author baggio
+ * @date 2017/2/7
  */
 
 public class HistoryTaskListFragment extends BaseTasksFragment implements AdapterView.OnItemClickListener, View.OnClickListener {

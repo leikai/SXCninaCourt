@@ -31,7 +31,7 @@ import org.sxchinacourt.widget.CustomProgress;
 
 import java.util.Vector;
 
-public class UserDetailInfoFragment extends ContactsManagerFragment implements View.OnClickListener {
+public class UserDetailInfoFragment extends ContactsNewManagerFragment implements View.OnClickListener {
     public static final String PARAM_USER = "user";
     UserNewBean mUser;
     RefreshUserInfoTask mRefreshUserInfoTask;

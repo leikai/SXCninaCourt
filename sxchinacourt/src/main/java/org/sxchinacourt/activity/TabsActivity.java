@@ -43,9 +43,7 @@ import com.google.android.gms.appindexing.Thing;
 
 import org.sxchinacourt.CApplication;
 import org.sxchinacourt.R;
-import org.sxchinacourt.activity.fragment.AppsManagerFragment;
 import org.sxchinacourt.activity.fragment.BaseFragment;
-import org.sxchinacourt.activity.fragment.ContactsManagerFragment;
 import org.sxchinacourt.activity.fragment.ContactsNewManagerFragment;
 import org.sxchinacourt.activity.fragment.HomePageManagerFragment;
 import org.sxchinacourt.activity.fragment.MsgFragment;
@@ -68,14 +66,15 @@ import java.util.Set;
 import static org.sxchinacourt.R.id.bottom_nav_content;
 import static org.sxchinacourt.activity.TagAliasOperatorHelper.ACTION_SET;
 import static org.sxchinacourt.activity.TagAliasOperatorHelper.sequence;
-import static org.sxchinacourt.activity.fragment.TodoTaskListFragment.pageLocationForH5;
 import static org.sxchinacourt.util.IConstant.REVISION_FULL_SIGN;
 import static org.sxchinacourt.util.IConstant.REVISION_GRID_SIGN;
 import static org.sxchinacourt.util.IConstant.REVISION_SIGN;
 import static org.sxchinacourt.util.IConstant.REVISION_WORD_SIGN;
 
 /**
- * Created by baggio on 2017/2/3.
+ *
+ * @author baggio
+ * @date 2017/2/3
  */
 
 public class TabsActivity extends AppCompatActivity implements BottomNavigationBar
@@ -131,9 +130,6 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
     private HomePageManagerFragment mHomePageManagerFragment;
     private MsgFragment mMsgFragment;
     private MsgManagerFragment mMsgManagerFragment;
-
-    private AppsManagerFragment mAppsManagerFragment;
-    private ContactsManagerFragment mContactsManagerFragment;
     private SettingManagerFragment mSettingManagerFragment;
     private BaseFragment mCurrentFragment;
 
@@ -201,8 +197,6 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
         mActionBarView = new CustomActionBar(this);
         actionBar.setCustomView(mActionBarView);
         user = CApplication.getInstance().getCurrentUser();
-
-
         initView();
 
         //-------推送-------------//

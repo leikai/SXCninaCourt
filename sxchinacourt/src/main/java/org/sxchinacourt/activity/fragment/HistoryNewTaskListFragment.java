@@ -39,34 +39,67 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by baggio on 2017/2/7.
+ *
+ * @author baggio
+ * @date 2017/2/7
  */
 
 public class HistoryNewTaskListFragment extends BaseFragment {
     private Context context;
     private int resId;
+    /**
+     * 获取当前的token
+     */
     private String ceshi;
+    /**
+     * 已办事项显示的webView
+     */
     private WebView webviewMsg;
-
-
+    /**
+     * 等待中。。。图标
+     */
     private CustomProgress mCustomProgress;
-
+    /**
+     * 网页加载，显示的进度条
+     */
     private ProgressBar mProgressBar;
+    /**
+     * 获取附件下载地址的任务
+     */
     private GetDownloadFileUrlTask mGetDownloadFileUrlTask;
+    /**
+     * 附件下载地址
+     */
     private String mFileUrl;
-
+    /**
+     * 下载时的截获标志，
+     */
     private boolean mInterceptFlag = false;
     private int mProgress;
-
+    /**
+     * 下载线程
+     */
     private Thread mDownLoadThread;
+    /**
+     * 下载附件的弹窗
+     */
     private Dialog mDownloadDialog;
-
+    /**
+     * 文件名
+     */
     private String mFileName;
-//    private String pageLocationForH5 = "";//从页面中获取目前H5所在的界面
-
+    /**
+     * 下载中，更新进度的任务
+     */
     private static final int PROGRESS_UPDATE = 1;
+    /**
+     * 处理下载完成后的任务
+     */
     private static final int DOWNLOAD_FINISHED = 2;
-    public static String pageLocationForH5 = "2" ;//从页面中获取目前H5所在的界面
+    /**
+     * 从页面中获取目前H5所在的界面
+     */
+    public static String pageLocationForH5 = "2" ;
 
     @SuppressLint({"NewApi", "ValidFragment"})
     public HistoryNewTaskListFragment() {
@@ -148,6 +181,9 @@ public class HistoryNewTaskListFragment extends BaseFragment {
     }
 
 
+    /**
+     * 显示下载弹窗
+     */
     private void showPromptDownloadDialog() {
         try {
             AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -176,7 +212,9 @@ public class HistoryNewTaskListFragment extends BaseFragment {
         }
     }
 
-
+    /**
+     * 任务：获取附件下载地址
+     */
     private class GetDownloadFileUrlTask extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... params) {
@@ -211,7 +249,9 @@ public class HistoryNewTaskListFragment extends BaseFragment {
         }
     }
 
-
+    /**
+     * 显示下载文件弹窗
+     */
     private void showDownloadDialog() {
         try {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -236,7 +276,9 @@ public class HistoryNewTaskListFragment extends BaseFragment {
             e.printStackTrace();
         }
     }
-
+    /**
+     * 下载
+     */
     private void downloadFile() {
         mDownLoadThread = new Thread(mDownFileRunnable);
         mDownLoadThread.start();
@@ -252,32 +294,9 @@ public class HistoryNewTaskListFragment extends BaseFragment {
                 conn.connect();
                 int length = conn.getContentLength();
                 InputStream is = conn.getInputStream();
-
                 Log.e("lk",""+mFileUrl.substring(mFileUrl.length()-36));
                 String filePath = "";
-//                if (mFileName.endsWith(".doc") ) {
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"1"+".doc") ;
-//                }else if (mFileName.endsWith(".docx")){
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"2"+".docx") ;
-//
-//                }else if (mFileName.endsWith(".xls") ) {
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"3"+".xls") ;
-//                }else if (mFileName.endsWith(".xlsx")){
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"4"+".xlsx") ;
-//
-//                }else if (mFileName.endsWith(".txt")) {
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"5"+".txt") ;
-//                } else if (mFileName.endsWith(".pdf")) {
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"6"+".pdf") ;
-//                } else if (mFileName.endsWith(".jpg") ) {
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"7"+".jpg") ;
-//                }else if (mFileName.endsWith(".png")){
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"8"+".png") ;
-//
-//                }
                 filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+mFileName) ;
-
-//                String filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+mFileUrl.substring(mFileUrl.length()-36)) ;
                 File file = new File(filePath);
                 file.createNewFile();
                 file.setWritable(true);
@@ -299,7 +318,8 @@ public class HistoryNewTaskListFragment extends BaseFragment {
                         mHandler.sendEmptyMessage(DOWNLOAD_FINISHED);
                         break;
                     }
-                } while (!mInterceptFlag);// 点击取消就停止下载.
+                    // 点击取消就停止下载.
+                } while (!mInterceptFlag);
                 fos.close();
                 is.close();
             } catch (Throwable e) {
@@ -309,6 +329,7 @@ public class HistoryNewTaskListFragment extends BaseFragment {
         }
     };
 
+    @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -324,7 +345,10 @@ public class HistoryNewTaskListFragment extends BaseFragment {
             }
         }
     };
-
+    /**
+     * 下载失败时，进行的处理
+     */
+    @SuppressLint("HandlerLeak")
     private Handler mDownloadError = new Handler() {
         public void handleMessage(Message msg) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -346,7 +370,9 @@ public class HistoryNewTaskListFragment extends BaseFragment {
             builder.create().show();
         }
     };
-
+    /**
+     * 弹窗：下载完成后，是否打开文件
+     */
     private void showPromptOpenFileDialog() {
         try {
             AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -373,7 +399,10 @@ public class HistoryNewTaskListFragment extends BaseFragment {
             e.printStackTrace();
         }
     }
-
+    /**
+     * 打开文件
+     * @param which
+     */
     private void openFile(int which) {
 //        String filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR) +
 //                mComponent.getLabelValue();
@@ -424,7 +453,9 @@ public class HistoryNewTaskListFragment extends BaseFragment {
         }
     }
 
-
+    /**
+     * 弹窗：选择打开文件的类型
+     */
     private void showSelectFileTypeDialog() {
         try {
             AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -450,9 +481,9 @@ public class HistoryNewTaskListFragment extends BaseFragment {
             e.printStackTrace();
         }
     }
-    /*
- 供H5页面调用的方法，目的是：获取现在H5页面处于几级页面下，原生处理返回键功能
-  */
+    /**
+     * 供H5页面调用的方法，目的是：获取现在H5页面处于几级页面下，原生处理返回键功能
+     */
     public static class TestJavaScriptInterface {
 
 

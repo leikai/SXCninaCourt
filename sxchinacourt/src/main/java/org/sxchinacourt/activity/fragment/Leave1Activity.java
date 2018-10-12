@@ -1,6 +1,5 @@
 package org.sxchinacourt.activity.fragment;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,7 +9,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -41,6 +39,9 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * @author lk
+ */
 public class Leave1Activity extends Activity {
     private Context context;
     private int resId;

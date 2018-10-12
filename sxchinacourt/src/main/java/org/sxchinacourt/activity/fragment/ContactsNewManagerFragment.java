@@ -8,12 +8,27 @@ import org.sxchinacourt.R;
 import java.util.Vector;
 
 
+/**
+ * @author lk
+ */
 public class ContactsNewManagerFragment extends BaseFragment {
     public static final int CHILD_TYPE_CONTACTS = 0;
     public static final int CHILD_TYPE_USERINFO = 1;
+    /**
+     * 通讯录列表碎片
+     */
     private ContactsFragment mContactsFragment;
+    /**
+     * 个人详情碎片
+     */
     private UserDetailInfoFragment mUserInfoFragment;
+    /**
+     * 当前的子碎片
+     */
     private BaseFragment mCurChildFragment;
+    /**
+     * Fragment栈
+     */
     private Vector<BaseFragment> mFragmentStack;
 
     @Override
@@ -28,6 +43,11 @@ public class ContactsNewManagerFragment extends BaseFragment {
         return super.onCreateView(inflater, R.layout.fragment_contactsmanager_new, container, savedInstanceState);
     }
 
+    /**
+     * 初始化Fragment
+     * @param container
+     * @param savedInstanceState
+     */
     @Nullable
     @Override
     protected void initFragment(@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -35,12 +55,20 @@ public class ContactsNewManagerFragment extends BaseFragment {
         showChildFragment(null);
     }
 
+    /**
+     * 隐藏当前的子碎片
+     * @param hidden
+     */
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         mCurChildFragment.onHiddenChanged(hidden);
     }
 
+    /**
+     * 显示子碎片
+     * @param bundle
+     */
     @Override
     public void showChildFragment(Bundle bundle) {
         super.showChildFragment(bundle);

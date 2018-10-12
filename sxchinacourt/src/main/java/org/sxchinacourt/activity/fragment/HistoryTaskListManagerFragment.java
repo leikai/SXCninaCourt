@@ -12,16 +12,30 @@ import java.util.Vector;
 
 import static org.sxchinacourt.activity.fragment.TodoTaskListFragment.pageLocationForH5;
 
-//import static org.sxchinacourt.activity.TabsActivity.pageLocationForH5;
-
+/**
+ * @author lk
+ */
 public class HistoryTaskListManagerFragment extends BaseFragment {
     private MsgFragment mMsgFragment;
-
+    /**
+     * 已办碎片
+     */
     private HistoryNewTaskListFragment mHistoryTaskListFragment;
+    /**
+     * 首页管理器碎片
+     */
     private HomePageManagerFragment mHomePageManagerFragment;
-
+    /**
+     * 目前显示的子碎片
+     */
     private BaseFragment mCurChildFragment;
+    /**
+     * 碎片栈
+     */
     private Vector<BaseFragment> mFragmentStack;
+    /**
+     * 待办消息
+     */
     public static final int CHILD_TYPE_MSG_TODO = 12;//消息
 
     @Override
@@ -66,7 +80,10 @@ public class HistoryTaskListManagerFragment extends BaseFragment {
         mFragmentStack.add(mCurChildFragment);
     }
 
-
+    /**
+     * 返回键监听逻辑实现
+     * @return
+     */
     @Override
     public boolean onBackPressed() {
         boolean handle = false;
@@ -101,14 +118,19 @@ public class HistoryTaskListManagerFragment extends BaseFragment {
     }
 
 
-    /*当Fragment由可见状态变为不可见状态时保存Fragment的页面显示状态，以备再次加载时使用*/
+    /**
+     * 当Fragment由可见状态变为不可见状态时保存Fragment的页面显示状态，以备再次加载时使用
+     * @param hidden
+     */
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         mCurChildFragment.onHiddenChanged(hidden);
     }
 
-    /*隐藏所有fragment*/
+    /**
+     * 隐藏所有fragment
+     */
     private void hideAllFragment() {
         if (mHistoryTaskListFragment!=null){
             hideFragment(mHistoryTaskListFragment);
