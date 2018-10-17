@@ -1,5 +1,6 @@
 package org.sxchinacourt.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,13 +13,16 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.alibaba.fastjson.JSONArray;
+import com.geek.thread.GeekThreadManager;
+import com.geek.thread.ThreadPriority;
+import com.geek.thread.ThreadType;
+import com.geek.thread.task.GeekRunnable;
 
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.sxchinacourt.CApplication;
 import org.sxchinacourt.R;
 import org.sxchinacourt.adapter.CourtAdapter;
 import org.sxchinacourt.bean.CourtDataBean;
-import org.sxchinacourt.bean.UserBean;
 import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.util.SoapClient;
 import org.sxchinacourt.util.SoapParams;
@@ -28,7 +32,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by 殇冰无恨 on 2017/10/11.
+ *
+ * @author 殇冰无恨
+ * @date 2017/10/11
  */
 
 public class AssignActivity extends Activity{
@@ -37,6 +43,7 @@ public class AssignActivity extends Activity{
     private static  String[] courts = null;
     private CourtAdapter courtAdapter;
     private List resps = null;
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
 
         @Override
@@ -93,8 +100,6 @@ public class AssignActivity extends Activity{
         btnBacktoFileDeposit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent jumptoFileDeposit = new Intent(getApplicationContext(),FileDepositDetailActivity.class);
-//                startActivity(jumptoFileDeposit);
                 finish();
             }
         });
@@ -111,10 +116,9 @@ public class AssignActivity extends Activity{
     }
     private void startThread() {
         UserNewBean user = CApplication.getInstance().getCurrentUser();
-//        final SoapParams soapParams = new SoapParams().put("EmployeeID",user.getUserId());//1414 是假数据，应该改成
-        final SoapParams soapParams = new SoapParams().put("arg0",String.valueOf ( user.getOaid()));//1414 是假数据，应该改成
+        final SoapParams soapParams = new SoapParams().put("arg0",String.valueOf ( user.getOaid()));
 
-        new Thread(new Runnable() {
+        GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
             public void run() {
                 WebServiceUtil.getInstance().GetCourtInfo(soapParams, new SoapClient.ISoapUtilCallback() {
@@ -123,10 +127,7 @@ public class AssignActivity extends Activity{
                         String response = envelope.getResponse().toString();
 
                         List<CourtDataBean> resps=new ArrayList<CourtDataBean>(JSONArray.parseArray(response,CourtDataBean.class));
-//                            CourtDataBean resp = JSON.parseObject(response, CourtDataBean.class);
                         Log.e("list",""+resps.get(0).getCourtName());
-
-//                            courts = new String[]{resp.get(0).getCourtName()};
                         Log.e("courts",""+courts);
                         Message message = new Message();
                         message.what = SHOW_RESPONSE_COURT;
@@ -139,7 +140,8 @@ public class AssignActivity extends Activity{
                     }
                 });
             }
-        }).start();
+        },ThreadType.NORMAL_THREAD);
+
     }
 
 }

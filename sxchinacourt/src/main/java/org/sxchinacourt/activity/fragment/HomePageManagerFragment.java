@@ -5,13 +5,16 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.sxchinacourt.R;
 
 import java.util.Vector;
 
 /**
- * Created by 殇冰无恨 on 2017/12/9.
+ *
+ * @author 殇冰无恨
+ * @date 2017/12/9
  */
 
 public class HomePageManagerFragment extends BaseFragment {
@@ -21,26 +24,45 @@ public class HomePageManagerFragment extends BaseFragment {
     public static final int CHILD_TYPE_NOTICE_DETAIL = 3;
     public static final int CHILD_TYPE_HISTORYTASKLIST = 4;
     public static final int CHILD_TYPE_TASKMANAGER = 5;
-    public static final int CHILD_TYPE_CABINETTASKLIST = 6;//云柜
-    public static final int CHILD_TYPE_MESSAGEMACHINE = 7;//留言机
+    /**
+     * 云柜
+     */
+    public static final int CHILD_TYPE_CABINETTASKLIST = 6;
+    /**
+     * 留言机
+     */
+    public static final int CHILD_TYPE_MESSAGEMACHINE = 7;
     private HomePageFragment mHomePageFragment;
 
 
     private TodoTaskListFragment mTodoTaskListFragment;
     private MsgManagerFragment msgManagerFragment;
-    private TodaTaskListManagerFragment mTodaTaskListManagerFragment;//待办模块
-
-    private HistoryTaskListManagerFragment mHistoryTaskListManagerFragment;//已办模块
-
-    private NoticeDetailManagerFragment mNoticeDetailManagerFragment;//通知公告
+    /**
+     * 待办模块
+     */
+    private TodaTaskListManagerFragment mTodaTaskListManagerFragment;
+    /**
+     * 已办模块
+     */
+    private HistoryTaskListManagerFragment mHistoryTaskListManagerFragment;
+    /**
+     * 通知公告
+     */
+    private NoticeDetailManagerFragment mNoticeDetailManagerFragment;
 
     private HistoryTaskListFragment mHistoryTaskListFragment;
     private NoticeDetailFragment mNoticeDetailFragment;
     private TaskManagerFragment mTaskManagerFragment;
     private BaseFragment mCurChildFragment;
     private Vector<BaseFragment> mFragmentStack;
-    private CabinetTaskListFragment mCabinetTaskListFragment;//云柜
-    private MessageMachineFragment mMessageMachineFragment;//留言机
+    /**
+     * 云柜
+     */
+    private CabinetTaskListFragment mCabinetTaskListFragment;
+    /**
+     * 留言机
+     */
+    private MessageMachineFragment mMessageMachineFragment;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,25 +103,6 @@ public class HomePageManagerFragment extends BaseFragment {
                 break;
 
             case CHILD_TYPE_TODOTASKLIST:
-//                if (mTodoTaskListFragment == null) {
-//                    mTodoTaskListFragment = new TodoTaskListFragment();
-//                    mTodoTaskListFragment.setPreFragment(mHomePageFragment);
-//                }
-//                mTodoTaskListFragment.setArguments(bundle);
-//                addChildFragment(mTodoTaskListFragment, R.id.content);
-//                hideFragment(mHomePageFragment);
-//                mCurChildFragment = mTodoTaskListFragment;
-
-//                if (msgManagerFragment == null) {
-//                    msgManagerFragment = new MsgManagerFragment();
-//                    msgManagerFragment.setPreFragment(mHomePageFragment);
-//                }
-//                msgManagerFragment.setArguments(bundle);
-//                addChildFragment(msgManagerFragment, R.id.content);
-//                hideFragment(mHomePageFragment);
-//                mCurChildFragment = msgManagerFragment;
-
-
                 if (mTodaTaskListManagerFragment == null) {
                     mTodaTaskListManagerFragment = new TodaTaskListManagerFragment();
                     mTodaTaskListManagerFragment.setPreFragment(mHomePageFragment);
@@ -108,20 +111,8 @@ public class HomePageManagerFragment extends BaseFragment {
                 addChildFragment(mTodaTaskListManagerFragment, R.id.content);
                 hideFragment(mHomePageFragment);
                 mCurChildFragment = mTodaTaskListManagerFragment;
-
-
-
                 break;
             case CHILD_TYPE_HISTORYTASKLIST:
-//                if (mHistoryTaskListFragment == null) {
-//                    mHistoryTaskListFragment = new HistoryTaskListFragment();
-//                    mHistoryTaskListFragment.setPreFragment(mHomePageFragment);
-//                }
-//                mHistoryTaskListFragment.setArguments(bundle);
-//                addChildFragment(mHistoryTaskListFragment, R.id.content);
-//                hideFragment(mHomePageFragment);
-//                mCurChildFragment = mHistoryTaskListFragment;
-
                 if (mHistoryTaskListManagerFragment == null) {
                     mHistoryTaskListManagerFragment = new HistoryTaskListManagerFragment();
                     mHistoryTaskListManagerFragment.setPreFragment(mHomePageFragment);
@@ -130,20 +121,8 @@ public class HomePageManagerFragment extends BaseFragment {
                 addChildFragment(mHistoryTaskListManagerFragment, R.id.content);
                 hideFragment(mHomePageFragment);
                 mCurChildFragment = mHistoryTaskListManagerFragment;
-
-
                 break;
             case CHILD_TYPE_NOTICETASKLIST:
-//                if (mNoticeTaskListFragment == null) {
-//                    mNoticeTaskListFragment = new NoticeTaskListFragment();
-//                    mNoticeTaskListFragment.setPreFragment(mHomePageFragment);
-//                }
-//                mNoticeTaskListFragment.setArguments(bundle);
-//                addChildFragment(mNoticeTaskListFragment, R.id.content);
-//                hideFragment(mHomePageFragment);
-//                mCurChildFragment = mNoticeTaskListFragment;
-
-
                 if (mNoticeDetailManagerFragment == null) {
                     mNoticeDetailManagerFragment = new NoticeDetailManagerFragment();
                     mNoticeDetailManagerFragment.setPreFragment(mHomePageFragment);
@@ -152,29 +131,11 @@ public class HomePageManagerFragment extends BaseFragment {
                 addChildFragment(mNoticeDetailManagerFragment, R.id.content);
                 hideFragment(mHomePageFragment);
                 mCurChildFragment = mNoticeDetailManagerFragment;
-
-
-
-
                 break;
             case CHILD_TYPE_NOTICE_DETAIL:
-//                if (mNoticeDetailFragment == null) {
-//                    mNoticeDetailFragment = new NoticeDetailFragment();
-//                    mNoticeDetailFragment.setPreFragment(mNoticeTaskListFragment);
-//                }
-//                mNoticeDetailFragment.setArguments(bundle);
-//                addChildFragment(mNoticeDetailFragment, R.id.content);
-//                hideFragment(mNoticeTaskListFragment);
-//                mCurChildFragment = mNoticeDetailFragment;
                 break;
             case CHILD_TYPE_TASKMANAGER:
-                if (mTaskManagerFragment == null) {
-                    mTaskManagerFragment = new TaskManagerFragment();
-                    mTaskManagerFragment.setPreFragment(mHomePageFragment);
-                }
-                addChildFragment(mTaskManagerFragment, R.id.content);
-                hideFragment(mHomePageFragment);
-                mCurChildFragment = mTaskManagerFragment;
+                Toast.makeText(getActivity(),"即将开放，敬请期待",Toast.LENGTH_SHORT).show();
                 break;
             case CHILD_TYPE_CABINETTASKLIST:
                 if (mCabinetTaskListFragment == null) {
@@ -194,6 +155,8 @@ public class HomePageManagerFragment extends BaseFragment {
                 hideFragment(mHomePageFragment);
                 mCurChildFragment = mMessageMachineFragment;
                 break;
+                default:
+                    break;
         }
         mFragmentStack.add(mCurChildFragment);
     }
@@ -207,9 +170,6 @@ public class HomePageManagerFragment extends BaseFragment {
             }
             handle = mCurChildFragment.onBackPressed();
             if (!handle) {
-//                if (mCurChildFragment instanceof TodoTaskListFragment) {
-//                    mTodoTaskListFragment = null;
-//                }
                 if (mCurChildFragment instanceof HistoryTaskListManagerFragment) {
                     mHistoryTaskListManagerFragment = null;
                 } else if (mCurChildFragment instanceof NoticeDetailManagerFragment) {

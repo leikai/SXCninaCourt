@@ -1,5 +1,6 @@
 package org.sxchinacourt.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,6 +22,10 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.geek.thread.GeekThreadManager;
+import com.geek.thread.ThreadPriority;
+import com.geek.thread.ThreadType;
+import com.geek.thread.task.GeekRunnable;
 
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.sxchinacourt.CApplication;
@@ -29,7 +34,6 @@ import org.sxchinacourt.bean.DepositDataBean;
 import org.sxchinacourt.bean.DepositRootBean;
 import org.sxchinacourt.bean.FileReverseDetailBean;
 import org.sxchinacourt.bean.FileReverseDetailDataBean;
-import org.sxchinacourt.bean.UserBean;
 import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.util.QRCodeUtil;
 import org.sxchinacourt.util.SoapClient;
@@ -46,6 +50,9 @@ import java.util.Random;
 
 import zxing.EncodingHandler;
 
+/**
+ * @author lk
+ */
 public class CabinetActivity extends AppCompatActivity implements View.OnClickListener{
     String  erweima = null;
     private static Boolean IsTure=true;
@@ -82,6 +89,7 @@ public class CabinetActivity extends AppCompatActivity implements View.OnClickLi
     public static final int SHOW_CABINET_ERWEIMA_AUTHENTICATION= 11;
     public static final int SHOW_CABINET_ERWEIMA_DEPOSIT= 12;
 
+    @SuppressLint("HandlerLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,11 +98,16 @@ public class CabinetActivity extends AppCompatActivity implements View.OnClickLi
             getSupportActionBar().hide();
         }
         findViewById(R.id.depositecabinetTask);
-        findViewById(R.id.btn_wait_assign).setOnClickListener(this);//待指派
-        findViewById(R.id.btn_deposit_file).setOnClickListener(this);//存件记录列表
-        findViewById(R.id.btn_picked_up).setOnClickListener(this);//取件记录列表
-        findViewById(R.id.btn_wait_pickup).setOnClickListener(this);//待取件
-        findViewById(R.id.btn_deposit).setOnClickListener(this);//存件
+        //待指派
+        findViewById(R.id.btn_wait_assign).setOnClickListener(this);
+        //存件记录列表
+        findViewById(R.id.btn_deposit_file).setOnClickListener(this);
+        //取件记录列表
+        findViewById(R.id.btn_picked_up).setOnClickListener(this);
+        //待取件
+        findViewById(R.id.btn_wait_pickup).setOnClickListener(this);
+        //存件
+        findViewById(R.id.btn_deposit).setOnClickListener(this);
         findViewById(R.id.tv_scanning_Center).setOnClickListener(this);
         btnBack = (Button) findViewById(R.id.btn_messagemachine_content_back);
         tvName = (TextView)findViewById(R.id.tv_scanning_Center);
@@ -141,6 +154,8 @@ public class CabinetActivity extends AppCompatActivity implements View.OnClickLi
                         }
                         tvWaitPickupAmount.setText(String.valueOf(waitPickupAmount));
                         break;
+                        default:
+                            break;
                 }
             }
         };
@@ -156,20 +171,13 @@ public class CabinetActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         public void run() {
             UserNewBean user = CApplication.getInstance().getCurrentUser();
-            final SoapParams soapParamsDeposit = new SoapParams().put("arg0",String.valueOf ( user.getOaid() )).put("arg1",1);//1414 是假数据，应该改成
-            final SoapParams soapParamsEmployeePickUp = new SoapParams().put("arg0", String.valueOf ( user.getOaid() )).put("arg1",1);//1414 是假数据，应该改成
+            final SoapParams soapParamsDeposit = new SoapParams().put("arg0",String.valueOf ( user.getOaid() )).put("arg1",1);
+            final SoapParams soapParamsEmployeePickUp = new SoapParams().put("arg0", String.valueOf ( user.getOaid() )).put("arg1",1);
             WebServiceUtil.getInstance().GetEmployeeDeposit(soapParamsDeposit, new SoapClient.ISoapUtilCallback() {
                 @Override
                 public void onSuccess(SoapSerializationEnvelope envelope) throws Exception {
                     String response = envelope.getResponse().toString();
-
                     DepositRootBean resps = JSON.parseObject(response,DepositRootBean.class);
-////                        List<FileReverseDetailBean> resps=new ArrayList<FileReverseDetailBean>(JSONArray.parseArray(response,FileReverseDetailBean.class));
-////                            CourtDataBean resp = JSON.parseObject(response, CourtDataBean.class);
-////                        Log.e("list",""+resps.get(0).getInitiatorName()+"   "+resps.get(0).getRecipientName());
-//                        Log.e("list",""+resps.getData().get(0));
-//
-////                            courts = new String[]{resp.get(0).getCourtName()};
                     Log.e("response",""+resps.getData().get(0));
                     Message message = new Message();
                     message.what = SHOW_RESPONSE_FILEDEPOSITDETSIL;
@@ -230,276 +238,62 @@ public class CabinetActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
     };
+    @SuppressLint("HandlerLeak")
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
-            /**
-             * 身份认证功能,已集成到存件与取件中
-             */
-//            case R.id.btn_authentication: {
-//                final UserBean user = CApplication.getInstance().getCurrentUser();
-//                String str = String.valueOf ( user.getId() );
-//                Log.e("user","雷凱"+user.getCourtoaid()+"雷凱"+user.getSessionId()+"雷凱"+user.getUserNo()+"雷凱"+user.getId());
-//                final SoapParams soapParams = new SoapParams().put("arg0",str);
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//
-//                        String dynamicData= WebServiceUtil.getInstance().GetQRCode(soapParams, new SoapClient.ISoapUtilCallback() {
-//                            @Override
-//                            public void onSuccess(SoapSerializationEnvelope envelope) throws Exception {
-//                                verificationErWeiMa  =  envelope.getResponse().toString();
-//                                    Message message = new Message();
-//                                    message.what = SHOW_RESPONSE_AUTHENTICATION;
-////                                message.obj = verificationErWeiMa;
-//                                    message.obj = v;
-//                                    handler.sendMessage(message);
-//
-//
-//                            }
-//
-//                            @Override
-//                            public void onFailure(Exception e) {
-//                            }
-//                        });
-//                    }
-//                }).start();
-//                handler = new Handler(){
-//                    @Override
-//                    public void handleMessage(Message msg) {
-//                        super.handleMessage(msg);
-//                        switch (msg.what) {
-//                            case SHOW_RESPONSE_AUTHENTICATION:
-////                                verificationErWeiMa = (String) msg.obj;
-//                                View v = (View) msg.obj;
-//                                Log.e("verificationErWeiMa",""+verificationErWeiMa);
-//
-//                                if (verificationErWeiMa==null){
-//                                    break;
-//                                }
-//                                new Thread(runAddEwmImg).start();
-//
-////                                mErWeiMaBitmap = BC_2weima(verificationErWeiMa);
-//                                Log.e("verificationErWeiMa",""+verificationErWeiMa);
-//                                LayoutInflater inflater = LayoutInflater.from(getContext());
-//                                // 引入窗口配置文件
-//                                View view = inflater.inflate(R.layout.view_erweima_popuwindow, null);
-//
-//                                tvErweimaName = (TextView) view.findViewById(R.id.tv_erwema_name);
-//                                iverweima = (ImageView) view.findViewById(R.id.iv_erweima);
-//                                btnErweimaNext = (Button) view.findViewById(R.id.btn_erweima_next);
-//                                ivErwemaBgTop = (ImageView) view.findViewById(R.id.iv_erweima_bgtop);
-//                                ivErwemaBgBottom = (ImageView) view.findViewById(R.id.iv_erweima_bgbottom);
-//                                ivErwemaBgLeft = (ImageView) view.findViewById(R.id.iv_erweima_bgleft);
-//                                ivErwemaBgRight = (ImageView) view.findViewById(R.id.iv_erweima_bgright);
-//
-//                                handler1 = new Handler(){
-//                                    @Override
-//                                    public void handleMessage(Message msg) {
-//                                        super.handleMessage(msg);
-//                                        switch (msg.what) {
-//                                            case SHOW_CABINET_ERWEIMA_AUTHENTICATION:
-//                                                tvErweimaName.setText("身份认证二维码");
-//                                                btnErweimaNext.setText("下一步");
-//                                                break;
-//                                            case SHOW_CABINET_ERWEIMA_DEPOSIT:
-//                                                tvErweimaName.setText("存件二维码");
-//                                                btnErweimaNext.setText("完成");
-//
-//                                        }
-//                                        iverweima.setImageBitmap(BitmapFactory.decodeFile(filePath));
-//                                    }
-//                                };
-////                                iverweima.setImageBitmap(mErWeiMaBitmap);
-//
-//                                // 创建PopupWindow对象
-//                                final PopupWindow pop = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, false);
-//                                pop.setAnimationStyle(R.style.mypopwindow_anim_style);
-//                                ColorDrawable dw = new ColorDrawable(0xb0000000);
-//                                pop.setBackgroundDrawable(dw);
-//                                // 需要设置一下此参数，点击外边可消失
-//                                pop.setBackgroundDrawable(new BitmapDrawable());
-//                                //设置点击窗口外边窗口消失
-//                                pop.setOutsideTouchable(true);
-//                                // 设置此参数获得焦点，否则无法点击
-//                                pop.setFocusable(true);
-//                                if(pop.isShowing()) {
-//                                    // 隐藏窗口，如果设置了点击窗口外小时即不需要此方式隐藏
-//                                    pop.dismiss();
-//                                } else {
-//                                    // 显示窗口
-//                                    pop.showAtLocation(v, Gravity.CENTER,0,0);
-//
-//                                }
-//                                btnErweimaNext.setOnClickListener(new View.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(View view) {
-//                                        if (btnErweimaNext.getText().toString().equals("完成")){
-//                                            pop.dismiss();
-//                                        }else {
-//                                            //生成M+时期+四位随机数
-//                                            SimpleDateFormat format1    =   new    SimpleDateFormat ("yyyyMMddHHmmss");
-//                                            Date curDate    =   new    Date(System.currentTimeMillis());
-//                                            String    timeNow    =    format1.format(curDate);
-//
-//                                            int intCount = 0;
-//                                            intCount = (new Random()).nextInt(9999);//
-//                                            if (intCount < 1000) intCount += 1000;
-//                                            s = "M"+timeNow+intCount + "";
-//                                            Log.e("lk",s);
-//                                            new Thread(runAddEwmImgForDeposit).start();
-//                                        }
-////                                        pop.dismiss();
-//
-//                                    }
-//                                });
-//                                ivErwemaBgTop.setOnClickListener(new View.OnClickListener() {
-//
-//                                    @Override
-//                                    public void onClick(View view) {
-//                                        pop.dismiss();
-//                                    }
-//                                });
-//                                ivErwemaBgBottom.setOnClickListener(new View.OnClickListener() {
-//
-//                                    @Override
-//                                    public void onClick(View view) {
-//                                        pop.dismiss();
-//                                    }
-//                                });
-//                                ivErwemaBgLeft.setOnClickListener(new View.OnClickListener() {
-//
-//                                    @Override
-//                                    public void onClick(View view) {
-//                                        pop.dismiss();
-//                                    }
-//                                });
-//                                ivErwemaBgRight.setOnClickListener(new View.OnClickListener() {
-//
-//                                    @Override
-//                                    public void onClick(View view) {
-//                                        pop.dismiss();
-//                                    }
-//                                });
-//
-//
-//                            default:
-//                                break;
-//                        }
-//                    }
-//                };
-//                break;
-//            }
-             /*
-            待指派按钮:
-             */
+             /**
+              * 待指派按钮
+              */
             case R.id.btn_wait_assign: {
                 Intent jumptoPickup = new Intent(CabinetActivity.this,FileDepositDetailNew1Activity.class);
                 startActivity(jumptoPickup);
 
                 break;
             }
-             /*
-            存件记录列表按钮:
-             */
+             /**
+              *: 存件记录列表按钮
+              */
             case R.id.btn_deposit_file: {
                 Intent jumptoPickup = new Intent(CabinetActivity.this,FileDepositDataActivity.class);
                 startActivity(jumptoPickup);
-
                 break;
             }
-             /*
-            待取件按钮
-             */
+             /**
+              * 待取件按钮
+              */
             case R.id.btn_wait_pickup: {
                 Intent jumptoWaitPickup = new Intent(CabinetActivity.this,FileReverseDetailNew1Activity.class);
                 startActivity(jumptoWaitPickup);
-
                 break;
             }
 
-            /*
-            取件记录列表
+            /**
+             * 取件记录列表
              */
             case R.id.btn_picked_up:
                 Intent jumptoWaitPickup = new Intent(CabinetActivity.this,FileReverseDataActivity.class);
                 startActivity(jumptoWaitPickup);
                 break;
-//            case R.id.tv_scanning_Center: {
-//                new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                EmployeeBean Recipient = (EmployeeBean)resps.get(i);
-//                final UserBean user = CApplication.getInstance().getCurrentUser();
-//                final SoapParams soapParams = new SoapParams().put("arg0",Recipient.getTDHyhid());//1414 是假数据，应该改成
-////                        final SoapParams soapParams = new SoapParams().put("SerialNo","17091215332720").put("InitiatorID","1017").put("RecipientID","1204");//1414 是假数据，应该改成
-//                WebServiceUtil.getInstance().GetTelByEmployeeID(soapParams, new SoapClient.ISoapUtilCallback() {
-//                    @Override
-//                    public void onSuccess(SoapSerializationEnvelope envelope) throws Exception {
-//                        String result = envelope.toString();
-//                        Log.e("result",""+result);
-//                        if(result!=null){
-//
-//                        }
-//
-//
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Exception e) {
-//
-//                    }
-//                });
-//            }
-//        }).start();
-//                break;
-//            }
             case R.id.tv_department: {
-//                LayoutInflater inflater = LayoutInflater.from(getContext());
-//                // 引入窗口配置文件
-//                View view = inflater.inflate(R.layout.view_erweima_popuwindow, null);
-//
-//                iverweima = (ImageView) view.findViewById(R.id.iv_erweima);
-//
-//                // 创建PopupWindow对象
-//                final PopupWindow pop = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
-//                mErWeiMaBitmap = BC_2weima(verificationErWeiMa);
-//                iverweima.setImageBitmap(mErWeiMaBitmap);
-//                // 需要设置一下此参数，点击外边可消失
-//                pop.setBackgroundDrawable(new BitmapDrawable());
-//                //设置点击窗口外边窗口消失
-//                pop.setOutsideTouchable(true);
-//                // 设置此参数获得焦点，否则无法点击
-//                pop.setFocusable(true);
-//                if(pop.isShowing()) {
-//                    // 隐藏窗口，如果设置了点击窗口外小时即不需要此方式隐藏
-//                    pop.dismiss();
-//                } else {
-//                    // 显示窗口
-//                    pop.showAsDropDown(v);
-//                }
                 break;
             }
             case R.id.btn_deposit: {
                 final UserNewBean user = CApplication.getInstance().getCurrentUser();
                 String str = String.valueOf ( user.getOaid() );
-//                Log.e("user","雷凱"+user.getOrgid()+"雷凱"+user.getSessionId()+"雷凱"+user.getUserNo()+"雷凱"+user.getId());
                 final SoapParams soapParams = new SoapParams().put("arg0",str);
-                new Thread(new Runnable() {
+
+                GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
                     @Override
                     public void run() {
-
                         String dynamicData= WebServiceUtil.getInstance().GetQRCode(soapParams, new SoapClient.ISoapUtilCallback() {
                             @Override
                             public void onSuccess(SoapSerializationEnvelope envelope) throws Exception {
                                 verificationErWeiMa  =  envelope.getResponse().toString();
                                 Message message = new Message();
                                 message.what = SHOW_RESPONSE_AUTHENTICATION;
-//                                message.obj = verificationErWeiMa;
                                 message.obj = v;
                                 handler.sendMessage(message);
-
-
                             }
 
                             @Override
@@ -507,14 +301,13 @@ public class CabinetActivity extends AppCompatActivity implements View.OnClickLi
                             }
                         });
                     }
-                }).start();
+                },ThreadType.NORMAL_THREAD);
                 handler = new Handler(){
                     @Override
                     public void handleMessage(Message msg) {
                         super.handleMessage(msg);
                         switch (msg.what) {
                             case SHOW_RESPONSE_AUTHENTICATION:
-//                                verificationErWeiMa = (String) msg.obj;
                                 View v = (View) msg.obj;
                                 Log.e("verificationErWeiMa",""+verificationErWeiMa);
 
@@ -523,7 +316,6 @@ public class CabinetActivity extends AppCompatActivity implements View.OnClickLi
                                 }
                                 new Thread(runAddEwmImg).start();
 
-//                                mErWeiMaBitmap = BC_2weima(verificationErWeiMa);
                                 Log.e("verificationErWeiMa",""+verificationErWeiMa);
                                 LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
                                 // 引入窗口配置文件
@@ -549,13 +341,13 @@ public class CabinetActivity extends AppCompatActivity implements View.OnClickLi
                                             case SHOW_CABINET_ERWEIMA_DEPOSIT:
                                                 tvErweimaName.setText("存件二维码");
                                                 btnErweimaNext.setText("完成");
+                                                default:
+                                                    break;
 
                                         }
                                         iverweima.setImageBitmap(BitmapFactory.decodeFile(filePath));
                                     }
                                 };
-//                                iverweima.setImageBitmap(mErWeiMaBitmap);
-
                                 // 创建PopupWindow对象
                                 final PopupWindow pop = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, false);
                                 pop.setAnimationStyle(R.style.mypopwindow_anim_style);
@@ -567,8 +359,6 @@ public class CabinetActivity extends AppCompatActivity implements View.OnClickLi
                                 pop.setOutsideTouchable(true);
                                 // 设置此参数获得焦点，否则无法点击
                                 pop.setFocusable(true);
-
-
                                 if(pop.isShowing()) {
                                     // 隐藏窗口，如果设置了点击窗口外小时即不需要此方式隐藏
                                     pop.dismiss();
@@ -589,13 +379,12 @@ public class CabinetActivity extends AppCompatActivity implements View.OnClickLi
                                             String    timeNow    =    format1.format(curDate);
 
                                             int intCount = 0;
-                                            intCount = (new Random()).nextInt(9999);//
+                                            intCount = (new Random()).nextInt(9999);
                                             if (intCount < 1000) intCount += 1000;
                                             s = "M"+timeNow+intCount + "";
                                             Log.e("lk",s);
                                             new Thread(runAddEwmImgForDeposit).start();
                                         }
-//                                        pop.dismiss();
 
                                     }
                                 });
@@ -627,15 +416,17 @@ public class CabinetActivity extends AppCompatActivity implements View.OnClickLi
                                         pop.dismiss();
                                     }
                                 });
-
-
+                                break;
                             default:
                                 break;
                         }
                     }
                 };
                 break;
+
             }
+            default:
+                break;
 
 
         }
@@ -644,7 +435,6 @@ public class CabinetActivity extends AppCompatActivity implements View.OnClickLi
 
     private Bitmap BC_2weima(String str) {
         try {
-
             String contentString = String.valueOf(str);
             String contentString2 = URLEncoder.encode(contentString.toString(), "utf-8");
             if (!contentString.equals("")) {
@@ -653,9 +443,6 @@ public class CabinetActivity extends AppCompatActivity implements View.OnClickLi
                         contentString2, 1080);
                 return qrCodeBitmap;
             } else {
-//                Toast.makeText(ErWeiMaActivity.this,
-//                        "写入字符串为空", Toast.LENGTH_SHORT)
-//                        .show();
             }
         } catch (Exception e) {
             e.printStackTrace();

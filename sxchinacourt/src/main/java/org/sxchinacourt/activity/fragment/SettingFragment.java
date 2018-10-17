@@ -13,7 +13,9 @@ import org.sxchinacourt.activity.SwitchAccountActivity;
 import org.sxchinacourt.cache.CSharedPreferences;
 
 /**
- * Created by baggio on 2017/2/3.
+ *
+ * @author baggio
+ * @date 2017/2/3
  */
 
 public class SettingFragment extends BaseFragment implements View.OnClickListener {

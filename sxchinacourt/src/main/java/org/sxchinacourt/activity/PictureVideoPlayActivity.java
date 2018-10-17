@@ -4,18 +4,18 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Color;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 import org.sxchinacourt.R;
 
-import java.net.URL;
 
+/**
+ * @author lk
+ */
 public class PictureVideoPlayActivity extends AppCompatActivity implements MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, View.OnClickListener {
     private String video_path = "";
     private MediaController mMediaController;
@@ -37,17 +37,15 @@ public class PictureVideoPlayActivity extends AppCompatActivity implements Media
     }
 
 
+    @Override
     public void onStart() {
-//         Play Video
         mVideoView.setVideoPath(video_path);
-//        Uri uri = Uri.parse("http://111.53.181.200:8087/Cloud/uploadFile/1513682210240.avi");
-//        mVideoView.setMediaController(new MediaController(this));
-//        mVideoView.setVideoURI(uri);
         mVideoView.setMediaController(new MediaController(this));
         mVideoView.start();
         super.onStart();
     }
 
+    @Override
     public void onPause() {
         // Stop video when the activity is pause.
         mPositionWhenPaused = mVideoView.getCurrentPosition();
@@ -63,6 +61,7 @@ public class PictureVideoPlayActivity extends AppCompatActivity implements Media
         mVideoView = null;
     }
 
+    @Override
     public void onResume() {
         // Resume video player
         if (mPositionWhenPaused >= 0) {

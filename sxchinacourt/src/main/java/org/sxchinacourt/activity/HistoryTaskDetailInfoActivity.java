@@ -1,5 +1,6 @@
 package org.sxchinacourt.activity;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,22 +27,32 @@ import org.sxchinacourt.widget.CustomProgress;
 import java.util.List;
 
 /**
- * Created by baggio on 2017/2/20.
+ *
+ * @author baggio
+ * @date 2017/2/20
  */
 
 public class HistoryTaskDetailInfoActivity extends AppCompatActivity implements View.OnClickListener {
-    public static final String PARAM_TASK = "task";  //
+    public static final String PARAM_TASK = "task";
     public static final String PARAM_TASK_TYPE = "task_type";
-    private LinearLayout mContentView;//内容区域
+    /**
+     * 内容区域
+     */
+    private LinearLayout mContentView;
     private CustomActionBar mActionBarView;
-    private CustomProgress mCustomProgress;  //自定义等待框
+    /**
+     * 自定义等待框
+     */
+    private CustomProgress mCustomProgress;
     private GetTaskInfoTask mGetTaskInfoTask;
     private TaskBean mTask;
     private int mTaskType;
     private ViewComponents mViewComponents;
     private LinearLayout mProcessOpinionContainer;
-    private TextView tvCheckMore;//点击拉开审批记录
-
+    /**
+     * 点击拉开审批记录
+     */
+    private TextView tvCheckMore;
 
     private Handler mUpdateUIHandler;
     private List<ProcessOpinion> mProcessOpinions;
@@ -90,9 +101,12 @@ public class HistoryTaskDetailInfoActivity extends AppCompatActivity implements 
                 finish();
                 break;
             }
+            default:
+                break;
         }
     }
 
+    @SuppressLint("HandlerLeak")
     private void initHandler() {
         mUpdateUIHandler = new Handler() {
             @Override
@@ -178,8 +192,6 @@ public class HistoryTaskDetailInfoActivity extends AppCompatActivity implements 
             if (mProcessOpinions != null){
                 for (int i=0;i<mProcessOpinions.size();i++){
                     ProcessOpinion opinion = mProcessOpinions.get(i);
-//                    UserBean userResult = WebServiceUtil.getInstance().getUserInfo(opinion.getCreateUser());
-//                    opinion.setCreateUser(userResult.getUserName());
                 }
             }
             return components;

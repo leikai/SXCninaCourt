@@ -1,10 +1,10 @@
 package org.sxchinacourt.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,18 +18,19 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.bumptech.glide.Glide;
+import com.geek.thread.GeekThreadManager;
+import com.geek.thread.ThreadPriority;
+import com.geek.thread.ThreadType;
+import com.geek.thread.task.GeekRunnable;
 
-import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.sxchinacourt.CApplication;
 import org.sxchinacourt.R;
 import org.sxchinacourt.adapter.AnswerPhoneAdapter;
 import org.sxchinacourt.bean.AnswermachineOnceJsonBean;
-import org.sxchinacourt.bean.UserBean;
 import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.dao.DBHelper;
 import org.sxchinacourt.dao.Msgmachinedb;
 import org.sxchinacourt.dao.MsgmachinedbDao;
-import org.sxchinacourt.util.SoapClient;
 import org.sxchinacourt.util.SoapParams;
 import org.sxchinacourt.util.WebServiceUtil;
 
@@ -39,6 +40,9 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * @author lk
+ */
 public class MachineActivity extends Activity {
     private List<AnswermachineOnceJsonBean> mMessagemachineBeanList = new ArrayList<>();
     public static final int SHOW_RESPONSE_MESSAGEMACHINE= 0;
@@ -63,11 +67,9 @@ public class MachineActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
+        //去掉标题栏
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_machine);
-//        if (getSupportActionBar() != null){
-//            getSupportActionBar().hide();
-//        }
         initFruits();
         ivWait = (ImageView) findViewById(R.id.iv_view_wait);
         tvNodata = (TextView) findViewById(R.id.tv_nodata);
@@ -96,83 +98,35 @@ public class MachineActivity extends Activity {
             }
         });
     }
+    @SuppressLint("HandlerLeak")
     private void initFruits() {
         final UserNewBean user = CApplication.getInstance().getCurrentUser();
         String str = String.valueOf ( user.getOaid() );
         final SoapParams soapParams = new SoapParams().put("arg0",str);
         final SoapParams soapParams1 = new SoapParams().put("judge_id", user.getOid()).put("del_flag","0");
-        new Thread(new Runnable() {
+        GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
             public void run() {
                 timer = new Timer();
-
                 task = new TimerTask() {
                     @Override
-
                     public void run() {
-
                         UserNewBean user = CApplication.getInstance().getCurrentUser();
-
-                        //-----------------------------------------------------------------------//
                         String judge_id = "{\"judge_id\":\"" + user.getOid()
                                 + "\",\"del_flag\":\"0\" }";
                         String  result = WebServiceUtil.getInstance().getOaAnswerMessages(judge_id.toString());
                         Log.d(result, "onSuccess: " + result);
                         List<AnswermachineOnceJsonBean> resps = new ArrayList<AnswermachineOnceJsonBean>(JSONArray.parseArray(result, AnswermachineOnceJsonBean.class));
-
-//                        String oid = resps.get(0).getOid();
-//                        String  ceshi = WebServiceUtil.getInstance().getTheOaAnswerMessage(oid);
-
-
-
-
                         Message message = new Message();
                         message.what = SHOW_RESPONSE_MESSAGEMACHINE;
                         message.obj = resps;
                         handler.sendMessage(message);
-                        //-----------------------------------------------------------------------//
-
-
-
-
-//                        WebServiceUtil.getInstance().getOaAnswerMessages(soapParams1, new SoapClient.ISoapUtilCallback() {
-//                            @Override
-//                            public void onSuccess(SoapSerializationEnvelope envelope) throws Exception {
-//
-//                                String result = envelope.getResponse().toString();
-//                                Log.d(result, "onSuccess: " + result);
-//                            }
-//
-//                            @Override
-//                            public void onFailure(Exception e) {
-//
-//                            }
-//                        });
-
-//                        String dynamicData = WebServiceUtil.getInstance().getOaMessageList(soapParams, new SoapClient.ISoapUtilCallback() {
-//                            @Override
-//                            public void onSuccess(SoapSerializationEnvelope envelope) throws Exception {
-//                                String result = envelope.getResponse().toString();
-//                                Log.d(result, "onSuccess: " + result);
-//                                List<AnswermachineOnceJsonBean> resps = new ArrayList<AnswermachineOnceJsonBean>(JSONArray.parseArray(result, AnswermachineOnceJsonBean.class));
-//                                Message message = new Message();
-//                                message.what = SHOW_RESPONSE_MESSAGEMACHINE;
-//                                message.obj = resps;
-//                                handler.sendMessage(message);
-//                            }
-//
-//                            @Override
-//                            public void onFailure(Exception e) {
-//                            }
-//                        });
                     }
                 };
-
-                timer.schedule(task,1000,300000000);//半分钟执行一次查询操作,访问一次后台
+                //半分钟执行一次查询操作,访问一次后台
+                timer.schedule(task,1000,300000000);
             }
-//                };
-//            }
-        }).start();
+        },ThreadType.NORMAL_THREAD);
 
         handler = new Handler(){
             @Override
@@ -213,29 +167,22 @@ public class MachineActivity extends Activity {
                                 tvNodata.setVisibility(View.GONE);
                                 LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
                                 lvMessage.setLayoutManager(layoutManager);
-//                        initBind();
                                 answerPhoneAdapter = new AnswerPhoneAdapter(MachineActivity.this,view ,msgmachinedbs);
-
                                 lvMessage.setAdapter(answerPhoneAdapter);
-
                             }else{
                                 ivWait.setVisibility(View.GONE);
                                 tvNodata.setVisibility(View.GONE);
                                 LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
                                 lvMessage.setLayoutManager(layoutManager);
-//                        initBind();
                                 answerPhoneAdapter = new AnswerPhoneAdapter(MachineActivity.this,view ,msgmachinedbs);
-
                                 lvMessage.setAdapter(answerPhoneAdapter);
                             }
-
-
                         }else {
                             ivWait.setVisibility(View.GONE);
                         }
-
-
                         break;
+                        default:
+                            break;
                 }
 
             }
@@ -269,7 +216,6 @@ public class MachineActivity extends Activity {
                 msgmachinedbs.remove(viewHolder.getAdapterPosition());
                 msgmachinedbDao.delete(msgmachinedbs.get(viewHolder.getAdapterPosition()));
                 answerPhoneAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
-
             }
         });
         helper.attachToRecyclerView(lvMessage);

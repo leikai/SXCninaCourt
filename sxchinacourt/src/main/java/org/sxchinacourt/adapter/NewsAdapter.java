@@ -13,12 +13,16 @@ import org.sxchinacourt.bean.NewsBean;
 import java.util.List;
 
 /**
- * Created by 殇冰无恨 on 2017/9/28.
+ *
+ * @author 殇冰无恨
+ * @date 2017/9/28
  */
 
 public class NewsAdapter extends BaseAdapter {
     private LayoutInflater mLayoutInflater;
-    // 映射数据<泛型bean>
+    /**
+     * 映射数据<泛型bean>
+     */
     private List<NewsBean> mDataList;
 
     public NewsAdapter(Context context, List<NewsBean> list) {
@@ -64,7 +68,10 @@ public class NewsAdapter extends BaseAdapter {
         holder.content.setText(bean.getKeyword());
         return view;
     }
-    // ViewHolder用于缓存控件
+
+    /**
+     * ViewHolder用于缓存控件
+     */
     class ViewHolder {
         public TextView title;
         public TextView content;

@@ -9,7 +9,9 @@ import android.widget.TextView;
 import cn.jpush.android.api.JPushInterface;
 
 /**
- * Created by 殇冰无恨 on 2017/10/27.
+ *
+ * @author 殇冰无恨
+ * @date 2017/10/27
  */
 
 public class TestActivity extends AppCompatActivity {

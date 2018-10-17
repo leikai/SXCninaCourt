@@ -1,5 +1,6 @@
 package org.sxchinacourt.activity.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -62,10 +63,11 @@ public class Leave1Activity extends Activity {
     private Dialog mDownloadDialog;
 
     private String mFileName;
-    private String pageLocationForH5 = "";//从页面中获取目前H5所在的界面
+    /**
+     * 从页面中获取目前H5所在的界面
+     */
+    private String pageLocationForH5 = "";
     private UserNewBean user;
-
-
     private static final int PROGRESS_UPDATE = 1;
     private static final int DOWNLOAD_FINISHED = 2;
 
@@ -74,20 +76,23 @@ public class Leave1Activity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
+        //去掉标题栏
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_leave1);
         mCustomProgress = (CustomProgress) findViewById(R.id.loading);
         webviewMsg = (WebView) findViewById(R.id.fg_webview_msg);
         user = CApplication.getInstance().getCurrentUser();
         ceshi  = CApplication.getInstance().getCurrentToken();
-        webviewMsg.getSettings().setJavaScriptEnabled(true);//设置支持js
+        //设置支持js
+        webviewMsg.getSettings().setJavaScriptEnabled(true);
         webviewMsg.addJavascriptInterface(new TodoTaskListFragment.TestJavaScriptInterface(),"android");
-        webviewMsg.getSettings().setDomStorageEnabled(true);//打开DOM存储API
-        webviewMsg.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);//设置缓存模式：不使用缓存
+        //打开DOM存储API
+        webviewMsg.getSettings().setDomStorageEnabled(true);
+        //设置缓存模式：不使用缓存
+        webviewMsg.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         webviewMsg.setWebChromeClient(new WebChromeClient(){
             @Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-//                return super.onJsAlert(view, url, message, result);
                 pageLocationForH5 = message;
                 Log.e("pageLocationForH5",""+pageLocationForH5  );
                 result.confirm();
@@ -102,22 +107,12 @@ public class Leave1Activity extends Activity {
             startActivity(new Intent(Leave1Activity.this, LoginActivity.class));
             finish();
         }else if (user.getOrgid().equals(Contstants.OID_JINZHONG)){
-            //-----------------------------------------------正式----------------------------------------------//
             webviewMsg.loadUrl("http://111.53.181.200:8087/mcourtoa/moffice/sign/doffice/bggl/jgqj/html/jgqj-daiban-add.html?token="+ceshi);
-            //--------------------------------------------finish--------------------------------------//
         }else if (user.getOrgid().equals(Contstants.OID_YUSHE)){
             webviewMsg.loadUrl("http://111.53.181.200:8087/mcourtoa/moffice/sign/doffice/bggl/jgqj_ys/html/jgqj-daiban-add.html?token="+ceshi);
         }else if (user.getOrgid().equals(Contstants.OID_LINGSHI)){
 
         }
-
-
-
-
-//        //-----------------------------------------------测试----------------------------------------------//
-//        webviewMsg.loadUrl("http://192.168.1.114:8088/mcourtoa/moffice/sign/doffice/bggl/jgqj/html/jgqj-daiban-add.html?token="+ceshi);
-//        //--------------------------------------------finish--------------------------------------//
-
         webviewMsg.setDownloadListener(new DownloadListener() {
             @Override
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
@@ -126,8 +121,6 @@ public class Leave1Activity extends Activity {
                     mFileUrl = url;
                     mFileName = mFileUrl.substring(mFileUrl.length()-36);
                     showPromptDownloadDialog();
-
-//                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
                 }
             }
         });
@@ -242,29 +235,8 @@ public class Leave1Activity extends Activity {
 
                 Log.e("lk",""+mFileUrl.substring(mFileUrl.length()-36));
                 String filePath = "";
-//                if (mFileName.endsWith(".doc") ) {
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"1"+".doc") ;
-//                }else if (mFileName.endsWith(".docx")){
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"2"+".docx") ;
-//
-//                }else if (mFileName.endsWith(".xls") ) {
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"3"+".xls") ;
-//                }else if (mFileName.endsWith(".xlsx")){
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"4"+".xlsx") ;
-//
-//                }else if (mFileName.endsWith(".txt")) {
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"5"+".txt") ;
-//                } else if (mFileName.endsWith(".pdf")) {
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"6"+".pdf") ;
-//                } else if (mFileName.endsWith(".jpg") ) {
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"7"+".jpg") ;
-//                }else if (mFileName.endsWith(".png")){
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"8"+".png") ;
-//
-//                }
                 filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+mFileName) ;
 
-//                String filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+mFileUrl.substring(mFileUrl.length()-36)) ;
                 File file = new File(filePath);
                 file.createNewFile();
                 file.setWritable(true);
@@ -286,7 +258,8 @@ public class Leave1Activity extends Activity {
                         mHandler.sendEmptyMessage(DOWNLOAD_FINISHED);
                         break;
                     }
-                } while (!mInterceptFlag);// 点击取消就停止下载.
+                    // 点击取消就停止下载.
+                } while (!mInterceptFlag);
                 fos.close();
                 is.close();
             } catch (Throwable e) {
@@ -296,6 +269,7 @@ public class Leave1Activity extends Activity {
         }
     };
 
+    @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -312,6 +286,7 @@ public class Leave1Activity extends Activity {
         }
     };
 
+    @SuppressLint("HandlerLeak")
     private Handler mDownloadError = new Handler() {
         public void handleMessage(Message msg) {
             AlertDialog.Builder builder = new AlertDialog.Builder(Leave1Activity.this);
@@ -362,14 +337,6 @@ public class Leave1Activity extends Activity {
     }
 
     private void openFile(int which) {
-//        String filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR) +
-//                mComponent.getLabelValue();
-//        File file = new File(filePath);
-//        Intent intent = FileOpenHelper.getFileIntent(file);
-//        if (intent != null) {
-//            getContext().startActivity(intent);
-//        }
-
         Intent intent = null;
         if (mFileName.endsWith(".doc")) {
             String filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+mFileName);

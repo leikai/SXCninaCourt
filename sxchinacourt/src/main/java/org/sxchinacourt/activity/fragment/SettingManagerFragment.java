@@ -15,7 +15,9 @@ import org.sxchinacourt.activity.SetHandlePasswordActivity;
 import java.util.Vector;
 
 /**
- * Created by baggio on 2017/2/9.
+ *
+ * @author baggio
+ * @date 2017/2/9
  */
 
 public class SettingManagerFragment extends BaseFragment {

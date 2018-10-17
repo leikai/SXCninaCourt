@@ -1,5 +1,6 @@
 package org.sxchinacourt.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +14,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
+import com.geek.thread.GeekThreadManager;
+import com.geek.thread.ThreadPriority;
+import com.geek.thread.ThreadType;
+import com.geek.thread.task.GeekRunnable;
 import com.google.gson.Gson;
 
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -21,7 +26,6 @@ import org.sxchinacourt.R;
 import org.sxchinacourt.adapter.EmployeeAdapter;
 import org.sxchinacourt.bean.CeShiBean;
 import org.sxchinacourt.bean.EmployeeBean;
-import org.sxchinacourt.bean.UserBean;
 import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.util.SoapClient;
 import org.sxchinacourt.util.SoapParams;
@@ -33,7 +37,9 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by 殇冰无恨 on 2017/10/11.
+ *
+ * @author 殇冰无恨
+ * @date 2017/10/11
  */
 
 public class EmployeeActivity extends Activity {
@@ -43,6 +49,7 @@ public class EmployeeActivity extends Activity {
     private EmployeeAdapter employeeAdapter;
     private List resps = null;
     private Button btnAssign;
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
 
         @Override
@@ -50,102 +57,74 @@ public class EmployeeActivity extends Activity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case SHOW_RESPONSE_EMPLOYEE:
-
                     resps = (ArrayList)msg.obj;
                     employeeAdapter = new EmployeeAdapter(getApplicationContext(),resps);
                     dateEmployee.setAdapter(employeeAdapter);
                     dateEmployee.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
-                            new Thread(new Runnable() {
+                            GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
                                 @Override
                                 public void run() {
                                     EmployeeBean Recipient = (EmployeeBean)resps.get(i);
                                     final UserNewBean user = CApplication.getInstance().getCurrentUser();
-                                    final SoapParams soapParams = new SoapParams().put("arg0",SerialNo).put("arg1",user.getOaid()).put("arg2",Recipient.getEmployeeID());//1414 是假数据，应该改成
-//                        final SoapParams soapParams = new SoapParams().put("SerialNo","17091215332720").put("InitiatorID","1017").put("RecipientID","1204");//1414 是假数据，应该改成
+                                    final SoapParams soapParams = new SoapParams().put("arg0",SerialNo).put("arg1",user.getOaid()).put("arg2",Recipient.getEmployeeID());
                                     //指派
                                     WebServiceUtil.getInstance().FileStateInReverse(soapParams, new SoapClient.ISoapUtilCallback() {
                                         @Override
                                         public void onSuccess(SoapSerializationEnvelope envelope) throws Exception {
-                                             String result = envelope.toString();
+                                            String result = envelope.toString();
                                             Log.e("result",""+result);
                                             if(result!=null){
-
                                             }
-
-
                                         }
-
                                         @Override
                                         public void onFailure(Exception e) {
-
                                         }
                                     });
                                 }
-                            }).start();
+                            },ThreadType.NORMAL_THREAD);
                             final UserNewBean user = CApplication.getInstance().getCurrentUser();
                             EmployeeBean RecipientGetAddress = (EmployeeBean)resps.get(i);
 
-                            new Thread(new Runnable() {
+                            GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
                                 @Override
                                 public void run() {
                                     final EmployeeBean Recipient = (EmployeeBean)resps.get(i);
                                     final UserNewBean user = CApplication.getInstance().getCurrentUser();
-                                    final SoapParams soapParams = new SoapParams().put("arg0",Recipient.getTDHyhid());//1414 是假数据，应该改成
-//                        final SoapParams soapParams = new SoapParams().put("SerialNo","17091215332720").put("InitiatorID","1017").put("RecipientID","1204");//1414 是假数据，应该改成
+                                    final SoapParams soapParams = new SoapParams().put("arg0",Recipient.getTDHyhid());
                                     WebServiceUtil.getInstance().GetTelByEmployeeID(soapParams, new SoapClient.ISoapUtilCallback() {
                                         @Override
                                         public void onSuccess(SoapSerializationEnvelope envelope) throws Exception {
                                             Log.e("employeeTel",""+envelope.getResponse().toString());
                                             String employeeTel = envelope.getResponse().toString();
-
                                             if(employeeTel!=null){
-                                                sendMseeage();//推送消息
-                                                sendMseeage(Recipient.getName(),employeeTel);//发短信
-
+                                                //推送消息
+                                                sendMseeage();
+                                                //发短信
+                                                sendMseeage(Recipient.getName(),employeeTel);
                                             }
-
-
                                         }
-
                                         @Override
                                         public void onFailure(Exception e) {
 
                                         }
                                     });
                                 }
-                            }).start();
-//                Intent jumptodepartment = new Intent(getApplicationContext(),FileReverseDetailAcitivity.class);
-//                startActivity(jumptodepartment);
-//                finish();
+                            },ThreadType.NORMAL_THREAD);
                             Toast.makeText(getApplicationContext(),"指派成功",Toast.LENGTH_LONG).show();
-//                            Intent jumptodepartment = new Intent(getApplicationContext(),FileDepositDetailActivity.class);
-//                            Bundle bundle = new Bundle();//创建内容对象
-//                            bundle.putBoolean("指派成功",true);//填写内容
-//                            jumptodepartment.putExtra("update",bundle);
-//                            startActivity(jumptodepartment);
                             finish();
-
-//                Intent jumptoErweima = new Intent(getApplicationContext(),ErWeiMaActivity.class);
-//                startActivity(jumptoErweima);
-//                finish();
-
                         }
                     });
-
-
                 default:
                     break;
             }
         }
-
     };
 
     public void sendMseeage(String Recipient,String employeeTel) {
         CeShiBean ceShiBean = new CeShiBean();
         ceShiBean.setMobiles("18335182938");
-//        ceShiBean.setMobiles(employeeTel);
         SimpleDateFormat format1    =   new    SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
         Date curDate    =   new    Date(System.currentTimeMillis());
         String    timeNow    =    format1.format(curDate);
@@ -155,9 +134,8 @@ public class EmployeeActivity extends Activity {
         Gson gson1 = new Gson();
         String jsonObjString1 = gson1.toJson(ceShiBean);
         Log.e("jsonObjString1",""+jsonObjString1);
-//                WebServiceUtil.getInstance().getWebInfos(jsonObjString1);
         final SoapParams soapParams1 = new SoapParams().put("jsonstr",jsonObjString1);
-        new Thread(new Runnable() {
+        GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
             public void run() {
                 //发消息
@@ -167,13 +145,12 @@ public class EmployeeActivity extends Activity {
                         String result  =  envelope.getResponse().toString();
                         Log.e("tel",""+result);
                     }
-
                     @Override
                     public void onFailure(Exception e) {
                     }
                 });
             }
-        }).start();
+        },ThreadType.NORMAL_THREAD);
     }
 
     /**
@@ -185,7 +162,7 @@ public class EmployeeActivity extends Activity {
         String    timeNow    =    format1.format(curDate);
         final UserNewBean user = CApplication.getInstance().getCurrentUser();
         final SoapParams soapParams1 = new SoapParams().put("arg0",user.getUserName()+"于"+timeNow +"给您指派了一份案件材料，请及时取件【晋中中院云柜】").put("arg1","这是一个信息").put("arg2",user.getUserName());
-        new Thread(new Runnable() {
+        GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
             public void run() {
                 //发消息
@@ -195,13 +172,12 @@ public class EmployeeActivity extends Activity {
                         String result  =  envelope.getResponse().toString();
                         Log.e("lk推送消息",""+result);
                     }
-
                     @Override
                     public void onFailure(Exception e) {
                     }
                 });
             }
-        }).start();
+        },ThreadType.NORMAL_THREAD);
     }
 
     public static final int SHOW_RESPONSE_EMPLOYEE = 0;
@@ -219,7 +195,6 @@ public class EmployeeActivity extends Activity {
         SerialNo = bundle.getString("SerialNo");
         Log.e("SerialNo",""+SerialNo);
         initdata(departmentId);
-
         btnBacktoDepartment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -237,21 +212,16 @@ public class EmployeeActivity extends Activity {
      */
     private void initdata(String departmentId) {
         UserNewBean user = CApplication.getInstance().getCurrentUser();
-        final SoapParams soapParams = new SoapParams().put("arg0",departmentId);//1414 是假数据，应该改成
-
-        new Thread(new Runnable() {
+        final SoapParams soapParams = new SoapParams().put("arg0",departmentId);
+        GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
             public void run() {
                 WebServiceUtil.getInstance().GetEmployee(soapParams, new SoapClient.ISoapUtilCallback() {
                     @Override
                     public void onSuccess(SoapSerializationEnvelope envelope) throws Exception {
                         String response = envelope.getResponse().toString();
-
                         List<EmployeeBean> resps=new ArrayList<EmployeeBean>(JSONArray.parseArray(response,EmployeeBean.class));
-//                            CourtDataBean resp = JSON.parseObject(response, CourtDataBean.class);
                         Log.e("list",""+resps.get(0).getName());
-
-//                            courts = new String[]{resp.get(0).getCourtName()};
                         Log.e("courts",""+courts);
                         Message message = new Message();
                         message.what = SHOW_RESPONSE_EMPLOYEE;
@@ -264,15 +234,12 @@ public class EmployeeActivity extends Activity {
                     }
                 });
             }
-        }).start();
+        },ThreadType.NORMAL_THREAD);
     }
 
     private void initview() {
         dateEmployee = (ListView) findViewById(R.id.data_employee);
         btnAssign = (Button) findViewById(R.id.btn_assign_sure);
         btnBacktoDepartment = (Button) findViewById(R.id.btn_employee_back);
-    }
-    private void startThread() {
-
     }
 }

@@ -48,6 +48,7 @@ public class CustomDateView extends LinearLayout {
             DateTimePickerDialog dialog = new DateTimePickerDialog(getContext(), System.currentTimeMillis
                     ());
             dialog.setOnDateTimeSetListener(new DateTimePickerDialog.OnDateTimeSetListener() {
+                @Override
                 public void OnDateTimeSet(AlertDialog dialog, long date) {
                     String dateStr = getStringDate(date);
                     mDateView.setText(dateStr);

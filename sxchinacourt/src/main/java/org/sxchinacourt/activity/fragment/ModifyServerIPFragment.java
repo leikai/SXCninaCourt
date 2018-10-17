@@ -1,6 +1,5 @@
 package org.sxchinacourt.activity.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -17,7 +16,9 @@ import org.sxchinacourt.cache.CSharedPreferences;
 import org.sxchinacourt.util.WebServiceUtil;
 
 /**
- * Created by baggio on 2017/2/9.
+ *
+ * @author baggio
+ * @date 2017/2/9
  */
 
 public class ModifyServerIPFragment extends BaseFragment implements View.OnClickListener {

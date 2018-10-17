@@ -201,7 +201,6 @@ public class SignOnActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-//            mProgressView.stop();
             if (!TextUtils.isEmpty(mMessage)) {
                 Toast.makeText(getBaseContext(), mMessage, Toast.LENGTH_LONG).show();
                 mGestureLockView.clearView();
@@ -221,7 +220,6 @@ public class SignOnActivity extends AppCompatActivity {
         @Override
         protected void onCancelled() {
             mAuthTask = null;
-//            mProgressView.stop();
         }
     }
 
@@ -238,10 +236,6 @@ public class SignOnActivity extends AppCompatActivity {
             //1.绘制中心点
             normalPaint.setStyle(Paint.Style.FILL);
             canvas.drawCircle(point.x,point.y,point.radius/4.0F,normalPaint);
-//            //2.绘制边界圆
-//            normalPaint.setStyle(Paint.Style.STROKE);
-//            normalPaint.setStrokeWidth(6);
-//            canvas.drawCircle(point.x,point.y,getGestureLockView().getRadius(),normalPaint);
         }
 
         @Override

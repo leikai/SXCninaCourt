@@ -1,5 +1,6 @@
 package org.sxchinacourt.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,7 +20,6 @@ import org.sxchinacourt.CApplication;
 import org.sxchinacourt.R;
 import org.sxchinacourt.adapter.TasksAssignedToMeAdatper;
 import org.sxchinacourt.bean.TaskAssignedToMeBean;
-import org.sxchinacourt.bean.UserBean;
 import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.util.WebServiceUtil;
 import org.sxchinacourt.widget.CustomActionBar;
@@ -29,7 +29,9 @@ import java.util.Hashtable;
 import java.util.List;
 
 /**
- * Created by baggio on 2017/2/27.
+ *
+ * @author baggio
+ * @date 2017/2/27
  */
 
 public class TasksAssignedToMeActivity extends AppCompatActivity implements PullToRefreshBase
@@ -87,6 +89,7 @@ public class TasksAssignedToMeActivity extends AppCompatActivity implements Pull
     }
 
 
+    @SuppressLint("HandlerLeak")
     private Handler mUpdateTasksListHandler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
@@ -148,6 +151,8 @@ public class TasksAssignedToMeActivity extends AppCompatActivity implements Pull
                 finish();
                 break;
             }
+            default:
+                break;
         }
     }
 

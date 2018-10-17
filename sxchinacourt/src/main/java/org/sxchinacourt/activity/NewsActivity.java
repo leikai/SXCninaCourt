@@ -1,5 +1,6 @@
 package org.sxchinacourt.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,16 +10,17 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
+import com.geek.thread.GeekThreadManager;
+import com.geek.thread.ThreadPriority;
+import com.geek.thread.ThreadType;
+import com.geek.thread.task.GeekRunnable;
 import com.google.gson.Gson;
 
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.sxchinacourt.R;
-import org.sxchinacourt.adapter.NewsAdapter;
 import org.sxchinacourt.adapter.NewsDetailAdapter;
 import org.sxchinacourt.bean.NewsBean;
 import org.sxchinacourt.bean.NewsContentPattsRoot;
@@ -31,7 +33,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by 殇冰无恨 on 2017/9/30.
+ *
+ * @author 殇冰无恨
+ * @date 2017/9/30
  */
 
 public class NewsActivity extends Activity{
@@ -43,6 +47,7 @@ public class NewsActivity extends Activity{
     private NewsBean newsBean;
     private List resps = null;
     private Button btn_news_back;
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
 
         @Override
@@ -50,14 +55,11 @@ public class NewsActivity extends Activity{
             super.handleMessage(msg);
             switch (msg.what) {
                 case SHOW_RESPONSE_NEWS_CONTENT:
-
                     resps = (ArrayList)msg.obj;
                     NewsContentPattsRoot newsContentPattsRoot = (NewsContentPattsRoot)resps.get(0);
                     tvTitle.setText(newsContentPattsRoot.getFtitle());
                     tvTime.setText(newsContentPattsRoot.getReleasetime());
                     webContent.loadDataWithBaseURL("about:blank",newsContentPattsRoot.getContent(),"text/html","utf-8",null);
-
-
                 default:
                     break;
             }
@@ -91,7 +93,8 @@ public class NewsActivity extends Activity{
     }
 
     private void initData(final String oid) {
-        new Thread(new Runnable() {
+
+        GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
             public void run() {
                 WebInfosBean webInfosBean = new WebInfosBean();
@@ -99,7 +102,6 @@ public class NewsActivity extends Activity{
                 Gson gson1 = new Gson();
                 String jsonObjString1 = gson1.toJson(webInfosBean);
                 Log.e("jsonObjString1",""+jsonObjString1);
-//                WebServiceUtil.getInstance().getWebInfos(jsonObjString1);
                 final SoapParams soapParams1 = new SoapParams().put("jsonstr",jsonObjString1);
                 WebServiceUtil.getInstance().getWebInfos(soapParams1, new SoapClient.ISoapUtilCallback() {
                     @Override
@@ -107,34 +109,21 @@ public class NewsActivity extends Activity{
                         String response = envelope.getResponse().toString();
 
                         NewsContentPattsRoot resps = JSON.parseObject(response,NewsContentPattsRoot.class);
-//                        List<NewsBean> resps=new ArrayList<NewsBean>(JSONArray.parseArray(response,NewsBean.class));
-//                            CourtDataBean resp = JSON.parseObject(response, CourtDataBean.class);
                         List<NewsContentPattsRoot> resp = new ArrayList<NewsContentPattsRoot>();
                         resp.add(resps);
                         Log.e("lk",""+resps.getFtitle());
-
-
-
-//                            courts = new String[]{resp.get(0).getCourtName()};
-
                         Message message = new Message();
                         message.what = SHOW_RESPONSE_NEWS_CONTENT;
                         message.obj = resp;
                         handler.sendMessage(message);
                     }
-
                     @Override
                     public void onFailure(Exception e) {
-
                     }
                 });
-
             }
-        }).start();
-
-
+        },ThreadType.NORMAL_THREAD);
         listData = new ArrayList();
-
         newsBean = new NewsBean();
         newsBean.setFtitle("asdasdasda");
         newsBean.setContent("审管办考核");

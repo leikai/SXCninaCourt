@@ -29,6 +29,8 @@ import org.sxchinacourt.bean.DepartmentNewBean;
 import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.common.Contstants;
 import org.sxchinacourt.util.WebServiceUtil;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -63,9 +65,14 @@ public class ContactsFragment extends BaseFragment{
 
     private UserNewBean user;//当前登录人的个人信息
     private String token;
+    /**
+     * 法院ID
+     */
+    private String orgId;
     public List<DepartmentNewBean> mDepartments;//联系人分组集合
-    public List<UserNewBean> mUsersList;//联系人分组集合
-
+    public List<UserNewBean> mUsersList =  new ArrayList<>();//联系人分组集合
+    private LinearLayoutManager layoutManager;
+    private UsersAdapter usersAdapter;
     private static final String TAG = "Constraints";
 
     @Override
@@ -139,6 +146,9 @@ public class ContactsFragment extends BaseFragment{
                 if ("祁县人民法院".equals(courtoaName)){
                     mRefreshGroupTask = new RefreshGroupTask(Contstants.OID_QIXIAN);
                 }
+                if ("介休市人民法院".equals(courtoaName)){
+                    mRefreshGroupTask = new RefreshGroupTask(Contstants.OID_JIEXIU);
+                }
                 mRefreshGroupTask.execute();
 
             }
@@ -160,6 +170,7 @@ public class ContactsFragment extends BaseFragment{
             DepartmentNewBean departmentNewBean = new DepartmentNewBean();
             departmentNewBean.setDeptName("所有部门");
             departmentNewBean.setDeptPid("");
+            orgId = mDepartments.get(1).getOrgid();
 //            departmentNewBean.setOid("null");
             mDepartments.add(0,departmentNewBean);
             setDateToView(mDepartments);
@@ -183,7 +194,7 @@ public class ContactsFragment extends BaseFragment{
                 String departmentName = mList.get(position).getDeptName();
 
 
-                mRefreshContactsTask = new RefreshContactsTask(null,departmentId,departmentName,user.getOrgid());
+                mRefreshContactsTask = new RefreshContactsTask(null,departmentId,departmentName,orgId);
                 mRefreshContactsTask.execute();
             }
 
@@ -201,7 +212,13 @@ public class ContactsFragment extends BaseFragment{
     private Handler mUpdateUsersListHandler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
-            mUsersList = (List<UserNewBean>) msg.obj;
+            List<UserNewBean> lists = (List<UserNewBean>) msg.obj;
+            mUsersList.clear();
+            if (lists != null){
+                mUsersList.addAll(lists);
+
+            }
+
             setDataToView();
             String departmentName = msg.getData().getString("departmentName");
         }
@@ -221,11 +238,17 @@ public class ContactsFragment extends BaseFragment{
         }else {
             rvUsers.setVisibility(View.VISIBLE);
             tvEmpty.setVisibility(View.GONE);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-            rvUsers.setLayoutManager(layoutManager);
-            UsersAdapter usersAdapter = new UsersAdapter(mUsersList,mPreFragment);
-            rvUsers.setAdapter(usersAdapter);
-            rvUsers.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
+            if (layoutManager == null){
+                layoutManager = new LinearLayoutManager(getActivity());
+                rvUsers.setLayoutManager(layoutManager);
+            }
+
+            if (usersAdapter == null){
+                usersAdapter = new UsersAdapter(mUsersList,mPreFragment);
+                rvUsers.setAdapter(usersAdapter);
+                rvUsers.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
+            }
+
             usersAdapter.notifyDataSetChanged();
         }
 
@@ -247,7 +270,7 @@ public class ContactsFragment extends BaseFragment{
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String ceshi  = etSearch.getText().toString().trim();
                 Log.e("ceshi",""+ceshi);
-                mRefreshContactsTask = new RefreshContactsTask(ceshi,null,null,user.getOrgid());
+                mRefreshContactsTask = new RefreshContactsTask(ceshi,null,null,orgId);
                 mRefreshContactsTask.execute();
             }
 

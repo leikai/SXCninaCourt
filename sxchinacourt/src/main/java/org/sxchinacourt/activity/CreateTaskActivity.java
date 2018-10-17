@@ -33,7 +33,9 @@ import org.sxchinacourt.widget.SelectContactsDialog;
 import static org.sxchinacourt.util.SysUtil.getStringDate;
 
 /**
- * Created by baggio on 2017/2/21.
+ *
+ * @author baggio
+ * @date 2017/2/21
  */
 
 public class CreateTaskActivity extends AppCompatActivity implements View.OnClickListener {
@@ -89,6 +91,8 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
                 handleCreateTask();
                 break;
             }
+            default:
+                break;
         }
     }
 
@@ -192,7 +196,6 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         subTask.setWsMan(user.getUserName());
         subTask.setWsManOAId(user.getId());
         subTask.setWsManId(user.getCourtoaid());
-//        subTask.setWsManId();
         final View subTaskView = LayoutInflater.from(this).inflate(R.layout.subtask_item, null);
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
@@ -200,6 +203,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
                 DateTimePickerDialog dialog = new DateTimePickerDialog(CreateTaskActivity.this,
                         System.currentTimeMillis());
                 dialog.setOnDateTimeSetListener(new DateTimePickerDialog.OnDateTimeSetListener() {
+                    @Override
                     public void OnDateTimeSet(AlertDialog dialog, long date) {
                         TextView tvDate = null;
                         String dateStr = getStringDate(date);
@@ -212,6 +216,8 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
                                 tvDate = (TextView) subTaskView.findViewById(R.id.tv_subTaskEndDate);
                                 subTask.setETime(dateStr);
                                 break;
+                                default:
+                                    break;
                         }
                         tvDate.setText(getStringDate(date));
                     }
@@ -251,6 +257,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
     private void setTaskTime(final View v) {
         DateTimePickerDialog dialog = new DateTimePickerDialog(this, System.currentTimeMillis());
         dialog.setOnDateTimeSetListener(new DateTimePickerDialog.OnDateTimeSetListener() {
+            @Override
             public void OnDateTimeSet(AlertDialog dialog, long date) {
                 TextView tvDate = null;
                 String dateStr = getStringDate(date);
@@ -267,6 +274,8 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
                         tvDate = (TextView) findViewById(R.id.tv_remindDate);
                         mAssignTaskBean.setAlertTime(dateStr);
                         break;
+                        default:
+                            break;
                 }
                 tvDate.setText(dateStr);
             }

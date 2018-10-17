@@ -1,5 +1,6 @@
 package org.sxchinacourt.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
@@ -28,6 +29,9 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * @author lk
+ */
 public class UpdateManager {
     public boolean interceptFlag = false;
     private String apkUrl;
@@ -46,7 +50,9 @@ public class UpdateManager {
     private Thread downLoadThread;
     private int mVersionCode;
     private Activity mActivity;
+    @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
+        @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case DOWN_UPDATE:
@@ -90,24 +96,6 @@ public class UpdateManager {
     private void showNoticeDialog() {
         synchronized (CApplication.getInstance().getBaseContext()) {
             try {
-//                Builder builder = new Builder(
-//                        mActivity);
-//                builder.setTitle("更新");
-//                builder.setMessage("有新版本，是否更新");
-//                builder.setPositiveButton("确定", new OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        showDownloadDialog();
-//                        interceptFlag = false;
-//                        downloadApk();
-//                        dialog.dismiss();
-//                    }
-//                });
-//                builder.setCancelable(false);
-//                noticeDialog = builder.create();
-//                noticeDialog.show();
-
-
                 Builder builder = new Builder(
                         mActivity);
                 builder.setTitle("更新提醒");
@@ -126,12 +114,8 @@ public class UpdateManager {
                         dialog.dismiss();
                     }
                 });
-
-//                builder.setCancelable(false);
                 noticeDialog = builder.create();
                 noticeDialog.show();
-
-
             } catch (Throwable e) {
                 e.printStackTrace();
             }
@@ -188,7 +172,9 @@ public class UpdateManager {
         }
     }
 
+    @SuppressLint("HandlerLeak")
     private Handler downloadError = new Handler() {
+        @Override
         public void handleMessage(Message msg) {
             Builder builder = new Builder(mActivity);
             builder.setTitle("版本更新失败");
@@ -246,7 +232,8 @@ public class UpdateManager {
                         mHandler.sendEmptyMessage(DOWN_OVER);
                         break;
                     }
-                } while (!interceptFlag);//点击取消就停止下载
+                    //点击取消就停止下载
+                } while (!interceptFlag);
                 fos.close();
                 is.close();
             } catch (Throwable e) {
@@ -276,7 +263,6 @@ public class UpdateManager {
         }
         Intent i = FileOpenHelper.getApkFileIntent(apkfile);
         CApplication.getInstance().startActivity(i);
-//        System.exit(0);
     }
 
 
@@ -286,10 +272,8 @@ public class UpdateManager {
 
         @Override
         protected String doInBackground(Void... params) {
-
             String ceshi = WebServiceUtil.getInstance().getAndroidVersion(mVersionCode);
             Log.e("服务器APK版本号：",""+ceshi);
-
             return ceshi;
 
         }
@@ -300,8 +284,6 @@ public class UpdateManager {
                 apkUrl = WebServiceUtil.BASE_DOWNLOAD_URL + path;
                 mHandler.sendEmptyMessage(SHOW_DIALOG);
             } else {
-                // SysUtil.alert(WuliApplication.mActivateActivity,
-                // result.getMessage());
             }
         }
     }

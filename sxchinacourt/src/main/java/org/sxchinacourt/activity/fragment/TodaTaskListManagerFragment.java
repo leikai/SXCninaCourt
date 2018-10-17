@@ -12,8 +12,10 @@ import java.util.Vector;
 
 import static org.sxchinacourt.activity.fragment.TodoTaskListFragment.pageLocationForH5;
 
-//import static org.sxchinacourt.activity.TabsActivity.pageLocationForH5;
 
+/**
+ * @author lk
+ */
 public class TodaTaskListManagerFragment extends BaseFragment {
     private MsgFragment mMsgFragment;
 
@@ -22,7 +24,10 @@ public class TodaTaskListManagerFragment extends BaseFragment {
 
     private BaseFragment mCurChildFragment;
     private Vector<BaseFragment> mFragmentStack;
-    public static final int CHILD_TYPE_MSG_TODO = 12;//消息
+    /**
+     * 消息
+     */
+    public static final int CHILD_TYPE_MSG_TODO = 12;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,17 +55,13 @@ public class TodaTaskListManagerFragment extends BaseFragment {
         super.showChildFragment(bundle);
         switch (mChildType) {
             case CHILD_TYPE_MSG_TODO:
-//                mMsgFragment = new MsgFragment(getActivity(), R.layout.fragment_msg);
-//                mMsgFragment.setPreFragment(this);
-//                addChildFragment(mMsgFragment, R.id.content);
-//                mCurChildFragment = mMsgFragment;
-
                 mTodoTaskListFragment = new TodoTaskListFragment(getActivity(), R.layout.fragment_msg);
                 mTodoTaskListFragment.setPreFragment(this);
                 addChildFragment(mTodoTaskListFragment, R.id.content);
                 mCurChildFragment = mTodoTaskListFragment;
-
                 break;
+                default:
+                    break;
 
         }
         mFragmentStack.add(mCurChildFragment);
@@ -101,13 +102,17 @@ public class TodaTaskListManagerFragment extends BaseFragment {
     }
 
 
-    /*当Fragment由可见状态变为不可见状态时保存Fragment的页面显示状态，以备再次加载时使用*/
+    /**
+     * 当Fragment由可见状态变为不可见状态时保存Fragment的页面显示状态，以备再次加载时使用
+     */
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         mCurChildFragment.onHiddenChanged(hidden);
     }
-    /*隐藏所有fragment*/
+    /**
+     * 隐藏所有fragment
+     */
     private void hideAllFragment() {
         if (mTodoTaskListFragment!=null){
             hideFragment(mTodoTaskListFragment);

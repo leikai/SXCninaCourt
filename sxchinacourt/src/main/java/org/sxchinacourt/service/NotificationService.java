@@ -135,10 +135,10 @@ public class NotificationService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                timer = new Timer();
-                task = new TimerTask(){
-                    @Override
-                    public void run() {
+//                timer = new Timer();
+//                task = new TimerTask(){
+//                    @Override
+//                    public void run() {
                         String token  = CApplication.getInstance().getCurrentToken();
                         UserNewBean user = CApplication.getInstance().getCurrentUser();
                         String msgCountdaiban = WebServiceUtil.getInstance().getTaskCount(token);
@@ -166,10 +166,10 @@ public class NotificationService extends Service {
                         String msgCountList = WebServiceUtil.getInstance().getNoticeList(token,"否");
                         Log.e("msgCountList",""+msgCountList);
 
-                    }
-                };
-                //半分钟执行一次查询操作,访问一次后台
-                timer.schedule(task,1000,60000);
+//                    }
+//                };
+//                //半分钟执行一次查询操作,访问一次后台
+//                timer.schedule(task,1000,60000);
 
 
 

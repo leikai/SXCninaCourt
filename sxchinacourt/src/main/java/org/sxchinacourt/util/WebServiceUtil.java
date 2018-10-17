@@ -60,9 +60,9 @@ public class WebServiceUtil {
     public static String BASE_MESSAGE_URL ="http://111.53.181.200:8087/Cloud/CloudAppPort?wsdl";//留言机
 
     //----------------------------------------------newOA-------------------------------------//
-    public static String BASE_SERVER_URL_TOKEN = "http://172.16.3.48:6641/mserver/services/bwsSvc?wsdl"; // http
+//    public static String BASE_SERVER_URL_TOKEN = "http://172.16.3.48:6641/mserver/services/bwsSvc?wsdl"; // http
 
-//    public static String BASE_SERVER_URL_TOKEN = "http://111.53.181.200:8087/mserver/services/bwsSvc?wsdl";
+    public static String BASE_SERVER_URL_TOKEN = "http://111.53.181.200:8087/mserver/services/bwsSvc?wsdl";
     //---------------------------------------------finish------------------------------------//
 
 //    //----------------------------------------------newOA——测试-------------------------------------//

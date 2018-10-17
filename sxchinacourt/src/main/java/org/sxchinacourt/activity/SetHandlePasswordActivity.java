@@ -62,7 +62,6 @@ public class SetHandlePasswordActivity extends AppCompatActivity {
                     return;
                 }else {
                     String userName = "gaohongwei";
-//                    String remind = mRemind.getText().toString();
                     if ("请输入手势密码".equals(mRemind.getText().toString())){
                         setHandlePwdOriginal = result;
                         mRemind.setText("请再次输入手势密码");
@@ -143,12 +142,14 @@ public class SetHandlePasswordActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-//            mProgressView.stop();
+
             if (!TextUtils.isEmpty(mMessage)) {
                 Toast.makeText(SetHandlePasswordActivity.this, mMessage, Toast.LENGTH_LONG).show();
+                UserNewBean user = CApplication.getInstance().getCurrentUser();
+                user.setHandPassword(mHandPassword);
+                CApplication.getInstance().setUser(user);
                 mRemind.setText("手势密码设置完成");
-//                mGestureLockView.clearView();
-//                return;
+                finish();
             }
             if (success) {
                 mGestureLockView.clearView();
@@ -158,7 +159,6 @@ public class SetHandlePasswordActivity extends AppCompatActivity {
         @Override
         protected void onCancelled() {
             mAuthTask = null;
-//            mProgressView.stop();
         }
     }
 

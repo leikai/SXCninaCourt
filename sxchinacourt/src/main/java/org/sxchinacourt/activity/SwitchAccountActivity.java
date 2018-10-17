@@ -17,6 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.geek.thread.GeekThreadManager;
+import com.geek.thread.ThreadPriority;
+import com.geek.thread.ThreadType;
+import com.geek.thread.task.GeekRunnable;
 
 import org.sxchinacourt.CApplication;
 import org.sxchinacourt.R;
@@ -77,6 +81,10 @@ public class SwitchAccountActivity extends AppCompatActivity {
      * 切换关联账号
      */
     public static final int SHOW_RESPONSE_RELATION_SWITCH = 1;
+    /**
+     * 无关联账号
+     */
+    public static final int SHOW_RESPONSE_RELATION_EMPTY = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,23 +132,29 @@ public class SwitchAccountActivity extends AppCompatActivity {
     @SuppressLint("HandlerLeak")
     private void initData() {
 
-        new Thread() {
+        GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
             public void run() {
                 UserNewBean user = CApplication.getInstance().getCurrentUser();
                 String relation = user.getRelation();
-                String resp = WebServiceUtil.getInstance().getUsersByRelation(relation);
-                List<UserNewBean> userList = JSON.parseArray(resp, UserNewBean.class);
-                String ceshi = userList.get(0).getUserName();
-                Message message = new Message();
-                message.what = SHOW_RESPONSE_USER_RELATION;
-                message.obj = userList;
-                handlergetdata.sendMessage(message);
+                if (relation!=null){
+                    String resp = WebServiceUtil.getInstance().getUsersByRelation(relation);
+                    List<UserNewBean> userList = JSON.parseArray(resp, UserNewBean.class);
+                    String ceshi = userList.get(0).getUserName();
+                    Message message = new Message();
+                    message.what = SHOW_RESPONSE_USER_RELATION;
+                    message.obj = userList;
+                    handlergetdata.sendMessage(message);
+                    Log.e("resp", "" + ceshi);
 
-                Log.e("resp", "" + ceshi);
+                }else {
+                    Message message = new Message();
+                    message.what = SHOW_RESPONSE_RELATION_EMPTY;
+                    message.obj = "";
+                    handlergetdata.sendMessage(message);
+                }
             }
-        }.start();
-
+        },ThreadType.NORMAL_THREAD);
         handlergetdata = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -148,24 +162,26 @@ public class SwitchAccountActivity extends AppCompatActivity {
                 switch (msg.what) {
                     case SHOW_RESPONSE_USER_RELATION:
                         usersRelation = (ArrayList) msg.obj;
-                        LinearLayoutManager layoutManager = new LinearLayoutManager(SwitchAccountActivity.this);
-                        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                        rvUsersRelation.setLayoutManager(layoutManager);
-                        UsersRelationAdapter adapter = new UsersRelationAdapter(SwitchAccountActivity.this,usersRelation);
-                        rvUsersRelation.setAdapter(adapter);
-
-                        adapter.setOnItemClickListener(new UsersRelationAdapter.OnItemClickListener() {
-                            @Override
-                            public void onItemClickListener(View view, int position) {
-                                UserNewBean userNewBean = usersRelation.get(position);
-                                ObtainNewRelationToken(userNewBean);
-                            }
-                        });
+                            LinearLayoutManager layoutManager = new LinearLayoutManager(SwitchAccountActivity.this);
+                            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                            rvUsersRelation.setLayoutManager(layoutManager);
+                            UsersRelationAdapter adapter = new UsersRelationAdapter(SwitchAccountActivity.this,usersRelation);
+                            rvUsersRelation.setAdapter(adapter);
+                            adapter.setOnItemClickListener(new UsersRelationAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClickListener(View view, int position) {
+                                    UserNewBean userNewBean = usersRelation.get(position);
+                                    ObtainNewRelationToken(userNewBean);
+                                }
+                            });
                         break;
                     case SHOW_RESPONSE_RELATION_SWITCH:
                         Intent intent = new Intent(SwitchAccountActivity.this, TabsActivity.class);
                         startActivity(intent);
                         Toast.makeText(SwitchAccountActivity.this,"跳微门户模块！",Toast.LENGTH_SHORT).show();
+                        break;
+                    case SHOW_RESPONSE_RELATION_EMPTY:
+                        Toast.makeText(SwitchAccountActivity.this, "暂无关联账号", Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         break;
@@ -180,7 +196,7 @@ public class SwitchAccountActivity extends AppCompatActivity {
      * @param user
      */
     private void ObtainNewRelationToken(final UserNewBean user) {
-        new Thread(new Runnable() {
+        GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
             public void run() {
                 String token = null;
@@ -204,19 +220,13 @@ public class SwitchAccountActivity extends AppCompatActivity {
                                 message.what = SHOW_RESPONSE_RELATION_SWITCH;
                                 message.obj = "1";
                                 handlergetdata.sendMessage(message);
-
                             }
-
-
                         }else {
-
                         }
-
                     }
                 }
-
             }
-        }).start();
+        },ThreadType.NORMAL_THREAD);
     }
 
 }

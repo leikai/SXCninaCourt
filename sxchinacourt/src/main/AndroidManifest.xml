@@ -104,10 +104,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
         <activity
-            android:name=".activity.NoticeDetailInfoActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
-        <activity
             android:name=".activity.NewsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
@@ -255,16 +251,12 @@
             tools:replace="android:value" />
 
         <activity android:name=".activity.MessagemachineContentActivity" />
-        <activity android:name=".activity.VideoPlayActivity" />
         <activity android:name=".activity.PictureVideoPlayActivity" />
-        <activity android:name=".activity.WeidoorActivity" />
         <activity android:name=".activity.ActivitySendSelect" />
         <activity android:name=".activity.CabinetActivity" />
         <activity android:name=".activity.MachineActivity" />
         <activity android:name=".activity.FileDepositDataActivity" />
         <activity android:name=".activity.FileReverseDataActivity" />
-        <activity android:name=".activity.fragment.LeaveActivity" />
-        <activity android:name=".activity.fragment.LeaveInformalActivity" />
         <activity
             android:name=".activity.fragment.Leave1Activity"
             android:windowSoftInputMode="adjustResize" />

@@ -15,17 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import org.sxchinacourt.R;
 import org.sxchinacourt.widget.CustomActionBar;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 /**
  *

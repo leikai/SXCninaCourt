@@ -55,6 +55,7 @@ public class UserDetailInfodActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_detail_infod);
+
         receiveUserIntent();
         initView();
         initEvent();
@@ -74,7 +75,6 @@ public class UserDetailInfodActivity extends AppCompatActivity {
                 if(!TextUtils.isEmpty(mUser.getEmpMobilephone())){
                     nums.add(mUser.getEmpMobilephone());
                 }
-//                nums.add("18611976018");
                 if(nums.size()>0){
                     String[] phoneNumArrsy = new String[nums.size()];
                     nums.toArray(phoneNumArrsy);
@@ -121,6 +121,7 @@ public class UserDetailInfodActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         customActionBar = (CustomActionBar) findViewById(R.id.customActionBar);
         customActionBar.setTitle("人员信息");
+        customActionBar.setLogoViewVisible(View.INVISIBLE);
         mUserInfoContainer = (LinearLayout) findViewById(R.id.userinfo_container);
         mCustomProgress = (CustomProgress) findViewById(R.id.loading);
         mUserNameView = (TextView) findViewById(R.id.tv_username);
@@ -137,8 +138,9 @@ public class UserDetailInfodActivity extends AppCompatActivity {
         mUser = (UserNewBean) getIntent().getSerializableExtra("user");
         Log.e("用户信息",""+mUser.getEmpname());
     }
-
-    //通讯录中个人详情页面
+    /**
+     * 通讯录中个人详情页面
+     */
     @SuppressLint("HandlerLeak")
     private Handler mUpdateUserInfoHandler = new Handler() {
         @Override
@@ -283,7 +285,6 @@ public class UserDetailInfodActivity extends AppCompatActivity {
         mPopUpWindow.setAnimationStyle(R.style.popup_window_anim);
         mPopUpWindow.setFocusable(true);
         mPopUpWindow.setOutsideTouchable(false);
-//        setWindowAlpha(0.3f);
         mPopUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {

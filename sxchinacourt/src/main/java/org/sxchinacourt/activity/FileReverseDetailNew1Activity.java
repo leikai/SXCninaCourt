@@ -1,5 +1,6 @@
 package org.sxchinacourt.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,6 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.geek.thread.GeekThreadManager;
+import com.geek.thread.ThreadPriority;
+import com.geek.thread.ThreadType;
+import com.geek.thread.task.GeekRunnable;
 import com.github.jdsjlzx.interfaces.OnLoadMoreListener;
 import com.github.jdsjlzx.interfaces.OnNetWorkErrorListener;
 import com.github.jdsjlzx.interfaces.OnRefreshListener;
@@ -30,10 +35,8 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.sxchinacourt.CApplication;
 import org.sxchinacourt.R;
 import org.sxchinacourt.adapter.SwipeMenuReverseAdapter;
-import org.sxchinacourt.bean.DepositDataBean;
 import org.sxchinacourt.bean.FileReverseDetailBean;
 import org.sxchinacourt.bean.FileReverseDetailDataBean;
-import org.sxchinacourt.bean.UserBean;
 import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.util.NetworkUtils;
 import org.sxchinacourt.util.SoapClient;
@@ -46,19 +49,28 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
- * Created by 殇冰无恨 on 2017/11/9.
+ *
+ * @author 殇冰无恨
+ * @date 2017/11/9
  */
 
 public class FileReverseDetailNew1Activity extends Activity{
     private static final String TAG = "lzx";
 
-    /**服务器端一共多少条数据*/
-    private static final int TOTAL_COUNTER = 11;//如果服务器没有返回总数据或者总页数，这里设置为最大值比如10000，什么时候没有数据了根据接口返回判断
+    /**
+     * 如果服务器没有返回总数据或者总页数，这里设置为最大值比如10000，什么时候没有数据了根据接口返回判断
+     * 服务器端一共多少条数据
+     */
+    private static final int TOTAL_COUNTER = 11;
 
-    /**每一页展示多少条数据*/
+    /**
+     * 每一页展示多少条数据
+     */
     private static final int REQUEST_COUNT = 10;
 
-    /**已经获取到多少条数据了*/
+    /**
+     * 已经获取到多少条数据了
+     */
     private static int mCurrentCounter = 0;
     private boolean isRefresh = false;
 
@@ -150,8 +162,10 @@ public class FileReverseDetailNew1Activity extends Activity{
 
         final View header = LayoutInflater.from(this).inflate(R.layout.sample_header,(ViewGroup)findViewById(android.R.id.content), false);
         mLRecyclerViewAdapter.addHeaderView(new SampleHeader(this));
-        mRecyclerView.setPullRefreshEnabled(true);//设置不能下拉刷新
-        mRecyclerView.setOnRefreshListener(new OnRefreshListener() {//下拉刷新的操作
+        //设置下拉刷新
+        mRecyclerView.setPullRefreshEnabled(true);
+        //下拉刷新的操作
+        mRecyclerView.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() {
                 mDataAdapter.clear();
@@ -164,11 +178,12 @@ public class FileReverseDetailNew1Activity extends Activity{
         });
         //是否禁用自动加载更多功能,false为禁用, 默认开启自动加载更多功能
         mRecyclerView.setLoadMoreEnabled(true);
-        mRecyclerView.setOnLoadMoreListener(new OnLoadMoreListener() {//自动加载操作
+        //自动加载操作
+        mRecyclerView.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
-
-                if (newList.size() !=10) {//每页的数据设置的为10条,如果不是10条说明是最后一页
+                //每页的数据设置的为10条,如果不是10条说明是最后一页
+                if (newList.size() !=10) {
                     //the end
                     mRecyclerView.setNoMore(true);
 
@@ -223,10 +238,8 @@ public class FileReverseDetailNew1Activity extends Activity{
     }
 
     private void addItems(ArrayList<FileReverseDetailDataBean> list) {
-
         mDataAdapter.addAll(list);
         mCurrentCounter += list.size();
-
     }
 
     private class PreviewHandler extends Handler {
@@ -237,6 +250,7 @@ public class FileReverseDetailNew1Activity extends Activity{
             ref = new WeakReference<>(activity);
         }
 
+        @SuppressLint("HandlerLeak")
         @Override
         public void handleMessage(Message msg) {
             final FileReverseDetailNew1Activity activity = ref.get();
@@ -276,12 +290,11 @@ public class FileReverseDetailNew1Activity extends Activity{
                                     activity.mRecyclerView.refreshComplete(REQUEST_COUNT);
                                     isRefresh = false;
                                     break;
-
+                                    default:
+                                        break;
                             }
                         }
                     };
-
-
                     break;
                 case -3:
                     activity.mRecyclerView.refreshComplete(REQUEST_COUNT);
@@ -292,7 +305,6 @@ public class FileReverseDetailNew1Activity extends Activity{
                             requestData();
                         }
                     });
-
                     break;
                 default:
                     break;
@@ -305,10 +317,9 @@ public class FileReverseDetailNew1Activity extends Activity{
      */
     private void requestData() {
         Log.d(TAG, "requestData");
-        new Thread() {
+        GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
             public void run() {
-                super.run();
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -322,7 +333,7 @@ public class FileReverseDetailNew1Activity extends Activity{
                     mHandler.sendEmptyMessage(-3);
                 }
             }
-        }.start();
+        },ThreadType.NORMAL_THREAD);
     }
 
     @Override
@@ -342,10 +353,10 @@ public class FileReverseDetailNew1Activity extends Activity{
     }
     private void startThread(int i) {
         UserNewBean user = CApplication.getInstance().getCurrentUser();
-        final SoapParams soapParams = new SoapParams().put("SerialNo","17091215332720");//1414 是假数据，应该改成
-        final SoapParams soapParamsEmployeePickUp = new SoapParams().put("arg0", String.valueOf ( user.getOaid() )).put("arg1",i);//1414 是假数据，应该改成
+        final SoapParams soapParams = new SoapParams().put("SerialNo","17091215332720");
+        final SoapParams soapParamsEmployeePickUp = new SoapParams().put("arg0", String.valueOf ( user.getOaid() )).put("arg1",i);
 
-        new Thread(new Runnable() {
+        GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
             public void run() {
                 WebServiceUtil.getInstance().GetEmployeePickup(soapParamsEmployeePickUp, new SoapClient.ISoapUtilCallback() {
@@ -370,7 +381,7 @@ public class FileReverseDetailNew1Activity extends Activity{
                     }
                 });
             }
-        }).start();
+        },ThreadType.NORMAL_THREAD);
     }
 
 }

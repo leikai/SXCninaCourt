@@ -1,5 +1,6 @@
 package org.sxchinacourt.activity;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,12 +32,17 @@ import org.sxchinacourt.widget.CustomProgress;
 import java.util.List;
 
 /**
- * Created by baggio on 2017/2/28.
+ *
+ * @author baggio
+ * @date 2017/2/28
  */
 
 public class TaskAssignedToMeDetailInfoActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String PARAM_TASK = "task";
-    private LinearLayout mContentView;//内容区域
+    /**
+     * 内容区域
+     */
+    private LinearLayout mContentView;
     private CustomActionBar mActionBarView;
     private CustomProgress mCustomProgress;
     private GetTaskInfoTask mGetTaskInfoTask;
@@ -70,6 +76,7 @@ public class TaskAssignedToMeDetailInfoActivity extends AppCompatActivity implem
         mGetTaskInfoTask.execute();
     }
 
+    @SuppressLint("HandlerLeak")
     private Handler mUpdateUIHandler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
@@ -121,6 +128,8 @@ public class TaskAssignedToMeDetailInfoActivity extends AppCompatActivity implem
                 }
 
                 break;
+                default:
+                    break;
         }
     }
 

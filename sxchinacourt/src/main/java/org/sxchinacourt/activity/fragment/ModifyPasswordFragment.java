@@ -12,12 +12,13 @@ import android.widget.Toast;
 
 import org.sxchinacourt.CApplication;
 import org.sxchinacourt.R;
-import org.sxchinacourt.bean.UserBean;
 import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.util.WebServiceUtil;
 
 /**
- * Created by baggio on 2017/2/9.
+ *
+ * @author baggio
+ * @date 2017/2/9
  */
 
 public class ModifyPasswordFragment extends BaseFragment implements View.OnClickListener {

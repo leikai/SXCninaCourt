@@ -11,6 +11,9 @@ import org.sxchinacourt.widget.DateTimePicker;
 
 import java.util.Calendar;
 
+/**
+ * @author lk
+ */
 public class DateTimePickerDialog extends AlertDialog implements OnClickListener {
     private DateTimePicker mDateTimePicker;
     private Calendar mDate = Calendar.getInstance();
@@ -50,6 +53,7 @@ public class DateTimePickerDialog extends AlertDialog implements OnClickListener
         mOnDateTimeSetListener = callBack;
     }
 
+    @Override
     public void onClick(DialogInterface arg0, int arg1) {
         if (mOnDateTimeSetListener != null) {
             mOnDateTimeSetListener.OnDateTimeSet(this, mDate.getTimeInMillis());

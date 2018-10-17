@@ -1,5 +1,6 @@
 package org.sxchinacourt.activity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -35,13 +36,19 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * @author lk
+ */
 public class NoticeWebActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private WebView webView;
     private CustomProgress mCustomProgress;
     private String ceshi;
-    public static String pageLocationForH5 = "2" ;//从页面中获取目前H5所在的界面
+    /**
+     * 从页面中获取目前H5所在的界面
+     */
+    public static String pageLocationForH5 = "2" ;
     private String mFileUrl;
     private String mFileName;
     private GetDownloadFileUrlTask mGetDownloadFileUrlTask;
@@ -72,9 +79,8 @@ public class NoticeWebActivity extends AppCompatActivity {
         WebSettings settings = webView.getSettings();
         webView.setWebViewClient(new WebViewClient());
         webView.addJavascriptInterface(new TodoTaskListFragment.TestJavaScriptInterface(),"android");
-        webView.getSettings().setDomStorageEnabled(true);//打开DOM存储API
-
-        //settings.setSupportMultipleWindows(false);      //设置为单窗口模式
+        //打开DOM存储API
+        webView.getSettings().setDomStorageEnabled(true);
         // 设置支持JavaScript
         settings.setJavaScriptEnabled(true);
         // 设置webview的缩放级别
@@ -82,7 +88,6 @@ public class NoticeWebActivity extends AppCompatActivity {
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-//                return super.onJsAlert(view, url, message, result);
                 pageLocationForH5 = message;
                 Log.e("pageLocationForH5",""+pageLocationForH5  );
                 result.confirm();
@@ -97,9 +102,7 @@ public class NoticeWebActivity extends AppCompatActivity {
                     mFileUrl = url;
                     mFileName = mFileUrl.substring(mFileUrl.length()-36);
                     showPromptDownloadDialog();
-
-//                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-                }
+                    }
             }
         });
         //给webview设置WebChromeClient   当ui发生改变的时候的回调
@@ -213,29 +216,7 @@ public class NoticeWebActivity extends AppCompatActivity {
 
                 Log.e("lk",""+mFileUrl.substring(mFileUrl.length()-36));
                 String filePath = "";
-//                if (mFileName.endsWith(".doc") ) {
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"1"+".doc") ;
-//                }else if (mFileName.endsWith(".docx")){
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"2"+".docx") ;
-//
-//                }else if (mFileName.endsWith(".xls") ) {
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"3"+".xls") ;
-//                }else if (mFileName.endsWith(".xlsx")){
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"4"+".xlsx") ;
-//
-//                }else if (mFileName.endsWith(".txt")) {
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"5"+".txt") ;
-//                } else if (mFileName.endsWith(".pdf")) {
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"6"+".pdf") ;
-//                } else if (mFileName.endsWith(".jpg") ) {
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"7"+".jpg") ;
-//                }else if (mFileName.endsWith(".png")){
-//                    filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+"8"+".png") ;
-//
-//                }
                 filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+mFileName) ;
-
-//                String filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+mFileUrl.substring(mFileUrl.length()-36)) ;
                 File file = new File(filePath);
                 file.createNewFile();
                 file.setWritable(true);
@@ -257,7 +238,8 @@ public class NoticeWebActivity extends AppCompatActivity {
                         mHandler.sendEmptyMessage(DOWNLOAD_FINISHED);
                         break;
                     }
-                } while (!mInterceptFlag);// 点击取消就停止下载.
+                    // 点击取消就停止下载.
+                } while (!mInterceptFlag);
                 fos.close();
                 is.close();
             } catch (Throwable e) {
@@ -290,7 +272,9 @@ public class NoticeWebActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
+        @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case PROGRESS_UPDATE:
@@ -306,7 +290,9 @@ public class NoticeWebActivity extends AppCompatActivity {
         }
     };
 
+    @SuppressLint("HandlerLeak")
     private Handler mDownloadError = new Handler() {
+        @Override
         public void handleMessage(Message msg) {
             AlertDialog.Builder builder = new AlertDialog.Builder(NoticeWebActivity.this);
             builder.setTitle("下载失败");
@@ -354,14 +340,6 @@ public class NoticeWebActivity extends AppCompatActivity {
         }
     }
     private void openFile(int which) {
-//        String filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR) +
-//                mComponent.getLabelValue();
-//        File file = new File(filePath);
-//        Intent intent = FileOpenHelper.getFileIntent(file);
-//        if (intent != null) {
-//            getContext().startActivity(intent);
-//        }
-
         Intent intent = null;
         if (mFileName.endsWith(".doc")) {
             String filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+mFileName);

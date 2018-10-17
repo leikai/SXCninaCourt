@@ -1,5 +1,6 @@
 package org.sxchinacourt.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -65,6 +66,7 @@ public class TagAliasOperatorHelper {
     public void put(int sequence,TagAliasBean tagAliasBean){
         tagAliasActionCache.put(sequence,tagAliasBean);
     }
+    @SuppressLint("HandlerLeak")
     private Handler delaySendHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -84,6 +86,8 @@ public class TagAliasOperatorHelper {
                         Logger.w(TAG,"#unexcepted - msg obj was incorrect");
                     }
                     break;
+                    default:
+                        break;
             }
         }
     };
@@ -181,6 +185,8 @@ public class TagAliasOperatorHelper {
                 return "clean";
             case ACTION_CHECK:
                 return "check";
+                default:
+                    break;
         }
         return "unkonw operation";
     }
@@ -251,10 +257,8 @@ public class TagAliasOperatorHelper {
         if(jPushMessage.getErrorCode() == 0){
             Logger.i(TAG,"action - modify alias Success,sequence:"+sequence);
             tagAliasActionCache.remove(sequence);
-//            String logs = getActionStr(tagAliasBean.action)+" alias success";
             String logs = "昵称设置成功";
             Logger.i(TAG,logs);
-//            ExampleUtil.showToast(logs, context);
         }else{
             String logs = "Failed to " + getActionStr(tagAliasBean.action)+" alias, errorCode:" + jPushMessage.getErrorCode();
             Logger.e(TAG, logs);

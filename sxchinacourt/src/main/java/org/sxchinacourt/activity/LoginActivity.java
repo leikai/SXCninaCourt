@@ -32,8 +32,6 @@ import org.sxchinacourt.common.Contstants;
 import org.sxchinacourt.util.PinYin.SharedPreferencesUtil;
 import org.sxchinacourt.util.WebServiceUtil;
 import org.sxchinacourt.widget.CustomProgress;
-import org.sxchinacourt.activity.SignOnActivity;
-import org.sxchinacourt.activity.TabsActivity;
 
 import static android.Manifest.permission.READ_CONTACTS;
 

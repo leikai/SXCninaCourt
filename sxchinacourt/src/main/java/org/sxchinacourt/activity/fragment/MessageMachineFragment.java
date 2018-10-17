@@ -1,8 +1,8 @@
 package org.sxchinacourt.activity.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -14,8 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.geek.thread.GeekThreadManager;
+import com.geek.thread.ThreadPriority;
+import com.geek.thread.ThreadType;
+import com.geek.thread.task.GeekRunnable;
 
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.sxchinacourt.CApplication;
@@ -23,10 +26,7 @@ import org.sxchinacourt.R;
 import org.sxchinacourt.activity.MessagemachineContentActivity;
 import org.sxchinacourt.adapter.AnswerPhoneAdapter;
 import org.sxchinacourt.bean.AnswermachineOnceJsonBean;
-import org.sxchinacourt.bean.AnswermachineTwiceJsonBean;
-import org.sxchinacourt.bean.EmployeeBean;
-import org.sxchinacourt.bean.MessagemachineBean;
-import org.sxchinacourt.bean.UserBean;
+
 import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.dao.DBHelper;
 import org.sxchinacourt.dao.Msgmachinedb;
@@ -41,7 +41,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Created by 殇冰无恨 on 2017/11/29.
+ *
+ * @author 殇冰无恨
+ * @date 2017/11/29
  */
 
 public class MessageMachineFragment extends BaseFragment {
@@ -99,22 +101,20 @@ public class MessageMachineFragment extends BaseFragment {
 
     }
 
+    @SuppressLint("HandlerLeak")
     private void initFruits() {
         final UserNewBean user = CApplication.getInstance().getCurrentUser();
         String str = String.valueOf ( user.getOaid() );
         final SoapParams soapParams = new SoapParams().put("arg0",str);
-        new Thread(new Runnable() {
+
+        GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
             public void run() {
                 timer = new Timer();
-
                 task = new TimerTask() {
                     @Override
 
                     public void run() {
-
-
-
                         String dynamicData = WebServiceUtil.getInstance().getOaMessageList(soapParams, new SoapClient.ISoapUtilCallback() {
                             @Override
                             public void onSuccess(SoapSerializationEnvelope envelope) throws Exception {
@@ -148,13 +148,10 @@ public class MessageMachineFragment extends BaseFragment {
                         });
                     }
                 };
-
-                timer.schedule(task,1000,30000);//半分钟执行一次查询操作,访问一次后台
-                    }
-//                };
-//            }
-        }).start();
-
+                //半分钟执行一次查询操作,访问一次后台
+                timer.schedule(task,1000,30000);
+            }
+        },ThreadType.NORMAL_THREAD);
         handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -195,73 +192,13 @@ public class MessageMachineFragment extends BaseFragment {
                         AnswerPhoneAdapter answerPhoneAdapter = new AnswerPhoneAdapter(getContext(),view ,msgmachinedbs);
                         lvMessage.setAdapter(answerPhoneAdapter);
                         break;
+                        default:
+                            break;
                 }
 
             }
         };
-//        for (int i=0;i<2;i++){
-//            MessagemachineBean user1 = new MessagemachineBean();
-//            user1.setPersonName("user1");
-//            user1.setAnswerType("文字留言");
-//            user1.setTextContent("法官你好!请听我说");
-//            user1.setAnswerTime("0:00");
-//            mMessagemachineBeanList.add(user1);
-//            MessagemachineBean user2 = new MessagemachineBean();
-//            user2.setPersonName("user2");
-//            user2.setAnswerType("语音留言");
-//            user2.setTextContent("法官你好!请听我说");
-//            user2.setAnswerTime("0:00");
-//            mMessagemachineBeanList.add(user2);
-//            MessagemachineBean user3 = new MessagemachineBean();
-//            user3.setPersonName("user3");
-//            user3.setAnswerType("文字留言");
-//            user3.setTextContent("法官你好!请听我说");
-//            user3.setAnswerTime("0:00");
-//            mMessagemachineBeanList.add(user3);
-//            MessagemachineBean user4 = new MessagemachineBean();
-//            user4.setPersonName("user4");
-//            user4.setAnswerType("视频留言");
-//            user4.setTextContent("法官你好!请听我说");
-//            user4.setAnswerTime("0:00");
-//            mMessagemachineBeanList.add(user4);
-//            MessagemachineBean user5 = new MessagemachineBean();
-//            user5.setPersonName("user5");
-//            user5.setAnswerType("文字留言");
-//            user5.setTextContent("法官你好!请听我说");
-//            user5.setAnswerTime("0:00");
-//            mMessagemachineBeanList.add(user5);
-//            MessagemachineBean user6 = new MessagemachineBean();
-//            user6.setPersonName("user6");
-//            user6.setAnswerType("语音留言");
-//            user6.setTextContent("法官你好!请听我说");
-//            user6.setAnswerTime("0:00");
-//            mMessagemachineBeanList.add(user6);
-//            MessagemachineBean user7 = new MessagemachineBean();
-//            user7.setPersonName("user7");
-//            user7.setAnswerType("视频留言");
-//            user7.setTextContent("法官你好!请听我说");
-//            user7.setAnswerTime("0:00");
-//            mMessagemachineBeanList.add(user7);
-//            MessagemachineBean user8 = new MessagemachineBean();
-//            user8.setPersonName("user8");
-//            user8.setAnswerType("文字留言");
-//            user8.setTextContent("法官你好!请听我说");
-//            user8.setAnswerTime("0:00");
-//            mMessagemachineBeanList.add(user8);
-//            MessagemachineBean user9 = new MessagemachineBean();
-//            user9.setPersonName("user9");
-//            user9.setAnswerType("语音留言");
-//            user9.setTextContent("法官你好!请听我说");
-//            user9.setAnswerTime("0:00");
-//            mMessagemachineBeanList.add(user9);
-//            MessagemachineBean user10 = new MessagemachineBean();
-//            user10.setPersonName("user10");
-//            user10.setAnswerType("文字留言");
-//            user10.setTextContent("法官你好!请听我说");
-//            user10.setAnswerTime("0:00");
-//            mMessagemachineBeanList.add(user10);
-//
-//        }
+
     }
 
     @Override

@@ -15,7 +15,9 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- * Created by efan on 2017/4/14.
+ *
+ * @author efan
+ * @date 2017/4/14
  */
 
 public final class LocalBroadcastManager {
@@ -36,7 +38,6 @@ public final class LocalBroadcastManager {
             if (mInstance == null) {
                 mInstance = new LocalBroadcastManager(context.getApplicationContext());
             }
-
             return mInstance;
         }
     }
@@ -44,6 +45,7 @@ public final class LocalBroadcastManager {
     private LocalBroadcastManager(Context context) {
         this.mAppContext = context;
         this.mHandler = new Handler(context.getMainLooper()) {
+            @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case 1:
@@ -108,7 +110,6 @@ public final class LocalBroadcastManager {
                         }
                     }
                 }
-
             }
         }
     }
@@ -125,22 +126,18 @@ public final class LocalBroadcastManager {
             if (debug) {
                 Logger.v("LocalBroadcastManager", "Resolving type " + type + " scheme " + scheme + " of intent " + intent);
             }
-
             ArrayList entries = (ArrayList) this.mActions.get(intent.getAction());
             if (entries != null) {
                 if (debug) {
                     Logger.v("LocalBroadcastManager", "Action list: " + entries);
                 }
-
                 ArrayList receivers = null;
-
                 int i;
                 for (i = 0; i < entries.size(); ++i) {
                     ReceiverRecord receiver = (ReceiverRecord) entries.get(i);
                     if (debug) {
                         Logger.v("LocalBroadcastManager", "Matching against filter " + receiver.filter);
                     }
-
                     if (receiver.broadcasting) {
                         if (debug) {
                             Logger.v("LocalBroadcastManager", "  Filter\'s target already added");
@@ -151,11 +148,9 @@ public final class LocalBroadcastManager {
                             if (debug) {
                                 Logger.v("LocalBroadcastManager", "  Filter matched!  match=0x" + Integer.toHexString(match));
                             }
-
                             if (receivers == null) {
                                 receivers = new ArrayList();
                             }
-
                             receivers.add(receiver);
                             receiver.broadcasting = true;
                         } else if (debug) {
@@ -176,7 +171,6 @@ public final class LocalBroadcastManager {
                                 default:
                                     reason = "unknown reason";
                             }
-
                             Logger.v("LocalBroadcastManager", "  Filter did not match: " + reason);
                         }
                     }
@@ -216,7 +210,6 @@ public final class LocalBroadcastManager {
                 if (br <= 0) {
                     return;
                 }
-
                 brs = new BroadcastRecord[br];
                 this.mPendingBroadcasts.toArray(brs);
                 this.mPendingBroadcasts.clear();

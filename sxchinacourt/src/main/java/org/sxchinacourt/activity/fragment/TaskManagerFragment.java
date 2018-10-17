@@ -13,7 +13,9 @@ import org.sxchinacourt.activity.TasksAssignedToMeActivity;
 import org.sxchinacourt.activity.TasksICreatedActivity;
 
 /**
- * Created by baggio on 2017/2/25.
+ *
+ * @author baggio
+ * @date 2017/2/25
  */
 
 public class TaskManagerFragment extends BaseFragment implements View.OnClickListener {
@@ -61,6 +63,8 @@ public class TaskManagerFragment extends BaseFragment implements View.OnClickLis
                 startActivity(intent);
                 break;
             }
+            default:
+                break;
         }
 
     }

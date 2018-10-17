@@ -16,10 +16,12 @@ import org.sxchinacourt.bean.NewsBean;
 import java.util.List;
 
 /**
- * Created by 殇冰无恨 on 2017/12/4.
+ * 新闻列表适配器
+ * @author 殇冰无恨
+ * @date 2017/12/4
  */
 
-public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> {
+public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHolder> {
     private List<NewsBean> mFruitList;
     private Context context;
     static class ViewHolder extends RecyclerView.ViewHolder{
@@ -33,13 +35,13 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
         }
     }
 
-    public FruitAdapter(Context context, List<NewsBean> mFruitList) {
+    public NewsListAdapter(Context context, List<NewsBean> mFruitList) {
         this.context = context;
         this.mFruitList = mFruitList;
     }
 
-    /*
-    创建ViewHolder的实例
+    /**
+     *  创建ViewHolder的实例
      */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -53,14 +55,12 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
                 bundle.putString("oid",mFruitList.get((int) holder.itemView.getTag()).getOid());
                 jumptoNews.putExtras(bundle);
                 context.startActivity(jumptoNews);
-//                Intent intent = new Intent(context, WeidoorActivity.class);
-//                context.startActivity(intent);
             }
         });
         return holder;
     }
-    /*
-    用于对RecyclerView子项的数据进行赋值
+    /**
+     * 用于对RecyclerView子项的数据进行赋值
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {

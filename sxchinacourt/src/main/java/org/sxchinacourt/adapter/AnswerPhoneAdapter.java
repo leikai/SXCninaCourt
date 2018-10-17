@@ -1,6 +1,5 @@
 package org.sxchinacourt.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,15 +9,12 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -27,17 +23,15 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
-//import com.wrz.picture_demo.SelectActivity;
+
 
 import org.sxchinacourt.R;
-import org.sxchinacourt.activity.MachineActivity;
+
 import org.sxchinacourt.activity.MessagemachineContentActivity;
 import org.sxchinacourt.activity.PictureVideoPlayActivity;
-import org.sxchinacourt.activity.VideoPlayActivity;
-import org.sxchinacourt.bean.AnswermachineOnceJsonBean;
+
 import org.sxchinacourt.bean.CabinetDetailBean;
-import org.sxchinacourt.bean.FileReverseDetailBean;
-import org.sxchinacourt.bean.MessagemachineBean;
+
 import org.sxchinacourt.dao.DBHelper;
 import org.sxchinacourt.dao.Msgmachinedb;
 import org.sxchinacourt.dao.MsgmachinedbDao;
@@ -47,8 +41,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -60,14 +53,19 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by 殇冰无恨 on 2017/12/5.
+ *
+ * @author 殇冰无恨
+ * @date 2017/12/5
  */
 
 public class AnswerPhoneAdapter extends RecyclerView.Adapter<AnswerPhoneAdapter.ViewHolder> {
     private List<Msgmachinedb> mMessagemachineBeanList;
     private Context mContext;
+    /**
+     * 定义上传文件类型
+     */
     public static final MediaType MEDIA_TYPE_MARKDOWN
-            = MediaType.parse("text/x-markdown; charset=utf-8");//定义上传文件类型
+            = MediaType.parse("text/x-markdown; charset=utf-8");
     private static final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
 
 
@@ -118,10 +116,10 @@ public class AnswerPhoneAdapter extends RecyclerView.Adapter<AnswerPhoneAdapter.
         this.mMessagemachineBeanList = mMessagemachineBeanList;
         msgmachinedbDao = dbHelper.initDatabase(mContext,TABLE_NAME).getMsgmachinedbDao();
     }
-    /*
-   创建ViewHolder的实例
-   添加点击事件
-    */
+    /**
+     * 创建ViewHolder的实例
+     *    添加点击事件
+     */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message_machine,parent,false);
@@ -129,8 +127,8 @@ public class AnswerPhoneAdapter extends RecyclerView.Adapter<AnswerPhoneAdapter.
 
         return holder;
     }
-    /*
-    用于对RecyclerView子项的数据进行赋值
+    /**
+     * 用于对RecyclerView子项的数据进行赋值
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {

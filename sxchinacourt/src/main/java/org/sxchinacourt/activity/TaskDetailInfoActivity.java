@@ -19,6 +19,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.geek.thread.GeekThreadManager;
+import com.geek.thread.ThreadPriority;
+import com.geek.thread.ThreadType;
+import com.geek.thread.task.GeekRunnable;
 import com.kinggrid.iapprevision_iwebrevision.FieldEntity;
 import com.kinggrid.iapprevision_iwebrevision.iAppRevision;
 import com.kinggrid.iapprevision_iwebrevision.iAppRevision_iWebRevision;
@@ -36,7 +41,6 @@ import org.sxchinacourt.bean.TaskBean;
 import org.sxchinacourt.bean.UserBean;
 import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.bean.ViewComponents;
-import org.sxchinacourt.util.SharedPreferencesUtil;
 import org.sxchinacourt.util.WebServiceUtil;
 import org.sxchinacourt.widget.CustomActionBar;
 import org.sxchinacourt.widget.CustomProgress;
@@ -44,46 +48,116 @@ import org.sxchinacourt.widget.MenuLayout;
 import org.sxchinacourt.widget.SelectContactsDialog;
 import java.util.ArrayList;
 import java.util.List;
-import org.sxchinacourt.common.Contstants;
 
 /**
- * Created by baggio on 2017/2/20.
+ *
+ * @author baggio
+ * @date 2017/2/20
  */
 
 public class TaskDetailInfoActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String PARAM_TASK = "task";
     public static final String PARAM_TASK_TYPE = "task_type";
-    private LinearLayout mContentView;//内容区域
+    /**
+     * 内容区域
+     */
+    private LinearLayout mContentView;
     private CustomActionBar mActionBarView;
     private CustomProgress mCustomProgress;
-    private MenuLayout mMenuLayout;  //菜单容器
-    private LinearLayout mProcessOpinionContainer;  //签批容器
-    private TextView tvCheckMore;//点击拉开审批记录
-    private TextView mParticipantsView;  //联系人
-    private LinearLayout mParticipantsContainer;  //联系人控件容器
-    private EditText mRemarkView;  //签批备注
-    private GetTaskInfoTask mGetTaskInfoTask;  //获取task模版信息
-    private CreateNextWorkflowTask mCreateNextWorkflowTask; //签批task
-    private GetNextParticipantsTask mGetNextParticipantsTask; //获取下一步执行人task
-    private static TaskBean mTask; //当前任务
+    /**
+     * 菜单容器
+     */
+    private MenuLayout mMenuLayout;
+    /**
+     * 签批容器
+     */
+    private LinearLayout mProcessOpinionContainer;
+    /**
+     * 点击拉开审批记录
+     */
+    private TextView tvCheckMore;
+    /**
+     * 联系人
+     */
+    private TextView mParticipantsView;
+    /**
+     * 联系人控件容器
+     */
+    private LinearLayout mParticipantsContainer;
+    /**
+     * 签批备注
+     */
+    private EditText mRemarkView;
+    /**
+     * 获取task模版信息
+     */
+    private GetTaskInfoTask mGetTaskInfoTask;
+    /**
+     * 签批task
+     */
+    private CreateNextWorkflowTask mCreateNextWorkflowTask;
+    /**
+     * 获取下一步执行人task
+     */
+    private GetNextParticipantsTask mGetNextParticipantsTask;
+    /**
+     * 当前任务
+     */
+    private static TaskBean mTask;
     private int mTaskType;
-    private ViewComponents mViewComponents; //模版控件
+    /**
+     *
+     */
+    private ViewComponents mViewComponents;
     public static String returnValue;
-    private List<ProcessOpinion> mProcessOpinions;  //签批
-    private List<MenuBean> mMenus;  // 菜单
-    private int mNextStepNo;  //下一步
-    private String mParticipants;//下一步执行人
-    private SelectContactsDialog mContactsDialog; //联系人
-    private SelectContactsDialog.UsersSelectedListener mUsersSelectedListener;//选中联系人回调
+    /**
+     * 签批
+     */
+    private List<ProcessOpinion> mProcessOpinions;
+    /**
+     * 菜单
+     */
+    private List<MenuBean> mMenus;
+    /**
+     * 下一步
+     */
+    private int mNextStepNo;
+    /**
+     * 下一步执行人
+     */
+    private String mParticipants;
+    /**
+     * 联系人
+     */
+    private SelectContactsDialog mContactsDialog;
+    /**
+     * 选中联系人回调
+     */
+    private SelectContactsDialog.UsersSelectedListener mUsersSelectedListener;
     private View.OnClickListener mDialogBtnConfirmClickListener;
     private DialogInterface.OnDismissListener mDialogDismissListener;
-    private Handler mUpdateUIHandler;  //更新UI handler
-    private Handler mUpdateParticipantHandler; //更新下一步执行人 handler
+    /**
+     * 更新UI handler
+     */
+    private Handler mUpdateUIHandler;
+    /**
+     * 更新下一步执行人 handler
+     */
+    private Handler mUpdateParticipantHandler;
     private MenuLayout.SelectedCallback mSelectedCallback;
-    private UserBean mExecutor;  //下一步执行人
-    private List<UserBean> mParticipantList; //执行人列表
+    /**
+     * 下一步执行人
+     */
+    private UserBean mExecutor;
+    /**
+     * 执行人列表
+     */
+    private List<UserBean> mParticipantList;
     public static Activity activity;
-    private boolean mTaskFinished;  //标记是否签批成功，如果成功不能重复签批
+    /**
+     * 标记是否签批成功，如果成功不能重复签批
+     */
+    private boolean mTaskFinished;
     private static boolean result = false;
     private UserBean user;
     public static final int SHOW_RESPONSE_USER_INFO = 0;
@@ -106,7 +180,8 @@ public class TaskDetailInfoActivity extends AppCompatActivity implements View.On
         mActionBarView.getBackBtnView().setOnClickListener(this);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            if (bundle.containsKey(PARAM_TASK)) { //判断是否包含指定的键名
+            //判断是否包含指定的键名
+            if (bundle.containsKey(PARAM_TASK)) {
                 mTask = (TaskBean) bundle.getSerializable(PARAM_TASK);
                 String completeTitle = mTask.getTitle();
                 String spStr[] = completeTitle.split("\\)");
@@ -114,7 +189,6 @@ public class TaskDetailInfoActivity extends AppCompatActivity implements View.On
 
                 mActionBarView.setTitle(spStr[1]);
                 mActionBarView.setLogoViewVisible(View.GONE);
-//                mActionBarView.setTitle("待办详情");
             }
             mTaskType = bundle.getInt(PARAM_TASK_TYPE, 0);
         }
@@ -128,6 +202,7 @@ public class TaskDetailInfoActivity extends AppCompatActivity implements View.On
     }
 
     //返回键
+    @Override
     public void onBackPressed() {
         if (mTaskFinished) {
             Bundle bundle = new Bundle();
@@ -223,28 +298,35 @@ public class TaskDetailInfoActivity extends AppCompatActivity implements View.On
                     }
                     try {
                         JSONObject json = new JSONObject();
-                        List<Component> components = mViewComponents.getSubViewComponents(); //拿到模板控件对应的标签名称
-                        for (Component component : components) {  // 遍历控件常量
+                        //拿到模板控件对应的标签名称
+                        List<Component> components = mViewComponents.getSubViewComponents();
+                        // 遍历控件常量
+                        for (Component component : components) {
                             SubViewComponent subViewComponent = (SubViewComponent) component;
                             String viewName = subViewComponent.getViewName();
                             String name = subViewComponent.getName();
-
-                            if (subViewComponent.getText().equals("自动编号")) { // 对hiddenview赋值
-                                boId = Integer.parseInt(subViewComponent.getLabelValue());//String 转Int
+                            // 对hiddenview赋值
+                            if (subViewComponent.getText().equals("自动编号")) {
+                                //String 转Int
+                                boId = Integer.parseInt(subViewComponent.getLabelValue());
                                 continue;
                             }
-                            if (viewName.equals(Component.VIEW_TYPE_EDITVIEW) || viewName.equals(Component.VIEW_TYPE_DATEVIEW)) {  //对edittext或者datetext进行赋值
+                            //对edittext或者datetext进行赋值
+                            if (viewName.equals(Component.VIEW_TYPE_EDITVIEW) || viewName.equals(Component.VIEW_TYPE_DATEVIEW)) {
                                 json.put(name, ((TextView) subViewComponent.getView
                                         ()).getText().toString());
-                            } else if (viewName.equals(Component.VIEW_TYPE_SELECTVIEW)) {//选中的selectView赋值，在下一个节点以文本的形式展示
+                                //选中的selectView赋值，在下一个节点以文本的形式展示
+                            } else if (viewName.equals(Component.VIEW_TYPE_SELECTVIEW)) {
                                 json.put(name, ((SelectViewComponent) subViewComponent).getCurrentItem());
-                            } else if(viewName.equals(Component.VIEW_TYPE_SIGNVIEW)){// signview进行赋值，在下一个节点以图片的形式展示
-                                //String value = SharedPreferencesUtil.getString(activity,Contstants.KEY_SP_FILE,Contstants.KEY_SP_VALUE,null);
+                                // signview进行赋值，在下一个节点以图片的形式展示
+                            } else if(viewName.equals(Component.VIEW_TYPE_SIGNVIEW)){
                                 json.put(name,returnValue);
                                 returnValue = null;
-                            }else if(viewName.equals(Component.VIEW_TYPE_RADIOVIEW)){ //对radio进行赋值 在下一个节点以文本的形式展示
+                                //对radio进行赋值 在下一个节点以文本的形式展示
+                            }else if(viewName.equals(Component.VIEW_TYPE_RADIOVIEW)){
                                 json.put(name, ViewComponents.radio);
-                            } else if(viewName.equals(Component.VIEW_TYPE_IMAGEVIEW)){ //对imageView 进行赋值
+                                //对imageView 进行赋值
+                            } else if(viewName.equals(Component.VIEW_TYPE_IMAGEVIEW)){
                                 json.put(name, subViewComponent.getLabelValue());
                             }else {
                                 json.put(name, subViewComponent.getLabelValue());
@@ -264,7 +346,10 @@ public class TaskDetailInfoActivity extends AppCompatActivity implements View.On
                     mCreateNextWorkflowTask.execute();
                 }
                 break;
+
             }
+            default:
+                break;
         }
     }
 
@@ -325,20 +410,19 @@ public class TaskDetailInfoActivity extends AppCompatActivity implements View.On
     }
 
     public static boolean saveRevisionToNet(final String url, final String recordId, final String userName, final String fieldName, final Bitmap bitmap, final iAppRevision_iWebRevision apprevison){
-        new Thread(new Runnable() {
+
+        GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
             public void run() {
                 FieldEntity fieldEntity = null;
                 iAppRevision.isDebug = true;
                 result = apprevison.saveRevision(String.valueOf(mTask.getProcessInstanceId()), url, bitmap, fieldName, userName, fieldEntity, true);
                 if(result){
-                    // Toast.makeText(activity,"chenggong",Toast.LENGTH_LONG);
 
                 } else {
-                    //  Toast.makeText(activity,"chenggong",Toast.LENGTH_LONG);
                 }
             }
-        }).start();
+        },ThreadType.NORMAL_THREAD);
         return true;
     }
     private void initHandler() {
@@ -439,7 +523,8 @@ public class TaskDetailInfoActivity extends AppCompatActivity implements View.On
         View img_selectExecutor = mParticipantsContainer.findViewById(R.id.img_selectExecutors);
         img_selectExecutor.setOnClickListener
                 (TaskDetailInfoActivity.this);
-        if (!TextUtils.isEmpty(mParticipants)) { //mParticipants 黄皓皓
+        //mParticipants 黄皓皓
+        if (!TextUtils.isEmpty(mParticipants)) {
             splitParticipants(mParticipants);
             mExecutor = mParticipantList.get(0);
             mParticipantsView.setText(mExecutor.getUserName());
@@ -454,15 +539,13 @@ public class TaskDetailInfoActivity extends AppCompatActivity implements View.On
     }
 
 
-    /*
-    添加备注模块
+    /**
+     * 添加备注模块
      */
     private void addMenusAndRemarkView() {
         if (mMenus == null) {
             return;
         }
-
-
         mMenuLayout = new MenuLayout(this, mSelectedCallback);
         int paddingLeft = (int) getResources().getDimension(R.dimen.menuLayout_paddingLeft);
         int paddingTop = (int) getResources().getDimension(R.dimen.menuLayout_paddingTop);
@@ -477,7 +560,10 @@ public class TaskDetailInfoActivity extends AppCompatActivity implements View.On
         mContentView.addView(remarkView);
     }
 
-    //请求网络
+
+    /**
+     * 任务：获取任务详情
+     */
     private class GetTaskInfoTask extends AsyncTask<Void, Void, ViewComponents> {
         @Override
         protected ViewComponents doInBackground(Void... params) {
@@ -491,12 +577,8 @@ public class TaskDetailInfoActivity extends AppCompatActivity implements View.On
             if (mProcessOpinions !=null){
                 for (int i=0;i<mProcessOpinions.size();i++){
                     ProcessOpinion opinion = mProcessOpinions.get(i);
-//                    UserBean userResult = WebServiceUtil.getInstance().getUserInfo(opinion.getCreateUser());
-//                    opinion.setCreateUser(userResult.getUserName());
                 }
             }
-
-
             mMenus = WebServiceUtil.getInstance().getAuditMenus(user.getUserName(), mTask.getTaskId());
             if (mMenus == null) {
                 mNextStepNo = WebServiceUtil.getInstance().getNextStepNo(user.getUserName(), mTask.getProcessInstanceId(),
@@ -591,22 +673,23 @@ public class TaskDetailInfoActivity extends AppCompatActivity implements View.On
         public GetDataBasePhotoTask(int metaId){
             this.metaId = metaId;
         }
-
-        //while boolean if
-        //初始值为false
-        //进入while必须为true
-        //进入循环体 如果取到值了 初始Boolean的值必须为！true  所以 boo=true 再次走到初始值 boo=true  进入while 现在为！true 跳出循环
+        /**
+         * while boolean if
+         * 初始值为false
+         * 进入while必须为true
+         * 进入循环体 如果取到值了 初始Boolean的值必须为！true  所以 boo=true 再次走到初始值 boo=true  进入while 现在为！true 跳出循环
+         * @param params
+         * @return
+         */
         @Override
         protected Void doInBackground(Void... params) {
             returnValue = WebServiceUtil.getInstance().getDataBasePhote(mTask.getProcessInstanceId(),metaId,"");
             if (returnValue != null){
-                //SharedPreferencesUtil.setString(activity,Contstants.KEY_SP_FILE,Contstants.KEY_SP_VALUE,returnValue);
             }else {
                 boolean boo = false;
                 while (!boo){
                     returnValue = WebServiceUtil.getInstance().getDataBasePhote(mTask.getProcessInstanceId(),metaId,"");
                     if (returnValue != null && !returnValue.equals("")){
-                        // SharedPreferencesUtil.setString(activity,Contstants.KEY_SP_FILE,Contstants.KEY_SP_VALUE,returnValue);
                         boo = true;
                     }
                 }
@@ -638,7 +721,6 @@ public class TaskDetailInfoActivity extends AppCompatActivity implements View.On
             this.recordData = recordData;
             this.boId = boId;
         }
-        //耗时操作如请求网络
         @Override
         protected String doInBackground(Void... params) {
             UserNewBean user = CApplication.getInstance().getCurrentUser();
@@ -665,12 +747,17 @@ public class TaskDetailInfoActivity extends AppCompatActivity implements View.On
             }
             return null;
         }
-        //在UI线程里面调用，它在这个task执行后会立即调用
+        /**
+         * 在UI线程里面调用，它在这个task执行后会立即调用
+         */
         @Override
         protected void onPreExecute() {
             mCustomProgress.start();
         }
-        //当task结束后调用，它运行在UI线程
+        /**
+         * 当task结束后调用，它运行在UI线程
+         * @param result
+         */
         @Override
         protected void onPostExecute(String result) {
             try {

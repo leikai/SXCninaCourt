@@ -1,6 +1,7 @@
 package org.sxchinacourt.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -43,6 +44,7 @@ import com.google.android.gms.appindexing.Thing;
 
 import org.sxchinacourt.CApplication;
 import org.sxchinacourt.R;
+import org.sxchinacourt.activity.fragment.AppsFragment;
 import org.sxchinacourt.activity.fragment.BaseFragment;
 import org.sxchinacourt.activity.fragment.ContactsNewManagerFragment;
 import org.sxchinacourt.activity.fragment.HomePageManagerFragment;
@@ -51,7 +53,6 @@ import org.sxchinacourt.activity.fragment.MsgManagerFragment;
 import org.sxchinacourt.activity.fragment.SettingManagerFragment;
 import org.sxchinacourt.bean.DepartmentBean;
 import org.sxchinacourt.bean.UserNewBean;
-import org.sxchinacourt.common.Contstants;
 import org.sxchinacourt.service.NotificationService;
 import org.sxchinacourt.util.ExampleUtil;
 import org.sxchinacourt.util.IConstant;
@@ -128,16 +129,15 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
      * 首页碎片
      */
     private HomePageManagerFragment mHomePageManagerFragment;
+    private AppsFragment mAppsFragment;
     private MsgFragment mMsgFragment;
     private MsgManagerFragment mMsgManagerFragment;
     private SettingManagerFragment mSettingManagerFragment;
     private BaseFragment mCurrentFragment;
-
-    //联系人Fragment碎片管理器
+    /**
+     * 联系人Fragment碎片管理器
+     */
     private ContactsNewManagerFragment mContactsNewManagerFragment;
-
-
-
     /**
      * 自定义actionBar
      */
@@ -156,12 +156,10 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
      * 联系人集合
      */
     public static List<UserNewBean> mUsers;
-    //-----------------------推送-----------------------//
     String alias = null;
     boolean isAliasAction = false;
     int action = -1;
     public static boolean isForeground = false;
-    //for receive customer msg from jpush server
     private MessageReceiver mMessageReceiver;
     public static final String MESSAGE_RECEIVED_ACTION = "com.example.pushtest1.MESSAGE_RECEIVED_ACTION";
     public static final String KEY_TITLE = "title";
@@ -319,27 +317,17 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
                 bottomNavVarPosition = mBottomNavigationBarContainer.getCurrentSelectedPosition();
                 break;
             case 1:
-                if (user.getOrgid() == null){
-                    startActivity(new Intent(TabsActivity.this, LoginActivity.class));
-                    finish();
-                }else if (user.getOrgid().equals(Contstants.OID_JINZHONG)){
-                    //------------------------------修改------------------------------//
-                    startActivity(new Intent(TabsActivity.this, ActivitySendSelect.class));
-                    //-------------------------------完----------------------------//
-                }else if (user.getOrgid().equals(Contstants.OID_YUSHE)){
-
-                }else if (user.getOrgid().equals(Contstants.OID_LINGSHI)){
+                hideAllFragment();
+                if (mAppsFragment == null) {
+                    mAppsFragment = new AppsFragment();
                 }
-                mBottomNavigationBarContainer.selectTab(bottomNavVarPosition);
+                showFragment(mAppsFragment);
+                bottomNavVarPosition = mBottomNavigationBarContainer.getCurrentSelectedPosition();
+
+
+
                 break;
             case 2:
-//                hideAllFragment();
-//                if (mContactsManagerFragment == null) {
-//                    mContactsManagerFragment = new ContactsManagerFragment();
-//                }
-//                showFragment(mContactsManagerFragment);
-//                bottomNavVarPosition = mBottomNavigationBarContainer.getCurrentSelectedPosition();
-//                break;
                 hideAllFragment();
                 //-----------------新通讯录-------------//
                 if (mContactsNewManagerFragment == null) {
@@ -365,8 +353,6 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
 
     @Override
     public void onTabUnselected(int position) {
-
-
     }
 
     @Override
@@ -461,6 +447,7 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
      */
     private void hideAllFragment() {
         hideFragment(mHomePageManagerFragment);
+        hideFragment(mAppsFragment);
         hideFragment(mMsgManagerFragment);
         hideFragment(mContactsNewManagerFragment);
         hideFragment(mSettingManagerFragment);
@@ -514,6 +501,7 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
 
 
 
+    @SuppressLint("HandlerLeak")
     private Handler mUpdateGroupsListHandler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {

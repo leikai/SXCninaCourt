@@ -1,6 +1,7 @@
 package org.sxchinacourt.activity.fragment;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -31,6 +32,9 @@ import org.sxchinacourt.widget.CustomProgress;
 
 import java.util.Vector;
 
+/**
+ * @author lk
+ */
 public class UserDetailInfoFragment extends ContactsNewManagerFragment implements View.OnClickListener {
     public static final String PARAM_USER = "user";
     UserNewBean mUser;
@@ -79,12 +83,16 @@ public class UserDetailInfoFragment extends ContactsNewManagerFragment implement
         mRootView.findViewById(R.id.btn_sms).setOnClickListener(this);
     }
 
+    @Override
     protected void initData() {
         token = CApplication.getInstance().getCurrentToken();
         mRefreshUserInfoTask = new RefreshUserInfoTask();
         mRefreshUserInfoTask.execute();
     }
-    //通讯录中个人详情页面
+    /**
+     * 通讯录中个人详情页面
+     */
+    @SuppressLint("HandlerLeak")
     private Handler mUpdateUserInfoHandler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
@@ -141,9 +149,7 @@ public class UserDetailInfoFragment extends ContactsNewManagerFragment implement
             labelView = (TextView) childView.findViewById(R.id.tv_label);
             valueView = (TextView) childView.findViewById(R.id.tv_value);
             labelView.setText("法院");
-//            if (!TextUtils.isEmpty(mUser.getORGNAME())) {
                 valueView.setText("");
-//            }
             mUserInfoContainer.addView(childView);
         }
     };
@@ -151,8 +157,8 @@ public class UserDetailInfoFragment extends ContactsNewManagerFragment implement
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_tail: {  //通讯录个人详情页面
-                //// TODO: 2017/2/17
+            case R.id.btn_tail: {
+                //通讯录个人详情页面
                 Vector<String> nums = new Vector();
                 if(!TextUtils.isEmpty(mUser.getEmpMobilephone())){
                     nums.add(mUser.getEmpMobilephone());
@@ -160,7 +166,6 @@ public class UserDetailInfoFragment extends ContactsNewManagerFragment implement
                 if(!TextUtils.isEmpty(mUser.getEmpMobilephone())){
                     nums.add(mUser.getEmpMobilephone());
                 }
-//                nums.add("18611976018");
                 if(nums.size()>0){
                     String[] phoneNumArrsy = new String[nums.size()];
                     nums.toArray(phoneNumArrsy);
@@ -176,7 +181,8 @@ public class UserDetailInfoFragment extends ContactsNewManagerFragment implement
                 }
                 break;
             }
-            case R.id.btn_sms: {//通讯录个人详情页面
+            case R.id.btn_sms: {
+                //通讯录个人详情页面
                 if (!TextUtils.isEmpty(mUser.getEmpMobilephone())) {
                     if (android.os.Build.VERSION.SDK_INT < 23 || PackageManager.PERMISSION_GRANTED ==
                             ContextCompat
@@ -194,6 +200,8 @@ public class UserDetailInfoFragment extends ContactsNewManagerFragment implement
                 }
                 break;
             }
+            default:
+                break;
         }
     }
 

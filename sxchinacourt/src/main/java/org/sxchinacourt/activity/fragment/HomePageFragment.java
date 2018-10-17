@@ -14,13 +14,16 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.bumptech.glide.Glide;
+import com.geek.thread.GeekThreadManager;
+import com.geek.thread.ThreadPriority;
+import com.geek.thread.ThreadType;
+import com.geek.thread.task.GeekRunnable;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -30,11 +33,10 @@ import org.sxchinacourt.R;
 import org.sxchinacourt.activity.CabinetActivity;
 import org.sxchinacourt.activity.LoginActivity;
 import org.sxchinacourt.activity.MachineActivity;
-import org.sxchinacourt.adapter.FruitAdapter;
 import org.sxchinacourt.adapter.HomePageAdapter;
+import org.sxchinacourt.adapter.NewsListAdapter;
 import org.sxchinacourt.bean.AppBean;
 import org.sxchinacourt.bean.BannerBean;
-import org.sxchinacourt.bean.Fruit;
 import org.sxchinacourt.bean.NewsBean;
 import org.sxchinacourt.bean.NewsParamsBean;
 import org.sxchinacourt.bean.ParameterBean;
@@ -108,20 +110,17 @@ public class HomePageFragment extends BaseFragment {
      * 待办、已办、通知公告、任务管理图片数组
      */
     int[] mResourceIdArray = {R.drawable.icon_dbsy, R.drawable.icon_ybsy, R.drawable
-            .icon_wdlc};//, R.drawable.app_email_icon
+            .icon_wdlc, R.drawable.icon_cjlc};
     /**
      * 四大功能名称数组
      */
-    String[] mAppNameArray = {"待办事宜", "已办事宜", "通知公告"};
+    String[] mAppNameArray = {"待办事宜", "已办事宜", "通知公告", "任务办理"};
     /**
      * 四大功能碎片
      */
     int[] mFragmentIndexArray = {AppBean.FRAGMENT_TO_DO_TASK, AppBean.FRAGMENT_HISTORY_TASK, AppBean
             .FRAGMENT_NOTICE_TASK, AppBean.FRAGMENT_MANAGER_TASK};
-    /**
-     * 微门户功能模块数据列表
-     */
-    private List<Fruit> fruitList = new ArrayList<>();
+
     private Context context;
 
     private UserNewBean user;
@@ -206,7 +205,7 @@ public class HomePageFragment extends BaseFragment {
         }
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         rvHomepageWeidoorRecycleView.setLayoutManager(layoutManager);
-        initFruits();
+
 
         initEvent();
 
@@ -266,13 +265,11 @@ public class HomePageFragment extends BaseFragment {
     public void showChildFragment(Bundle bundle) {
         mPreFragment.showChildFragment(bundle);
     }
-    private void initFruits() {
-
-        new Thread(new Runnable() {
+    private void initNews() {
+        GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
             public void run() {
                 NewsParamsBean user = new NewsParamsBean();
-
                 user.setNums("5");
                 user.setTypename("法院要闻");
                 Gson gson = new Gson();
@@ -284,30 +281,26 @@ public class HomePageFragment extends BaseFragment {
                         String response = envelope.getResponse().toString();
 
                         final List<NewsBean> resps=new ArrayList<NewsBean>(JSONArray.parseArray(response,NewsBean.class));
-//                            CourtDataBean resp = JSON.parseObject(response, CourtDataBean.class);
                         Log.e("lk",""+resps.get(0).getOid());
 
                         Log.e("list",""+resps.get(0).getFtitle());
                         Log.e("list",""+resps.get(0).getKeyword());
 
-//                            courts = new String[]{resp.get(0).getCourtName()};
 
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                FruitAdapter fruitAdapter = new FruitAdapter(getContext(),resps);
-                                rvHomepageWeidoorRecycleView.setAdapter(fruitAdapter);
+                                NewsListAdapter newsListAdapter = new NewsListAdapter(getContext(),resps);
+                                rvHomepageWeidoorRecycleView.setAdapter(newsListAdapter);
                             }
                         });
                     }
                     @Override
                     public void onFailure(Exception e) {
-//                        Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
-        }).start();
-
+        },ThreadType.NORMAL_THREAD);
     }
     /**
      * 通过文件名获取资源id 例子：getResId("icon", R.drawable.class);
@@ -368,6 +361,7 @@ public class HomePageFragment extends BaseFragment {
                     .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.CENTER_HORIZONTAL)
                     .startTurning(3000)
                     .setManualPageable(true);
+            initNews();
 
         }
     }

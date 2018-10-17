@@ -62,7 +62,6 @@ public class ModifyHandlePasswordActivity extends AppCompatActivity {
                     return;
                 }else {
                     String userName = "gaohongwei";
-//                    String remind = mRemind.getText().toString();
                     if ("请输入原手势密码".equals(mRemind.getText().toString())){
                         if (result.equals(currentUser.getHandPassword())){
                             mRemind.setText("请绘制修改后的手势密码");
@@ -130,7 +129,6 @@ public class ModifyHandlePasswordActivity extends AppCompatActivity {
 
             user.setUserName(mUsername);
             user.setHandPassword(mHandPassword);
-//            user.setUserPassword(mHandPassword);
 
             String resultStr = WebServiceUtil.getInstance().changeUserPWD(mUsername,mHandPassword);
             Log.e("resultStr",""+resultStr);
@@ -153,12 +151,15 @@ public class ModifyHandlePasswordActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-//            mProgressView.stop();
             if (!TextUtils.isEmpty(mMessage)) {
+
                 Toast.makeText(ModifyHandlePasswordActivity.this, mMessage, Toast.LENGTH_LONG).show();
+                UserNewBean user = CApplication.getInstance().getCurrentUser();
+                user.setHandPassword(mHandPassword);
+                CApplication.getInstance().setUser(user);
+
                 mRemind.setText("手势密码修改完成");
-//                mGestureLockView.clearView();
-//                return;
+                finish();
             }
             if (success) {
                 mGestureLockView.clearView();
@@ -168,7 +169,6 @@ public class ModifyHandlePasswordActivity extends AppCompatActivity {
         @Override
         protected void onCancelled() {
             mAuthTask = null;
-//            mProgressView.stop();
         }
     }
 

@@ -12,11 +12,12 @@ import android.widget.Toast;
 
 import org.sxchinacourt.CApplication;
 import org.sxchinacourt.R;
-import org.sxchinacourt.bean.UserBean;
 import org.sxchinacourt.bean.UserNewBean;
 
 /**
- * Created by baggio on 2017/2/9.
+ *
+ * @author baggio
+ * @date 2017/2/9
  */
 
 public class ModifyUserNameFragment extends BaseFragment implements View.OnClickListener {
@@ -75,9 +76,6 @@ public class ModifyUserNameFragment extends BaseFragment implements View.OnClick
         @Override
         protected Boolean doInBackground(Void... voids) {
             UserNewBean user = CApplication.getInstance().getCurrentUser();
-//            boolean success = WebServiceUtil.getInstance().changeUserPWD(user.getUserId(),
-//                    mOldPwd, mNewPwd1);
-//            return success;
             return false;
         }
 

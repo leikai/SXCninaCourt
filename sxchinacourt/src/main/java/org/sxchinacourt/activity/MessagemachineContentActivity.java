@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -24,13 +23,14 @@ import android.widget.VideoView;
 
 import org.sxchinacourt.R;
 
-import java.io.File;
 import java.io.IOException;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * @author lk
+ */
 public class MessagemachineContentActivity extends AppCompatActivity implements View.OnClickListener {
     TextView textContent;
     TextView voiceContent;
@@ -68,13 +68,16 @@ public class MessagemachineContentActivity extends AppCompatActivity implements 
 
         bindData();
         initEvent();
+        //检查应用的权限:是否含有读写SD卡的权限
         if (ContextCompat.checkSelfPermission(MessagemachineContentActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(MessagemachineContentActivity.this,new String[]{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
-            },1);//检查应用的权限:是否含有读写SD卡的权限
+            },1);
         }else {
-            initMediaPlayer();//如果有的话,初始化MediaPlayer
-            initVideoPath(); //初始化 VideoView
+            //如果有的话,初始化MediaPlayer
+            initMediaPlayer();
+            //初始化 VideoView
+            initVideoPath();
         }
     }
 
@@ -156,10 +159,11 @@ public class MessagemachineContentActivity extends AppCompatActivity implements 
     }
     Handler handler = new Handler();
     Runnable updateThread = new Runnable(){
+        @Override
         public void run() {
             //获得歌曲现在播放位置并设置成播放进度条的值
             try {
-                            sbVoice.setProgress(mediaPlayer.getCurrentPosition());
+                sbVoice.setProgress(mediaPlayer.getCurrentPosition());
                 //每次延迟100毫秒再启动线程
                 handler.postDelayed(updateThread, 100);
             }catch (IllegalStateException e){
@@ -203,7 +207,6 @@ public class MessagemachineContentActivity extends AppCompatActivity implements 
                     videoView.resume();//重新播放
                 }
                 break;
-
             default:
                 break;
         }
@@ -219,12 +222,8 @@ public class MessagemachineContentActivity extends AppCompatActivity implements 
             viewVideoContent.setVisibility(View.GONE);
         }
         if ("1".equals(answerType)){
-//            viewTextContent.setVisibility(View.VISIBLE);
-//            textContent.setText(content);
             viewTextContent.setVisibility(View.GONE);
             viewVoiceContent.setVisibility(View.VISIBLE);
-//            tvVoiceMachine.setVisibility(View.GONE);
-//            voiceContent.setVisibility(View.GONE);
             viewVideoContent.setVisibility(View.GONE);
         }
         if ("2".equals(answerType)){
@@ -245,44 +244,10 @@ public class MessagemachineContentActivity extends AppCompatActivity implements 
 
     private void initMediaPlayer() {
         try {
-            //-----------------播放应用的资源文件-------------------//
-////            法1. 直接调用create函数实例化一个MediaPlayer对象，播放位于res/raw/test.mp3文件
-//            MediaPlayer  mMediaPlayer = MediaPlayer.create(this, R.raw.test);
-//
-////            法2. test.mp3放在res/raw/目录下，使用setDataSource(Context context, Uri uri)
-//            mp = new MediaPlayer();
-//            Uri setDataSourceuri = Uri.parse("android.resource://com.android.sim/"+R.raw.test);
-//            mp.setDataSource(this, uri);
-//
-////            说明：此种方法是通过res转换成uri然后调用setDataSource()方法，需要注意格式Uri.parse("android.resource://[应用程序包名Application package name]/"+R.raw.播放文件名);
-////            例子中的包名为com.android.sim，播放文件名为：test;特别注意包名后的"/"。
-//
-////            法3. test.mp3文件放在assets目录下，使用setDataSource(FileDescriptor fd, long offset, long length)
-//            AssetManager assetMg = this.getApplicationContext().getAssets();
-//            AssetFileDescriptor fileDescriptor = assetMg.openFd("test.mp3");
-//            mp.setDataSource(fileDescriptor.getFileDescriptor(), fileDescriptor.getStartOffset(), fileDescriptor.getLength());
-            //-----------------end--------------------//
-            //-----------------播放存储设备的资源文件-------------------//
-//            MediaPlayer mediaPlayer = new MediaPlayer();
-//            mediaPlayer.setDataSource("/mnt/sdcard/test.mp3");
-            //-----------------end--------------------//
-
-            //-----------------播放远程资源文件-------------------//
-//            Uri uri = Uri.parse("http://**");
-//            MediaPlayer mediaPlayer = new MediaPlayer();
-//            mediaPlayer.setDataSource(Context, uri);
-            //-----------------end--------------------//
-
-//            File file = new File(Environment.getExternalStorageDirectory(),"李行亮-愿得一人心.flac");//寻找SD卡下的根目录中的指定文件
-
-            //--------------------------------测试------------------------//
-//            File file = new File(Environment.getExternalStorageDirectory(),"李行亮-愿得一人心.flac");//寻找SD卡下的根目录中的指定文件
-//            mediaPlayer.setDataSource(file.getAbsolutePath());
-            //---------------------------------完-------------------------//
-//            //---------------------------正式-----------------------------//
-            mediaPlayer.setDataSource(content);//指定音频文件的路径
-//            //---------------------------完-----------------------------//
-            mediaPlayer.prepare();//让mediaPlayer 进入到准备状态
+            //指定音频文件的路径
+            mediaPlayer.setDataSource(content);
+            //让mediaPlayer 进入到准备状态
+            mediaPlayer.prepare();
             sbStart.setText("0:00");
 
             Date data = new Date(mediaPlayer.getDuration());
@@ -299,9 +264,8 @@ public class MessagemachineContentActivity extends AppCompatActivity implements 
 
     private void initVideoPath() {
         videoView.setMediaController(new MediaController(this));
-        videoView.setVideoPath(Environment.getExternalStorageDirectory()+"/1513682210240.avi");//指定视频文件的路径
-//        Uri uri = Uri.parse("http://111.53.181.200:8087/Cloud/uploadFile/1513682210240.avi");  //播放网上图片
-//        videoView.setVideoURI(uri);
+        //指定视频文件的路径
+        videoView.setVideoPath(Environment.getExternalStorageDirectory()+"/1513682210240.avi");
     }
 
     @Override
@@ -313,7 +277,8 @@ public class MessagemachineContentActivity extends AppCompatActivity implements 
         }
         try {
             if (videoView !=null){
-                videoView.suspend();//将VideoView所占用的资源释放掉
+                //将VideoView所占用的资源释放掉
+                videoView.suspend();
             }
         }catch (IllegalStateException e){
             e.printStackTrace();

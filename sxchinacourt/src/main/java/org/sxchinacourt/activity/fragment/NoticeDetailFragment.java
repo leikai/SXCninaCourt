@@ -1,6 +1,7 @@
 
 package org.sxchinacourt.activity.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,21 +15,25 @@ import android.widget.LinearLayout;
 import org.sxchinacourt.CApplication;
 import org.sxchinacourt.R;
 import org.sxchinacourt.bean.TaskBean;
-import org.sxchinacourt.bean.UserBean;
 import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.bean.ViewComponents;
 import org.sxchinacourt.util.WebServiceUtil;
 import org.sxchinacourt.widget.CustomProgress;
 
 /**
- * Created by baggio on 2017/2/10.
+ *
+ * @author baggio
+ * @date 2017/2/10
  */
 
 public class NoticeDetailFragment extends BaseFragment {
     public static final String PARAM_TASK = "task";
     private ViewComponents mViewComponents;
     private CustomProgress mCustomProgress;
-    private LinearLayout mContentView;//内容区域
+    /**
+     * 内容区域
+     */
+    private LinearLayout mContentView;
 
     private TaskBean mTask;
     private GetNoticeInfoTask mGetNoticeInfoTask;
@@ -70,6 +75,7 @@ public class NoticeDetailFragment extends BaseFragment {
         mGetNoticeInfoTask.execute();
     }
 
+    @SuppressLint("HandlerLeak")
     private void initHandler() {
         mUpdateUIHandler = new Handler() {
             @Override

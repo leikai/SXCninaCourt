@@ -15,6 +15,9 @@ import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.util.WebServiceUtil;
 import org.sxchinacourt.widget.CustomActionBar;
 
+/**
+ * @author lk
+ */
 public class ForgetPasswordActivity extends AppCompatActivity implements View.OnClickListener {
 
     private CustomActionBar customActionBar;

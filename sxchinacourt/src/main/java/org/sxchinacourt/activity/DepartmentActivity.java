@@ -1,5 +1,6 @@
 package org.sxchinacourt.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +13,10 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.alibaba.fastjson.JSONArray;
+import com.geek.thread.GeekThreadManager;
+import com.geek.thread.ThreadPriority;
+import com.geek.thread.ThreadType;
+import com.geek.thread.task.GeekRunnable;
 
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.sxchinacourt.R;
@@ -25,7 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by 殇冰无恨 on 2017/10/11.
+ *
+ * @author 殇冰无恨
+ * @date 2017/10/11
  */
 
 public class DepartmentActivity extends Activity{
@@ -34,8 +41,8 @@ public class DepartmentActivity extends Activity{
     private static  String[] courts = null;
     private DepartmentForCabinetAdapter departmentForCabinetAdapter;
     private List resps = null;
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
-
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -57,7 +64,6 @@ public class DepartmentActivity extends Activity{
                             jumptoemployee.putExtras(bundle);
                             startActivity(jumptoemployee);
                             finish();
-
                         }
                     });
                 default:
@@ -97,24 +103,20 @@ public class DepartmentActivity extends Activity{
     }
 
     private void initdata(String courtId) {
-//        final SoapParams soapParams = new SoapParams().put("arg0",courtId);//1414 是假数据，应该改成
 
-        final SoapParams soapParams = new SoapParams().put("arg0",courtId);//1414 是假数据，应该改成
+        final SoapParams soapParams = new SoapParams().put("arg0",courtId);
 
-        new Thread(new Runnable() {
+        GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
             public void run() {
-
                 WebServiceUtil.getInstance().GetDepartment(soapParams, new SoapClient.ISoapUtilCallback() {
                     @Override
                     public void onSuccess(SoapSerializationEnvelope envelope) throws Exception {
                         String response = envelope.getResponse().toString();
 
                         List<DepartmentForCabinetBean> resps=new ArrayList<DepartmentForCabinetBean>(JSONArray.parseArray(response,DepartmentForCabinetBean.class));
-//                            CourtDataBean resp = JSON.parseObject(response, CourtDataBean.class);
                         Log.e("list",""+resps.get(0).getDepartmentName());
 
-//                            courts = new String[]{resp.get(0).getCourtName()};
                         Log.e("courts",""+courts);
                         Message message = new Message();
                         message.what = SHOW_RESPONSE_DEPARTMENT;
@@ -127,7 +129,7 @@ public class DepartmentActivity extends Activity{
                     }
                 });
             }
-        }).start();
+        },ThreadType.NORMAL_THREAD);
     }
 
     private void initview() {

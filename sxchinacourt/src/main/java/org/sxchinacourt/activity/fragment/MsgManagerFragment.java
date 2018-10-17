@@ -11,14 +11,19 @@ import org.sxchinacourt.R;
 
 import java.util.Vector;
 
-import static org.sxchinacourt.activity.fragment.TodoTaskListFragment.pageLocationForH5;
 
+/**
+ * @author lk
+ */
 public class MsgManagerFragment extends BaseFragment {
     private MsgFragment mMsgFragment;
     private HomePageManagerFragment mHomePageManagerFragment;
     private BaseFragment mCurChildFragment;
     private Vector<BaseFragment> mFragmentStack;
-    public static final int CHILD_TYPE_MSG = 2;//消息
+    /**
+     * 消息
+     */
+    public static final int CHILD_TYPE_MSG = 2;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,7 +34,6 @@ public class MsgManagerFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         return super.onCreateView(inflater, R.layout.fragment_msgmanager, container, savedInstanceState);
     }
 
@@ -68,19 +72,10 @@ public class MsgManagerFragment extends BaseFragment {
                     mMsgFragment = null;
                     mFragmentStack.remove(mMsgFragment);
                     mCurChildFragment = mFragmentStack.get(mFragmentStack.size() - 1);
-//                    if ("2".equals(pageLocationForH5)) {
                         mMsgFragment = new MsgFragment(getActivity(), R.layout.fragment_invest_one);
                         mMsgFragment.setPreFragment(this);
                         addChildFragment(mMsgFragment, R.id.content);
                         mCurChildFragment = mMsgFragment;
-//                        pageLocationForH5 = "1";
-//                    }else {
-//                        mHomePageManagerFragment = new HomePageManagerFragment();
-//                        mHomePageManagerFragment.setPreFragment(this);
-//                        addChildFragment(mHomePageManagerFragment, R.id.content);
-//                        mCurChildFragment = mHomePageManagerFragment;
-//                        pageLocationForH5 = "2";
-//                    }
                 }
                 return true;
             }
@@ -89,13 +84,17 @@ public class MsgManagerFragment extends BaseFragment {
     }
 
 
-    /*当Fragment由可见状态变为不可见状态时保存Fragment的页面显示状态，以备再次加载时使用*/
+    /**
+     * 当Fragment由可见状态变为不可见状态时保存Fragment的页面显示状态，以备再次加载时使用
+     */
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         mCurChildFragment.onHiddenChanged(hidden);
     }
-    /*隐藏所有fragment*/
+    /**
+     * 隐藏所有fragment
+     */
     private void hideAllFragment() {
         if (mMsgFragment!=null){
             hideFragment(mMsgFragment);
