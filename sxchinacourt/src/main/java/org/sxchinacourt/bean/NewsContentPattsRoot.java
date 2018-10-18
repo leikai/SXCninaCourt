@@ -3,7 +3,9 @@ package org.sxchinacourt.bean;
 import java.util.List;
 
 /**
- * Created by 殇冰无恨 on 2017/9/30.
+ *
+ * @author 殇冰无恨
+ * @date 2017/9/30
  */
 
 public class NewsContentPattsRoot {

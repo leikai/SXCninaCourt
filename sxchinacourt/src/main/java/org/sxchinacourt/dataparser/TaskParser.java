@@ -5,7 +5,9 @@ import org.json.JSONObject;
 import org.sxchinacourt.bean.TaskBean;
 
 /**
- * Created by baggio on 2017/2/6.
+ *
+ * @author baggio
+ * @date 2017/2/6
  */
 
 public class TaskParser extends DataParser {

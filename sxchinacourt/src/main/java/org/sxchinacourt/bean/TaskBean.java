@@ -16,24 +16,74 @@ public class TaskBean implements Serializable{
     public static final int STATUS_TYPE_NOTICE_TASK = 9;
     public static final int STATUS_TYPE_TO_SIGN_TASK = 11;
 
-
-    private String mNo;     //序号
-    private int mTaskId;     //任务
-    private int mProcessInstanceId;     //流程实例 ID
-    private int mStatus;    //状态（1=正常任务，2=传阅任务，3=驳回修改任务，4=挂起等待任务，9=通知任务，11=加签任务）
-    private String mOwner;      //任务创建者
-    private String mOwnerName;      //任务创建者用户名
-    private String mTitle;      //任务标题
-    private String mProcessGroup;       //流程组名称
-    private String mBeginTime;      //任务达到时间
-    private String mReadTime;       //读取时间
-    private boolean isRead;     //是否读取
-    private int mPriority;      //优先级（0=低，1=无，2=中，3=高）
-    private String mProcessDefId;   //流程模型 ID
-    private String mActivityDefId;      //节点模型 ID
-    private String mWftitle;        //流程任务标题
-    private String mStepname;       //节点名称
-    private String mBindUrl;    //该节点激活应用中定义的‘激活 URL’值
+    /**
+     * 序号
+     */
+    private String mNo;
+    /**
+     * 任务
+     */
+    private int mTaskId;
+    /**
+     *流程实例 ID
+     */
+    private int mProcessInstanceId;
+    /**
+     * 状态（1=正常任务，2=传阅任务，3=驳回修改任务，4=挂起等待任务，9=通知任务，11=加签任务）
+     */
+    private int mStatus;
+    /**
+     * 任务创建者
+     */
+    private String mOwner;
+    /**
+     * 任务创建者用户名
+     */
+    private String mOwnerName;
+    /**
+     * 任务标题
+     */
+    private String mTitle;
+    /**
+     * 流程组名称
+     */
+    private String mProcessGroup;
+    /**
+     * 任务达到时间
+     */
+    private String mBeginTime;
+    /**
+     * 读取时间
+     */
+    private String mReadTime;
+    /**
+     * 是否读取
+     */
+    private boolean isRead;
+    /**
+     * 优先级（0=低，1=无，2=中，3=高）
+     */
+    private int mPriority;
+    /**
+     * 流程模型 ID
+     */
+    private String mProcessDefId;
+    /**
+     * 节点模型 ID
+     */
+    private String mActivityDefId;
+    /**
+     * 流程任务标题
+     */
+    private String mWftitle;
+    /**
+     * 节点名称
+     */
+    private String mStepname;
+    /**
+     * 该节点激活应用中定义的‘激活 URL’值
+     */
+    private String mBindUrl;
 
     public void setNo(String mNo) {
         this.mNo = mNo;

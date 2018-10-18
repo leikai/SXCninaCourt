@@ -1,5 +1,8 @@
 package org.sxchinacourt.bean;
 
+/**
+ * @author lk
+ */
 public class TokenRoot {
     private boolean opresult;
 

@@ -3,7 +3,9 @@ package org.sxchinacourt.bean;
 import java.io.Serializable;
 
 /**
- * Created by DongZi on 2017/9/29.
+ *
+ * @author DongZi
+ * @date 2017/9/29
  */
 
 public class ParameterBean implements Serializable {

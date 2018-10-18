@@ -3,7 +3,9 @@ package org.sxchinacourt.bean;
 import java.io.Serializable;
 
 /**
- * Created by baggio on 2017/2/8.
+ *
+ * @author baggio
+ * @date 2017/2/8
  */
 
 public class RoleBean implements Serializable{

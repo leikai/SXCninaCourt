@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by baggio on 2017/2/16.
+ *
+ * @author baggio
+ * @date 2017/2/16
  */
 
 public class TasksAssignedToMeAdatper extends BaseAdapter {
@@ -68,7 +70,8 @@ public class TasksAssignedToMeAdatper extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
         TaskAssignedToMeBean task = mTasks.get(position);
-        String taskType = "";// "[" + task.getOwner() + "]";
+        // "[" + task.getOwner() + "]";
+        String taskType = "";
         String taskTitle = taskType + task.getTitle();
         SpannableStringBuilder style = new SpannableStringBuilder(taskTitle);
         style.setSpan(new ForegroundColorSpan(Color.parseColor("#666666")), 0, taskType.length(),

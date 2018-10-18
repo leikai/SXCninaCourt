@@ -17,11 +17,6 @@ import org.sxchinacourt.util.BitmapUtil;
 
 import java.util.List;
 
-//import org.czsxchinacourt.CApplication;
-//import org.czsxchinacourt.R;
-//import org.czsxchinacourt.bean.UserNewBean;
-//import org.czsxchinacourt.util.BitmapUtil;
-
 /**
  * 角色切换适配器
  * @author lk

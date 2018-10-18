@@ -5,7 +5,9 @@ import org.json.JSONObject;
 import org.sxchinacourt.bean.SelectViewComponent;
 
 /**
- * Created by baggio on 2017/3/2.
+ *
+ * @author baggio
+ * @date 2017/3/2
  */
 
 public class SelectViewComponentParser extends SubViewComponentParser {
@@ -14,7 +16,6 @@ public class SelectViewComponentParser extends SubViewComponentParser {
     @Override
     public SelectViewComponent parser(JSONObject jsonObject) throws JSONException {
         SelectViewComponent component = new SelectViewComponent();
-//        ComponentParser.parser(component, jsonObject);
         if (jsonObject.has(SUBVIEW)) {
             component.setViewName(jsonObject.getString(SUBVIEW));
         }

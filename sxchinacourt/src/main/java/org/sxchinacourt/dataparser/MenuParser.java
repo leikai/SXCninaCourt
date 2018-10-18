@@ -5,14 +5,28 @@ import org.json.JSONObject;
 import org.sxchinacourt.bean.MenuBean;
 
 /**
- * Created by baggio on 2017/2/20.
+ *
+ * @author baggio
+ * @date 2017/2/20
  */
 
 public class MenuParser extends DataParser {
-    public static String MENUNAME = "menuName";// 菜单名称
-    public static String MENUTYPE = "menuType";// 一个 int 值，菜单的动作代码
-    public static String ISCHECKED = "isChecked";// 是否选择
-    public static String OPINION = "opinion";// 留言内容
+    /**
+     * 菜单名称
+     */
+    public static String MENUNAME = "menuName";
+    /**
+     * 一个 int 值，菜单的动作代码
+     */
+    public static String MENUTYPE = "menuType";
+    /**
+     * 是否选择
+     */
+    public static String ISCHECKED = "isChecked";
+    /**
+     * 留言内容
+     */
+    public static String OPINION = "opinion";
 
     @Override
     public MenuBean parser(JSONObject jsonObject) throws JSONException {

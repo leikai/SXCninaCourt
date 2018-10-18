@@ -5,7 +5,9 @@ import org.json.JSONObject;
 import org.sxchinacourt.bean.DepartmentBean;
 
 /**
- * Created by baggio on 2017/2/8.
+ *
+ * @author baggio
+ * @date 2017/2/8
  */
 
 public class DepartmentParser extends DataParser {

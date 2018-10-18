@@ -6,7 +6,9 @@ import android.util.Log;
 import java.io.Serializable;
 
 /**
- * Created by baggio on 2017/2/6.
+ *
+ * @author baggio
+ * @date 2017/2/6
  */
 
 public class UserBean implements Serializable {

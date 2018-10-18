@@ -1,16 +1,36 @@
 package org.sxchinacourt.bean;
 
 /**
- * Created by baggio on 2017/2/20.
+ *
+ * @author baggio
+ * @date 2017/2/20
  */
 
 public class ProcessOpinion {
-    private String mTaskId;//任务 ID
-    private String mCreateUser;//留言人
-    private String mCreateDate; // 留言日期
-    private String mMenuName;// 选择的审核菜单名
-    private String mStepName;// 节点名
-    private String mOpinion;// 留言内容
+    /**
+     * 任务 ID
+     */
+    private String mTaskId;
+    /**
+     * 留言人
+     */
+    private String mCreateUser;
+    /**
+     * 留言日期
+     */
+    private String mCreateDate;
+    /**
+     * 选择的审核菜单名
+     */
+    private String mMenuName;
+    /**
+     * 节点名
+     */
+    private String mStepName;
+    /**
+     * 留言内容
+     */
+    private String mOpinion;
 
     public String getTaskId() {
         return mTaskId;

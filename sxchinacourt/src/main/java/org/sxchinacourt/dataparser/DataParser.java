@@ -4,7 +4,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by baggio on 2017/2/6.
+ *
+ * @author baggio
+ * @date 2017/2/6
  */
 
 public abstract class DataParser {
@@ -67,6 +69,8 @@ public abstract class DataParser {
             case PARSER_TYPE_USER_NEW:
                 parser = new UserNewParser();
                 break;
+                default:
+                    break;
         }
         return parser;
     }

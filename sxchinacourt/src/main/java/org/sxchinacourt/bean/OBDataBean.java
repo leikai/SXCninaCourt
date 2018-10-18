@@ -1,12 +1,17 @@
 package org.sxchinacourt.bean;
 
 /**
- * Created by baggio on 2017/2/17.
+ *
+ * @author baggio
+ * @date 2017/2/17
  */
 
 public class OBDataBean {
-    private int mId;             //自动编号
-    private String mOrgNo;          //
+    /**
+     * 自动编号
+     */
+    private int mId;
+    private String mOrgNo;
     private String mCreateDate;
     private String mCreateUser;
     private String mUpdateDate;

@@ -5,7 +5,9 @@ import org.json.JSONObject;
 import org.sxchinacourt.bean.RoleBean;
 
 /**
- * Created by baggio on 2017/2/8.
+ *
+ * @author baggio
+ * @date 2017/2/8
  */
 
 public class RoleParser extends DataParser {

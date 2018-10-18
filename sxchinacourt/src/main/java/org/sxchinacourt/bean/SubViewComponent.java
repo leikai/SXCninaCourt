@@ -1,7 +1,9 @@
 package org.sxchinacourt.bean;
 
 /**
- * Created by baggio on 2017/3/2.
+ *
+ * @author baggio
+ * @date 2017/3/2
  */
 
 public class SubViewComponent extends Component {

@@ -13,12 +13,16 @@ import org.sxchinacourt.bean.CourtDataBean;
 import java.util.List;
 
 /**
- * Created by 殇冰无恨 on 2017/10/11.
+ *
+ * @author 殇冰无恨
+ * @date 2017/10/11
  */
 
 public class CourtAdapter extends BaseAdapter {
     private LayoutInflater mLayoutInflater;
-    // 映射数据<泛型bean>
+    /**
+     * 映射数据<泛型bean>
+     */
     private List<CourtDataBean> mDataList;
 
     public CourtAdapter(Context context, List<CourtDataBean> list) {
@@ -58,11 +62,13 @@ public class CourtAdapter extends BaseAdapter {
         // 取出bean对象
         CourtDataBean bean = mDataList.get(i);
         // 设置控件的数据
-//        holder.content.setText("晋中市人民法院");
         holder.content.setText(bean.getCourtName());
         return view;
     }
-    // ViewHolder用于缓存控件
+
+    /**
+     * ViewHolder用于缓存控件
+     */
     class ViewHolder {
         public TextView content;
     }

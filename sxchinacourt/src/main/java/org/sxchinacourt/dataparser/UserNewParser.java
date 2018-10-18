@@ -5,6 +5,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.sxchinacourt.bean.UserNewBean;
 
+/**
+ * @author lk
+ */
 public class UserNewParser extends DataParser {
     public static final String OID = "oid";
     public static final String DEPTCODE = "deptcode";

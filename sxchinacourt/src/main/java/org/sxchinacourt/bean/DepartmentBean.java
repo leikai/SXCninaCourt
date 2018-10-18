@@ -4,13 +4,18 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by baggio on 2017/2/8.
+ *
+ * @author baggio
+ * @date 2017/2/8
  */
 
 public  class  DepartmentBean implements Serializable {
     private static final long serialVersionUID = -4854451883462054811L;
     private String mId;
-    private String mDepartmentName;    //联系人分组名称
+    /**
+     * 联系人分组名称
+     */
+    private String mDepartmentName;
     private String mDepartmentNo;
     private String mDepartmentFullName;
     private String mDepartmentFullId;

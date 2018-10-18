@@ -1,7 +1,9 @@
 package org.sxchinacourt.bean;
 
 /**
- * Created by 殇冰无恨 on 2017/10/12.
+ *
+ * @author 殇冰无恨
+ * @date 2017/10/12
  */
 
 public class CeShiBean {

@@ -6,6 +6,7 @@ import android.view.View;
 
 /**
  * ViewHolder基类
+ * @author lk
  */
 public class SuperViewHolder extends RecyclerView.ViewHolder {
 

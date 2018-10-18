@@ -5,12 +5,17 @@ import org.json.JSONObject;
 import org.sxchinacourt.bean.OBDataBean;
 
 /**
- * Created by baggio on 2017/2/17.
+ *
+ * @author baggio
+ * @date 2017/2/17
  */
 
 public class OBDataParser extends DataParser {
-    public static final String ID = "ID";             //自动编号
-    public static final String ORGNO = "ORGNO";          //
+    /**
+     * 自动编号
+     */
+    public static final String ID = "ID";
+    public static final String ORGNO = "ORGNO";
     public static final String CREATEDATE = "CREATEDATE";
     public static final String CREATEUSER = "CREATEUSER";
     public static final String UPDATEDATE = "UPDATEDATE";
@@ -21,18 +26,8 @@ public class OBDataParser extends DataParser {
     public static final String RELEASEUSER = "RELEASEUSER";
     public static final String RELEASEDEPARTMENT = "RELEASEDEPARTMENT";
     public static final String SUBTITLE = "SUBTITLE";
-    //    private String mSubPicture;
     public static final String CONTENT = "CONTENT";
-    //    private boolean mIsClose;
-//    private boolean mIsTalk;
     public static final String ARCHIVES = "ARCHIVES";
-    //    private String mSecurityList;
-//    private String mYDFW;
-//    private boolean mIsCopy;
-//    private String mZYTS;
-//    private String mISZD;
-//    private String mBTJC;
-//    private String mSource;
     public static final String DISPLAYTITLE = "DISPLAYTITLE";
     public static final String DEPTID = "DEPTID";
 

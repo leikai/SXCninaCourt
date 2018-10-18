@@ -1,16 +1,36 @@
 package org.sxchinacourt.bean;
 
 /**
- * Created by baggio on 2017/2/24.
+ *
+ * @author baggio
+ * @date 2017/2/24
  */
 
 public class AssignSubTaskBean {
-    private String mETime;//结束日期
-    private String mSTime;//开始日期
-    private String mContent;//任务内容
-    private String mWsMan;//执行人姓名
-    private String mWsManId;//执行人courtoaid的值
-    private int mWsManOAId;//执行人id的值
+    /**
+     * 结束日期
+     */
+    private String mETime;
+    /**
+     * 开始日期
+     */
+    private String mSTime;
+    /**
+     * 任务内容
+     */
+    private String mContent;
+    /**
+     * 执行人姓名
+     */
+    private String mWsMan;
+    /**
+     * 执行人courtoaid的值
+     */
+    private String mWsManId;
+    /**
+     * 执行人id的值
+     */
+    private int mWsManOAId;
 
     public String getETime() {
         return mETime;

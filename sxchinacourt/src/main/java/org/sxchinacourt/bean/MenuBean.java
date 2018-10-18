@@ -1,14 +1,28 @@
 package org.sxchinacourt.bean;
 
 /**
- * Created by baggio on 2017/2/20.
+ *
+ * @author baggio
+ * @date 2017/2/20
  */
 
 public class MenuBean {
-    private String mMenuName;// 菜单名称
-    private int mMenuType;//一个 int 值，菜单的动作代码
-    private boolean isChecked;// 是否选择
-    private String mOpinion;// 留言内容
+    /**
+     * 菜单名称
+     */
+    private String mMenuName;
+    /**
+     * 一个 int 值，菜单的动作代码
+     */
+    private int mMenuType;
+    /**
+     * 是否选择
+     */
+    private boolean isChecked;
+    /**
+     * 留言内容
+     */
+    private String mOpinion;
 
     public String getMenuName() {
         return mMenuName;

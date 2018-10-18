@@ -3,7 +3,9 @@ package org.sxchinacourt.bean;
 import android.view.View;
 
 /**
- * Created by baggio on 2017/3/2.
+ *
+ * @author baggio
+ * @date 2017/3/2
  */
 
 public class Component {

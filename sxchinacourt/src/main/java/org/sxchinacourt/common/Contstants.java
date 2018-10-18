@@ -1,5 +1,8 @@
 package org.sxchinacourt.common;
 
+/**
+ * @author lk
+ */
 public class Contstants {
     /***************************SharedPreferences-Key***************************/
 

@@ -1,25 +1,16 @@
 package org.sxchinacourt.bean;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Environment;
 import android.support.annotation.IdRes;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -38,7 +29,6 @@ import org.sxchinacourt.widget.CustomSpinner;
 import org.sxchinacourt.widget.FlowRadioGroup;
 import org.sxchinacourt.widget.RevisionNormalDialog;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +36,9 @@ import static org.sxchinacourt.R.id.tv_value;
 import static org.sxchinacourt.activity.TaskDetailInfoActivity.activity;
 
 /**
- * Created by baggio on 2017/3/2.
+ *
+ * @author baggio
+ * @date 2017/3/2
  */
 
 public class ViewComponents{
@@ -66,7 +58,6 @@ public class ViewComponents{
     private  String user_name;
     public  String imetaId;
     private final String copyRight = "SxD/phFsuhBWZSmMVtSjKZmm/c/3zSMrkV2Bbj5tznSkEVZmTwJv0wwMmH/+p6wLBSSVwmUpRfendwEawLj0VLJ6vDthIEAOcf4QTRWI/ShtZhuMjbvpgCAqbKKMHJWgpW1Gr8XXPYJ4HhGdpGi52DxjDOb5tag0qxTJVdrxXbre7ScPph+uyVo0lj5RYMthslzcF8aMKcf7kC8oWy6JNGF7KKeL4hJgLscmq65tlNSgSOimMBZXAWJyoNec+zKVpsIbmNxqKyvhX5tNT5jWlstVFd1auzF3hfElMKqI/DhfjgZng3BAkQ0sSjCWwWV9BpEVGh+pLlRbzYy0JKBajR97b07zZk7J3N9w9HyrB6pbyicI7UCAwAPZKTF8lcz+31TdZ5LxM6ZF9VY0A81SIZKEWu5GE6csEuLnbina4reniVn7rtDzO6a7c0CwCVewb44+oWA6yuS47Uqtqvl76Q==";
-//    private final String copyRight = "SxD/phFsuhBWZSmMVtSjKZmm/c/3zSMrkV2Bbj5tznSkEVZmTwJv0wwMmH/+p6wLiUHbjadYueX9v51H9GgnjUhmNW1xPkB++KQqSv/VKLDsR8V6RvNmv0xyTLOrQoGzAT81iKFYb1SZ/Zera1cjGwQSq79AcI/N/6DgBIfpnlwiEiP2am/4w4+38lfUELaNFry8HbpbpTqV4sqXN1WpeJ7CHHwcDBnMVj8djMthFaapMFm/i6swvGEQ2JoygFU3CQHU1ScyOebPLnpsDlQDzHENS81ywEMOF6XVxCiBAjLx6aD2yiupr6ji7hzsE6/QbaqCDCtTDTe1U1UGNQSK3Hpz3SSO8TGR8+bXO3HAMImVWEbHWAH22+t7LdPt+jENfhH/0A5Aom0qQCL/Z9LXyKcd2k72+1SjzDw0qWe3PQeSgCNRP4FpYjl8hG/IVrYXSsIegvD2Y5Y9n+QAp0EUduW8fXpxdRHfEuWC1PB9ruQ=";
     public void addComponent(Component component) {
         if (component.getViewName().equals(Component.VIEW_TYPE_HIDDENVIEW)) {
             mHiddenComponent.add(component);
@@ -95,12 +86,18 @@ public class ViewComponents{
     public List<Component> getHiddenComponent() {
         return mHiddenComponent;
     }
-   //待办详情页面动态摆放控件   根据标签名称 view
+
+    /**
+     * 待办详情页面动态摆放控件   根据标签名称 view
+     * @param contentView
+     * @param customProgress
+     */
     public void loadViewComponents(ViewGroup contentView, CustomProgress customProgress) {
         final Context context = contentView.getContext();
         subViewComponent = new SubViewComponent();
         for (Component component : getComponents()) {
-            if (component.getViewName().equals(Component.VIEW_TYPE_SIGNVIEW) ) {//满足这两个条件一定是图片签批
+            //满足这两个条件一定是图片签批
+            if (component.getViewName().equals(Component.VIEW_TYPE_SIGNVIEW) ) {
                 initIAppRevisionInstance();
                     imetaId = component.getLabelValue();
                     fieldName= imetaId;
@@ -123,7 +120,8 @@ public class ViewComponents{
                         }
                     });
             }
-               else if (component.getViewName().equals(Component.VIEW_TYPE_TEXTVIEW) ) {//满足这个判断的一个条件就是文本签批
+                //满足这个判断的一个条件就是文本签批
+               else if (component.getViewName().equals(Component.VIEW_TYPE_TEXTVIEW) ) {
                     ViewGroup childView = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.task_detailinfo_textview, null);
                     TextView tv_nameView = (TextView) childView.findViewById(R.id.tv_name);
                     tv_nameView.setText(component.getText() + "：");
@@ -131,7 +129,9 @@ public class ViewComponents{
                     tv_valueView.setText(component.getLabelValue());
                     component.setView(tv_valueView);
                     contentView.addView(childView);
-                } else if (component.getViewName().equals(Component.VIEW_TYPE_EDITVIEW)) {     //editview
+                }
+                //editview
+                else if (component.getViewName().equals(Component.VIEW_TYPE_EDITVIEW)) {
                     ViewGroup childView = (ViewGroup) LayoutInflater.from(context)
                             .inflate(R.layout.task_detailinfo_editview, null);
                     TextView textView = (TextView) childView.findViewById(R.id.tv_name);
@@ -142,20 +142,28 @@ public class ViewComponents{
                     }
                     component.setView(editText);
                     contentView.addView(childView);
-                } else if (component.getViewName().equals(Component.VIEW_TYPE_ATTACHMENTVIEW)) {    //attcahmentview
+                }
+                //attcahmentview
+                else if (component.getViewName().equals(Component.VIEW_TYPE_ATTACHMENTVIEW)) {
                     CustomAttachmentView attachmentView = new CustomAttachmentView(context, component, customProgress);
                     contentView.addView(attachmentView);
-                } else if (component.getViewName().equals(Component.VIEW_TYPE_DATEVIEW)) {                   //dateview
+                }
+                //dateview
+                else if (component.getViewName().equals(Component.VIEW_TYPE_DATEVIEW)) {
                     CustomDateView dateView = new CustomDateView(context, component);
                     if (!TextUtils.isEmpty(component.getHintText())) {
                         dateView.setDate(component.getHintText());
                     }
                     component.setView(dateView.getDateView());
                     contentView.addView(dateView);
-                } else if (component.getViewName().equals(Component.VIEW_TYPE_SELECTVIEW)) {         //selectview
+                }
+                //selectview
+                else if (component.getViewName().equals(Component.VIEW_TYPE_SELECTVIEW)) {
                     CustomSpinner spinnerView = new CustomSpinner(context, (SelectViewComponent) component);
                     contentView.addView(spinnerView);
-                }else if (component.getViewName().equals(Component.VIEW_TYPE_RADIOVIEW)) {           //radioview
+                }
+                //radioview
+                else if (component.getViewName().equals(Component.VIEW_TYPE_RADIOVIEW)) {
                     LinearLayout layout = new LinearLayout(context);
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams
                             (LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);

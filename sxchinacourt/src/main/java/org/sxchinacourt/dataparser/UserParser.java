@@ -7,7 +7,9 @@ import org.sxchinacourt.bean.RoleBean;
 import org.sxchinacourt.bean.UserBean;
 
 /**
- * Created by baggio on 2017/2/6.
+ *
+ * @author baggio
+ * @date 2017/2/6
  */
 
 public class UserParser extends DataParser {

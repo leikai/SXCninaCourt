@@ -1,7 +1,9 @@
 package org.sxchinacourt.bean;
 
 /**
- * Created by baggio on 2017/2/3.
+ *
+ * @author baggio
+ * @date 2017/2/3
  */
 
 public class AppBean {
@@ -10,8 +12,14 @@ public class AppBean {
     public static final int FRAGMENT_NOTICE_TASK = 2;
     public static final int FRAGMENT_MANAGER_TASK = 3;
     public static final int FRAGMENT_EMAIL_TASK =4;
-    public static final int FRAGMENT_CABINET_TASK = 5;//云柜
-    public static final int FRAGMENT_MESSAGE_MACHINE = 6;//留言机
+    /**
+     * 云柜
+     */
+    public static final int FRAGMENT_CABINET_TASK = 5;
+    /**
+     * 留言机
+     */
+    public static final int FRAGMENT_MESSAGE_MACHINE = 6;
     private String mName;
     private int mFragmentIndex;
     private int mResourceId;

@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by baggio on 2017/3/28.
+ *
+ * @author baggio
+ * @date 2017/3/28
  */
 
 public class SelectViewComponent extends SubViewComponent {

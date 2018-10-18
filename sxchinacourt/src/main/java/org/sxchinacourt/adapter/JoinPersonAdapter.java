@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by baggio on 2017/2/21.
+ *
+ * @author baggio
+ * @date 2017/2/21
  */
 
 public class JoinPersonAdapter extends BaseAdapter {

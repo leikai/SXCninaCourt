@@ -34,15 +34,25 @@ import java.util.Map;
  */
 public class CrashHandler implements UncaughtExceptionHandler {
     public static final String TAG = "CrashHandler";
-    // CrashHandler 实例
+    /**
+     *  CrashHandler 实例
+     */
     private static CrashHandler INSTANCE = new CrashHandler();
-    // 程序的 Context 对象
+    /**
+     * 程序的 Context 对象
+     */
     private Context mContext;
-    // 系统默认的 UncaughtException 处理类
+    /**
+     * 系统默认的 UncaughtException 处理类
+     */
     private UncaughtExceptionHandler mDefaultHandler;
-    // 用来存储设备信息和异常信息
+    /**
+     * 用来存储设备信息和异常信息
+     */
     private Map<String, String> infos = new HashMap<String, String>();
-    // 用于格式化日期,作为日志文件名的一部分
+    /**
+     * 用于格式化日期,作为日志文件名的一部分
+     */
     private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
 
     /**

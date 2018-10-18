@@ -7,6 +7,9 @@ import org.sxchinacourt.util.SysUtil;
 
 import java.io.File;
 
+/**
+ * @author lk
+ */
 public abstract class FileAccessUtil {
     public static final String FILE_DIR = "下载/";
     public static boolean hasSdcard() {

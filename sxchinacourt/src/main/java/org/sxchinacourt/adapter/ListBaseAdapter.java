@@ -36,7 +36,13 @@ public abstract class ListBaseAdapter<T> extends RecyclerView.Adapter<SuperViewH
         onBindItemHolder(holder, position);
     }
 
-    //局部刷新关键：带payload的这个onBindViewHolder方法必须实现
+
+    /**
+     * 局部刷新关键：带payload的这个onBindViewHolder方法必须实现
+     * @param holder
+     * @param position
+     * @param payloads
+     */
     @Override
     public void onBindViewHolder(SuperViewHolder holder, int position, List<Object> payloads) {
         if (payloads.isEmpty()) {
@@ -61,7 +67,6 @@ public abstract class ListBaseAdapter<T> extends RecyclerView.Adapter<SuperViewH
     }
 
     public List<T> getDataList() {
-//        Log.e("mDataList",""+mDataList.get(1).toString());
         return mDataList;
     }
 
@@ -81,8 +86,8 @@ public abstract class ListBaseAdapter<T> extends RecyclerView.Adapter<SuperViewH
     public void remove(int position) {
         this.mDataList.remove(position);
         notifyItemRemoved(position);
-
-        if(position != (getDataList().size())){ // 如果移除的是最后一个，忽略
+        // 如果移除的是最后一个，忽略
+        if(position != (getDataList().size())){
             notifyItemRangeChanged(position,this.mDataList.size()-position);
         }
     }

@@ -8,16 +8,46 @@ import java.util.List;
  */
 
 public class AssignTaskBean {
-    private String mWTitle; //wtitle:任务标题
-    private String mWsMan;//wsman:布置人姓名
-    private String mWsManId;//wsmanid:布置人id  getUserInfo接口获取的 courtoaid的值
-    private int mWsManOAId;//wsmanoaid:布置人工作流id  getUserInfo接口获取的 id的值
-    private String mNote;//note:选择的执行人姓名，多人用,隔开
-    private String mSTime;//stime:开始日期
-    private String mETime;//etime:结束日期
-    private String mAlertTime;//alerttime:提醒日期
-    private String mWContent;//wcontent:任务内容
-    private List<AssignSubTaskBean> mDetails;//执行人明细
+    /**
+     * wtitle:任务标题
+     */
+    private String mWTitle;
+    /**
+     * wsman:布置人姓名
+     */
+    private String mWsMan;
+    /**
+     * wsmanid:布置人id  getUserInfo接口获取的 courtoaid的值
+     */
+    private String mWsManId;
+    /**
+     * wsmanoaid:布置人工作流id  getUserInfo接口获取的 id的值
+     */
+    private int mWsManOAId;
+    /**
+     * note:选择的执行人姓名，多人用,隔开
+     */
+    private String mNote;
+    /**
+     * stime:开始日期
+     */
+    private String mSTime;
+    /**
+     * etime:结束日期
+     */
+    private String mETime;
+    /**
+     * alerttime:提醒日期
+     */
+    private String mAlertTime;
+    /**
+     * wcontent:任务内容
+     */
+    private String mWContent;
+    /**
+     * 执行人明细
+     */
+    private List<AssignSubTaskBean> mDetails;
 
     public AssignTaskBean() {
         mDetails = new ArrayList<>();

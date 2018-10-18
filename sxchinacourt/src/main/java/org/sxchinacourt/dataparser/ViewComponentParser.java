@@ -5,7 +5,9 @@ import org.json.JSONObject;
 import org.sxchinacourt.bean.ViewComponent;
 
 /**
- * Created by baggio on 2017/2/20.
+ *
+ * @author baggio
+ * @date 2017/2/20
  */
 
 public class ViewComponentParser extends DataParser {
@@ -14,7 +16,6 @@ public class ViewComponentParser extends DataParser {
     @Override
     public ViewComponent parser(JSONObject jsonObject) throws JSONException {
         ViewComponent component = new ViewComponent();
-//        ComponentParser.parser(component,jsonObject);
         if (jsonObject.has(VIEW)) {
             component.setViewName(jsonObject.getString(VIEW));
         }

@@ -1,5 +1,6 @@
 package org.sxchinacourt.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -20,12 +21,16 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.geek.thread.GeekThreadManager;
+import com.geek.thread.ThreadPriority;
+import com.geek.thread.ThreadType;
+import com.geek.thread.task.GeekRunnable;
+
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.sxchinacourt.CApplication;
 import org.sxchinacourt.R;
 import org.sxchinacourt.activity.AssignActivity;
 import org.sxchinacourt.bean.FileReverseDetailDataBean;
-import org.sxchinacourt.bean.UserBean;
 import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.util.QRCodeUtil;
 import org.sxchinacourt.util.SoapClient;
@@ -35,6 +40,9 @@ import org.sxchinacourt.widget.SwipeMenuView;
 
 import java.io.File;
 
+/**
+ * @author lk
+ */
 public class SwipeMenuReverseAdapter extends ListBaseAdapter<FileReverseDetailDataBean> {
     private FileReverseDetailDataBean bean =null;
     private String serialNo ;
@@ -82,7 +90,6 @@ public class SwipeMenuReverseAdapter extends ListBaseAdapter<FileReverseDetailDa
 
         //这句话关掉IOS阻塞式交互效果 并依次打开左滑右滑
         ((SwipeMenuView)holder.itemView).setIos(false).setLeftSwipe( true);
-//        ((SwipeMenuView)holder.itemView).setIos(false).setLeftSwipe(position % 2 == 0 ? true : false);
         String initiatorName = getDataList().get(position).getInitiatorName();
         Log.e("initiatorName",""+initiatorName);
         InitiatorName.setText(getDataList().get(position).getInitiatorName());
@@ -153,29 +160,24 @@ public class SwipeMenuReverseAdapter extends ListBaseAdapter<FileReverseDetailDa
         //创建的二维码地址
         filePath = Environment.getExternalStorageDirectory().getPath() + "/Json/" + "code_json.jpg";
         btnPickUp.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("HandlerLeak")
             @Override
             public void onClick(final View view) {
                 final UserNewBean user = CApplication.getInstance().getCurrentUser();
                 String str = String.valueOf ( user.getOaid() );
-//                Log.e("user","雷凱"+user.getCourtoaid()+"雷凱"+user.getSessionId()+"雷凱"+user.getUserNo()+"雷凱"+user.getId());
                 final SoapParams soapParams = new SoapParams().put("arg0",str);
-                new Thread(new Runnable() {
+
+                GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
                     @Override
                     public void run() {
                         String dynamicData= WebServiceUtil.getInstance().GetQRCode(soapParams, new SoapClient.ISoapUtilCallback() {
                             @Override
                             public void onSuccess(SoapSerializationEnvelope envelope) throws Exception {
                                 verificationErWeiMa  =  envelope.getResponse().toString();
-
-
                                 Message message = new Message();
                                 message.what = SHOW_RESPONSE_AUTHENTICATION;
-//                                message.obj = verificationErWeiMa;
                                 message.obj = view;
-
                                 handler.sendMessage(message);
-
-
                             }
 
                             @Override
@@ -183,25 +185,20 @@ public class SwipeMenuReverseAdapter extends ListBaseAdapter<FileReverseDetailDa
                             }
                         });
                     }
-                }).start();
+                },ThreadType.NORMAL_THREAD);
                 handler = new Handler(){
                     @Override
                     public void handleMessage(Message msg) {
                         super.handleMessage(msg);
                         switch (msg.what) {
                             case SHOW_RESPONSE_AUTHENTICATION:
-//                                verificationErWeiMa = (String) msg.obj;
                                 View v = (View) msg.obj;
                                 Log.e("verificationErWeiMa",""+verificationErWeiMa);
-
                                 if (verificationErWeiMa==null){
                                     break;
                                 }
                                 new Thread(runAddEwmImg).start();
-
-//                                mErWeiMaBitmap = BC_2weima(verificationErWeiMa);
                                 Log.e("verificationErWeiMa",""+verificationErWeiMa);
-//                                LayoutInflater inflater = LayoutInflater.from(mmContext());
                                 // 引入窗口配置文件
                                 View view = mLayoutInflater.inflate(R.layout.view_erweima_popuwindow, null);
 
@@ -224,13 +221,13 @@ public class SwipeMenuReverseAdapter extends ListBaseAdapter<FileReverseDetailDa
                                             case SHOW_RESPONSE_ERWEIMA_REVERSE:
                                                 tvErweimaName.setText("取件二维码");
                                                 btnErweimaNext.setText("完成");
+                                                default:
+                                                    break;
 
                                         }
                                         iverweimaPop.setImageBitmap(BitmapFactory.decodeFile(filePath));
                                     }
                                 };
-//                                iverweima.setImageBitmap(mErWeiMaBitmap);
-
                                 // 创建PopupWindow对象
                                 final PopupWindow pop = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, false);
                                 pop.setAnimationStyle(R.style.mypopwindow_anim_style);
@@ -260,40 +257,34 @@ public class SwipeMenuReverseAdapter extends ListBaseAdapter<FileReverseDetailDa
                                             serialNo =  bean.getSerialNo();
                                             new Thread(runAddEwmImgReverse).start();
                                         }
-//                                        pop.dismiss();
-
                                     }
                                 });
                                 ivErwemaBgTop.setOnClickListener(new View.OnClickListener() {
-
                                     @Override
                                     public void onClick(View view) {
                                         pop.dismiss();
                                     }
                                 });
                                 ivErwemaBgBottom.setOnClickListener(new View.OnClickListener() {
-
                                     @Override
                                     public void onClick(View view) {
                                         pop.dismiss();
                                     }
                                 });
                                 ivErwemaBgLeft.setOnClickListener(new View.OnClickListener() {
-
                                     @Override
                                     public void onClick(View view) {
                                         pop.dismiss();
                                     }
                                 });
                                 ivErwemaBgRight.setOnClickListener(new View.OnClickListener() {
-
                                     @Override
                                     public void onClick(View view) {
                                         pop.dismiss();
                                     }
                                 });
 
-
+                                break;
                             default:
                                 break;
                         }
@@ -308,7 +299,6 @@ public class SwipeMenuReverseAdapter extends ListBaseAdapter<FileReverseDetailDa
         contentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                AppToast.makeShortToast(mContext, getDataList().get(position).title);
                 Log.d("TAG", "onClick() called with: v = [" + v + "]");
             }
         });

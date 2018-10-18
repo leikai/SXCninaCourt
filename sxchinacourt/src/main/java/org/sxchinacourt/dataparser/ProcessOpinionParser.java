@@ -5,16 +5,33 @@ import org.json.JSONObject;
 import org.sxchinacourt.bean.ProcessOpinion;
 
 /**
- * Created by baggio on 2017/2/20.
+ *
+ * @author baggio
+ * @date 2017/2/20
  */
 
 public class ProcessOpinionParser extends DataParser {
     public static final String TASKID = "taskId";
-    public static final String CREATEUSER = "createUser";// 留言人
-    public static final String CREATEDATE = "createDate";// 留言日期
-    public static final String MENUNAME = "menuName";// 选择的审核菜单名
-    public static final String STEPNAME = "stepName";// 节点名
-    public static final String OPINION = "opinion";// 留言内容
+    /**
+     * 留言人
+     */
+    public static final String CREATEUSER = "createUser";
+    /**
+     * 留言日期
+     */
+    public static final String CREATEDATE = "createDate";
+    /**
+     * 选择的审核菜单名
+     */
+    public static final String MENUNAME = "menuName";
+    /**
+     * 节点名
+     */
+    public static final String STEPNAME = "stepName";
+    /**
+     * 留言内容
+     */
+    public static final String OPINION = "opinion";
 
     @Override
     public ProcessOpinion parser(JSONObject jsonObject) throws JSONException {

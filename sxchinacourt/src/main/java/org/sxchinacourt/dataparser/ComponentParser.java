@@ -9,7 +9,9 @@ import org.sxchinacourt.bean.ViewComponent;
 import org.sxchinacourt.bean.ViewComponents;
 
 /**
- * Created by baggio on 2017/3/2.
+ *
+ * @author baggio
+ * @date 2017/3/2
  */
 
 public class ComponentParser {

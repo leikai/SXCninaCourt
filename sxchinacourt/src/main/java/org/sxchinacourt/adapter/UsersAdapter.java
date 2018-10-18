@@ -64,7 +64,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
         holder.userName.setText(userNewBean.getEmpname());
         Bitmap bp = BitmapUtil.GetUserImageByNickName(mcontext,userNewBean.getEmpname());
         holder.userImage.setImageBitmap(bp);
-//        Glide.with(mcontext).load(userNewBean.getImageId()).into(holder.userImage);
     }
 
     @Override

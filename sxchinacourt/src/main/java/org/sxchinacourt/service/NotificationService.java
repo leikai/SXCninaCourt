@@ -17,6 +17,11 @@ import android.os.Message;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.geek.thread.GeekThreadManager;
+import com.geek.thread.ThreadPriority;
+import com.geek.thread.ThreadType;
+import com.geek.thread.task.GeekRunnable;
+
 import org.sxchinacourt.CApplication;
 import org.sxchinacourt.R;
 import org.sxchinacourt.activity.NotificationActivity;
@@ -62,8 +67,6 @@ public class NotificationService extends Service {
                                 .setChannelId(id)
                                 .setContentTitle("通知:")
                                 .setContentText("当前您有"+resps+"待办消息,请点击查看详情并尽快办理！")
-//                              .setStyle(new NotificationCompat.BigTextStyle().bigText("通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容通知栏里面的内容"))
-//                              .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(BitmapFactory.decodeResource(getResources(), R.drawable.cabinet_bg)))//在通知栏里面显示一个大图片
                                 .setWhen(System.currentTimeMillis())
                                 .setSmallIcon(R.mipmap.ic_launcher_updata)
                                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_updata))
@@ -85,7 +88,6 @@ public class NotificationService extends Service {
                         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(NotificationService.this)
                                 .setContentTitle("通知:")
                                 .setContentText("当前您有"+resps+"条消息,请点击查看详情并尽快办理！")
-//                                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(BitmapFactory.decodeResource(getResources(), R.drawable.cabinet_bg)))//在通知栏里面显示一个大图片
                                 .setWhen(System.currentTimeMillis())
                                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_updata))
                                 //设置点击通知栏跳转到该活动页面
@@ -98,7 +100,7 @@ public class NotificationService extends Service {
                                 .setVibrate(new long[] {0,1000,1000,1000})
                                 //设置手机LED灯，设置成一闪一闪的效果
                                 .setLights(Color.GREEN,1000,1000)
-//                                .setDefaults(NotificationCompat.DEFAULT_ALL)//将通知栏的属性设置成默认属性
+                                //.setDefaults(NotificationCompat.DEFAULT_ALL)//将通知栏的属性设置成默认属性
                                 //设置通知的重要性，最高的话可以在弹出一个横幅
                                 .setPriority(NotificationCompat.PRIORITY_MAX)
                                 .setSmallIcon(R.mipmap.ic_launcher_updata)
@@ -132,49 +134,35 @@ public class NotificationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        new Thread(new Runnable() {
+
+        GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
             public void run() {
-//                timer = new Timer();
-//                task = new TimerTask(){
-//                    @Override
-//                    public void run() {
-                        String token  = CApplication.getInstance().getCurrentToken();
-                        UserNewBean user = CApplication.getInstance().getCurrentUser();
-                        String msgCountdaiban = WebServiceUtil.getInstance().getTaskCount(token);
-                        Log.e("msgCountdaiban",""+msgCountdaiban);
-                        int  a = Integer.parseInt(msgCountdaiban);
-                        Log.e("a",""+a);
+                String token  = CApplication.getInstance().getCurrentToken();
+                UserNewBean user = CApplication.getInstance().getCurrentUser();
+                String msgCountdaiban = WebServiceUtil.getInstance().getTaskCount(token);
+                Log.e("msgCountdaiban",""+msgCountdaiban);
+                int  a = Integer.parseInt(msgCountdaiban);
+                Log.e("a",""+a);
 
-                        int ceshi = a - beforeNo ;
-                        if (0 == ceshi){
-                            beforeNo = a;
-                            Log.e("ceshi",""+ceshi);
+                int ceshi = a - beforeNo ;
+                if (0 == ceshi){
+                    beforeNo = a;
+                    Log.e("ceshi",""+ceshi);
+                }else {
+                    beforeNo = a;
+                    Log.e("ceshi",""+ceshi);
 
-                        }else {
-                            beforeNo = a;
-                            Log.e("ceshi",""+ceshi);
-
-                            Message message = new Message();
-                            message.what = SHOW_RESPONSE_NOTIFICATION_COUNT;
-                            message.obj = String.valueOf(ceshi);
-                            handler.sendMessage(message);
-                        }
-
-
-                        String msgCount = WebServiceUtil.getInstance().getNoticeCount(token,"否");
-                        String msgCountList = WebServiceUtil.getInstance().getNoticeList(token,"否");
-                        Log.e("msgCountList",""+msgCountList);
-
-//                    }
-//                };
-//                //半分钟执行一次查询操作,访问一次后台
-//                timer.schedule(task,1000,60000);
-
-
-
+                    Message message = new Message();
+                    message.what = SHOW_RESPONSE_NOTIFICATION_COUNT;
+                    message.obj = String.valueOf(ceshi);
+                    handler.sendMessage(message);
+                }
+                String msgCount = WebServiceUtil.getInstance().getNoticeCount(token,"否");
+                String msgCountList = WebServiceUtil.getInstance().getNoticeList(token,"否");
+                Log.e("msgCountList",""+msgCountList);
             }
-        }).start();
+        },ThreadType.NORMAL_THREAD);
         return super.onStartCommand(intent, flags, startId);
     }
 

@@ -55,12 +55,7 @@ public class HBase64 {
 		return result;
 	}
 
-	/*
-	 * Replace all instances of a String in a String. @param s String to alter.
-	 * 
-	 * @param f String to look for. @param r String to replace it with, or null
-	 * to just remove it.
-	 */
+
 	public static String replace(String s, String f, String r) {
 		if (s == null) {
 			return s;

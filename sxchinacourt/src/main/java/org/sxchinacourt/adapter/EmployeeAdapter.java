@@ -13,12 +13,16 @@ import org.sxchinacourt.bean.EmployeeBean;
 import java.util.List;
 
 /**
- * Created by 殇冰无恨 on 2017/10/11.
+ *
+ * @author 殇冰无恨
+ * @date 2017/10/11
  */
 
 public class EmployeeAdapter extends BaseAdapter {
     private LayoutInflater mLayoutInflater;
-    // 映射数据<泛型bean>
+    /**
+     * 映射数据<泛型bean>
+     */
     private List<EmployeeBean> mDataList;
 
     public EmployeeAdapter(Context context, List<EmployeeBean> list) {
@@ -61,7 +65,10 @@ public class EmployeeAdapter extends BaseAdapter {
         holder.content.setText(bean.getName());
         return view;
     }
-    // ViewHolder用于缓存控件
+
+    /**
+     * ViewHolder用于缓存控件
+     */
     class ViewHolder {
         public TextView content;
     }

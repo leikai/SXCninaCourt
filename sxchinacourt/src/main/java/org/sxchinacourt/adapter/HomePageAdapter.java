@@ -22,7 +22,9 @@ import org.sxchinacourt.bean.AppBean;
 import java.util.List;
 
 /**
- * Created by baggio on 2017/2/3.
+ *
+ * @author baggio
+ * @date 2017/2/3
  */
 
 public class HomePageAdapter extends BaseAdapter {
@@ -80,12 +82,9 @@ public class HomePageAdapter extends BaseAdapter {
                 }
                 default: {
                     Toast.makeText(mFragment.getContext(), "暂不支持该功能", Toast.LENGTH_LONG).show();
-//                    app_type = AppsManagerFragment.CHILD_TYPE_TODOTASKLIST;
                     break;
                 }
             }
-//            bundle.putInt(BaseFragment.PARAM_CHILD_TYPE, app_type);
-//            mFragment.showChildFragment(bundle);
         }
     };
 
@@ -121,17 +120,6 @@ public class HomePageAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         AppViewHolder holder;
         if (view == null) {
-            /*switch (getItemViewType(i)) {
-                case TYPE_LEFT_ITEM:
-                    view = LayoutInflater.from(mFragment.getContext()).inflate(R.layout.app_left_item, null,
-                            false);
-                    break;
-                case TYPE_RIGHT_ITEM:
-                    view = LayoutInflater.from(mFragment.getContext()).inflate(R.layout
-                                    .app_right_item, null,
-                            false);
-                    break;
-            }*/
             view = LayoutInflater.from(mFragment.getContext()).inflate(R.layout.app_homepage_item, null,
                     false);
             holder = new AppViewHolder();
@@ -145,10 +133,8 @@ public class HomePageAdapter extends BaseAdapter {
         AppBean app = mApps.get(i);
         holder.mContainerView.setTag(app);
         holder.mContainerView.setOnClickListener(mOnClickListener);
-//        holder.mAppIconView.setImageResource(app.getResourceId());
         holder.mAppNameView.setText(app.getName());
         holder.mContainerView.setBackgroundResource(app.getResourceId());
-//        holder.mContainerView.setBackgroundColor(app.getResourceId());
         return view;
     }
 

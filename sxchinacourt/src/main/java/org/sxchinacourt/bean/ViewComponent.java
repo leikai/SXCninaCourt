@@ -1,7 +1,9 @@
 package org.sxchinacourt.bean;
 
 /**
- * Created by baggio on 2017/2/20.
+ *
+ * @author baggio
+ * @date 2017/2/20
  */
 
 public class ViewComponent extends Component{

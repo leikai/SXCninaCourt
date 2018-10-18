@@ -20,7 +20,9 @@ import org.sxchinacourt.dataparser.UserNewParser;
 import org.sxchinacourt.dataparser.UserParser;
 
 /**
- * Created by baggio on 2017/2/6.
+ *
+ * @author baggio
+ * @date 2017/2/6
  */
 
 public class DataFormat {

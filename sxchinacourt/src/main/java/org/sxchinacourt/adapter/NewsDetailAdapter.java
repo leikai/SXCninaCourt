@@ -8,19 +8,21 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import org.sxchinacourt.R;
-import org.sxchinacourt.bean.NewsBean;
-import org.sxchinacourt.bean.NewsContentPatts;
 import org.sxchinacourt.bean.NewsContentPattsRoot;
 
 import java.util.List;
 
 /**
- * Created by 殇冰无恨 on 2017/9/30.
+ *
+ * @author 殇冰无恨
+ * @date 2017/9/30
  */
 
 public class NewsDetailAdapter extends BaseAdapter {
     private LayoutInflater mLayoutInflater;
-    // 映射数据<泛型bean>
+    /**
+     * 映射数据<泛型bean>
+     */
     private List<NewsContentPattsRoot> mDataList;
 
     public NewsDetailAdapter(Context context, List<NewsContentPattsRoot> list) {
@@ -67,13 +69,12 @@ public class NewsDetailAdapter extends BaseAdapter {
         holder.title.setText(bean.getFtitle());
         holder.content.setText(bean.getStitle());
         holder.time.setText("");
-//        holder.time.setText(bean.getToptime());
-//        holder.title.setText("lalalalalalla");
-//        holder.content.setText("weasdasdasdasdasdas");
-//        holder.time.setText("2017.6.6");
         return view;
     }
-    // ViewHolder用于缓存控件
+
+    /**
+     * ViewHolder用于缓存控件
+     */
     class ViewHolder {
         public TextView title;
         public TextView content;

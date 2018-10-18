@@ -1,5 +1,6 @@
 package org.sxchinacourt.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +24,10 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
+import com.geek.thread.GeekThreadManager;
+import com.geek.thread.ThreadPriority;
+import com.geek.thread.ThreadType;
+import com.geek.thread.task.GeekRunnable;
 
 
 import org.sxchinacourt.R;
@@ -172,6 +177,7 @@ public class AnswerPhoneAdapter extends RecyclerView.Adapter<AnswerPhoneAdapter.
             }
         });
         holder.llViewMessageType.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("HandlerLeak")
             @Override
             public void onClick(View view) {
                 Log.e("留言类型：",""+messagemachineBean.getAnswerType());
@@ -181,7 +187,8 @@ public class AnswerPhoneAdapter extends RecyclerView.Adapter<AnswerPhoneAdapter.
                     intent.putExtra("content",messagemachineBean.getTextContent());
                     mContext.startActivity(intent);
                 }else {
-                    new Thread(){
+
+                    GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
                         @Override
                         public void run() {
                             String oid = messagemachineBean.getOid();
@@ -196,7 +203,7 @@ public class AnswerPhoneAdapter extends RecyclerView.Adapter<AnswerPhoneAdapter.
                             message.obj = ceshi1;
                             handler3.sendMessage(message);
                         }
-                    }.start();
+                    },ThreadType.NORMAL_THREAD);
 
                     handler3 = new Handler(){
                         @Override
@@ -282,10 +289,11 @@ public class AnswerPhoneAdapter extends RecyclerView.Adapter<AnswerPhoneAdapter.
                                                                 intent.putExtra("video_path", Environment.getExternalStorageDirectory()+"/"+path1);
                                                                 mContext.startActivity(intent);
                                                                 break;
+                                                                default:
+                                                                    break;
                                                         }
                                                     }
                                                 };
-
                                             }
                                         }
                                     });
@@ -297,6 +305,8 @@ public class AnswerPhoneAdapter extends RecyclerView.Adapter<AnswerPhoneAdapter.
                                     });
                                     dialog.show();
                                     break;
+                                    default:
+                                        break;
                             }
 
                         }
@@ -335,9 +345,6 @@ public class AnswerPhoneAdapter extends RecyclerView.Adapter<AnswerPhoneAdapter.
 
         String url = "http://111.53.181.200:8087/mserver/uploadFile/"+path;
         Log.e("下载地址",""+url);
-
-//        String url = "http://111.53.181.200:8087/sInfoWeb/web/UpLoadFiles/vedio/樊利明_201808171314211698.avi";
-//        final String url = "http://123.56.26.77:8888//UpLoadFiles//vedio//%E5%BC%A0%E6%B3%95%E5%AE%98_201710241425548910.avi";
         Request request = new Request.Builder().url(url).build();
         Call call = client.newCall(request);
         call.enqueue(new Callback() {

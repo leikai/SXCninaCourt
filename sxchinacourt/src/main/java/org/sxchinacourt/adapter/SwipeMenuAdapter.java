@@ -14,6 +14,9 @@ import org.sxchinacourt.activity.AssignActivity;
 import org.sxchinacourt.bean.DepositDataBean;
 import org.sxchinacourt.widget.SwipeMenuView;
 
+/**
+ * @author lk
+ */
 public class SwipeMenuAdapter extends ListBaseAdapter<DepositDataBean> {
 
     public SwipeMenuAdapter(Context context) {
@@ -38,7 +41,6 @@ public class SwipeMenuAdapter extends ListBaseAdapter<DepositDataBean> {
 
         //这句话关掉IOS阻塞式交互效果 并依次打开左滑右滑
         ((SwipeMenuView)holder.itemView).setIos(false).setLeftSwipe( true);
-//        ((SwipeMenuView)holder.itemView).setIos(false).setLeftSwipe(position % 2 == 0 ? true : false);
         String initiatorName = getDataList().get(position).getInitiatorName();
         Log.e("initiatorName",""+initiatorName);
         InitiatorName.setText(getDataList().get(position).getInitiatorName());
@@ -106,7 +108,6 @@ public class SwipeMenuAdapter extends ListBaseAdapter<DepositDataBean> {
         contentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                AppToast.makeShortToast(mContext, getDataList().get(position).title);
                 Log.d("TAG", "onClick() called with: v = [" + v + "]");
             }
         });

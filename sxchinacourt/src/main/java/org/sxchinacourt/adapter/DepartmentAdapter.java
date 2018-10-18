@@ -12,6 +12,9 @@ import org.sxchinacourt.bean.DepartmentNewBean;
 
 import java.util.List;
 
+/**
+ * @author lk
+ */
 public class DepartmentAdapter extends BaseAdapter {
     private Context context;
     private List<DepartmentNewBean> list;

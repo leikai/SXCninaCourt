@@ -1,15 +1,13 @@
 package org.sxchinacourt.dataparser;
 
-import android.util.Log;
-
-import com.google.android.gms.playlog.internal.LogEvent;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.sxchinacourt.bean.SubViewComponent;
 
 /**
- * Created by baggio on 2017/3/2.
+ *
+ * @author baggio
+ * @date 2017/3/2
  */
 
 public class SubViewComponentParser extends DataParser {

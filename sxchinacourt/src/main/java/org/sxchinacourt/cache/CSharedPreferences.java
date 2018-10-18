@@ -8,13 +8,14 @@ import android.text.TextUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.sxchinacourt.CApplication;
-import org.sxchinacourt.bean.UserBean;
 import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.dataformat.DataFormat;
 import org.sxchinacourt.dataparser.DataParser;
 
 /**
- * Created by baggio on 2017/2/6.
+ *
+ * @author baggio
+ * @date 2017/2/6
  */
 
 public class CSharedPreferences {
