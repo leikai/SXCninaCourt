@@ -56,21 +56,33 @@ public class ContactsFragment extends BaseFragment{
 
     private AppCompatSpinner spinnerCourtoa;
     private AppCompatSpinner spinnerDepartment;
-    private RecyclerView rvUsers;//人员列表
+    /**
+     * 人员列表
+     */
+    private RecyclerView rvUsers;
     private RefreshGroupTask mRefreshGroupTask;
     private RefreshContactsTask mRefreshContactsTask;
     private ImageView ivSearch;
     private EditText etSearch;
     private TextView tvEmpty;
 
-    private UserNewBean user;//当前登录人的个人信息
+    /**
+     * 当前登录人的个人信息
+     */
+    private UserNewBean user;
     private String token;
     /**
      * 法院ID
      */
     private String orgId;
-    public List<DepartmentNewBean> mDepartments;//联系人分组集合
-    public List<UserNewBean> mUsersList =  new ArrayList<>();//联系人分组集合
+    /**
+     * 联系人分组集合
+     */
+    public List<DepartmentNewBean> mDepartments;
+    /**
+     * 联系人分组集合
+     */
+    public List<UserNewBean> mUsersList =  new ArrayList<>();
     private LinearLayoutManager layoutManager;
     private UsersAdapter usersAdapter;
     private static final String TAG = "Constraints";
@@ -171,7 +183,6 @@ public class ContactsFragment extends BaseFragment{
             departmentNewBean.setDeptName("所有部门");
             departmentNewBean.setDeptPid("");
             orgId = mDepartments.get(1).getOrgid();
-//            departmentNewBean.setOid("null");
             mDepartments.add(0,departmentNewBean);
             setDateToView(mDepartments);
 

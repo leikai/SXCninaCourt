@@ -49,13 +49,13 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
- *
+ * 存件记录列表
  * @author 殇冰无恨
  * @date 2017/11/4
  */
 
 public class FileDepositDataActivity extends Activity{
-    private static final String TAG = "lzx";
+    private static final String TAG = "存件记录列表";
 
     /**
      * 如果服务器没有返回总数据或者总页数，这里设置为最大值比如10000，什么时候没有数据了根据接口返回判断
@@ -71,7 +71,13 @@ public class FileDepositDataActivity extends Activity{
      * 已经获取到多少条数据了
      */
     private static int mCurrentCounter = 0;
-    private boolean isRefresh = false;
+    private boolean isRefresh = true;
+
+    /**
+     * 当前用户的employeeId
+     */
+    private String employeeId;
+
 
     private TextView tvNodata;
     private LRecyclerView mRecyclerView = null;
@@ -104,6 +110,7 @@ public class FileDepositDataActivity extends Activity{
         tvNodata = (TextView)findViewById(R.id.tv_nodata);
         btnBack = (Button) findViewById(R.id.btn_file_deposit_detail_back);
         mRecyclerView = (LRecyclerView) findViewById(R.id.list);
+        employeeId = CApplication.getInstance().getCurrentEmployeeID();
         dataList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             DepositDataBean depositDataBean = new DepositDataBean();
@@ -169,10 +176,12 @@ public class FileDepositDataActivity extends Activity{
             @Override
             public void onRefresh() {
                 mDataAdapter.clear();
+                waitassignList.clear();
                 tvNodata.setVisibility(View.GONE);
                 mLRecyclerViewAdapter.notifyDataSetChanged();//fix bug:crapped or attached views may not be recycled. isScrap:false isAttached:true
                 mCurrentCounter = 0;
                 isRefresh = true;
+
                 requestData();
             }
         });
@@ -362,7 +371,10 @@ public class FileDepositDataActivity extends Activity{
     private void startThread(final int i) {
         UserNewBean user = CApplication.getInstance().getCurrentUser();
         String str = String.valueOf ( user.getOaid() );
-        final SoapParams soapParamsDeposit = new SoapParams().put("arg0",String.valueOf ( user.getOaid() )).put("arg1",i);
+        final ArrayList<DepositDataBean> otherPageDataList = new ArrayList<>();
+
+
+        final SoapParams soapParamsDeposit = new SoapParams().put("EmployeeID",employeeId).put("pageindex",i);
 
         GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
@@ -373,10 +385,20 @@ public class FileDepositDataActivity extends Activity{
                         String response = envelope.getResponse().toString();
                         Log.e("response",response+"");
                         DepositRootBean resps = JSON.parseObject(response,DepositRootBean.class);
-                        //对数据进行处理,将待指派的数据过滤出去
-                        for (int i = 0;i<resps.getData().size();i++){
-                            if (resps.getData().get(i).getFileState() == 2 ||resps.getData().get(i).getFileState() == 3){
-                                waitassignList.add(resps.getData().get(i));
+
+                        if (i == 1){
+                            //对数据进行处理,将待指派的数据过滤出去
+                            for (int i = 0;i<resps.getData().size();i++){
+                                if (resps.getData().get(i).getFileState() == 2 ||resps.getData().get(i).getFileState() == 3){
+                                    waitassignList.add(resps.getData().get(i));
+                                }
+                            }
+                        }else {
+                            //对数据进行处理,将待指派的数据过滤出去
+                            for (int i = 0;i<resps.getData().size();i++){
+                                if (resps.getData().get(i).getFileState() == 2 ||resps.getData().get(i).getFileState() == 3){
+                                    otherPageDataList.add(resps.getData().get(i));
+                                }
                             }
                         }
                         if (i ==1){
@@ -387,7 +409,7 @@ public class FileDepositDataActivity extends Activity{
                         }else {
                             Message message = new Message();
                             message.what = SHOW_RESPONSE_FILEREVERSEDETSIL_NEXT;
-                            message.obj = waitassignList;
+                            message.obj = otherPageDataList;
                             handlerNext.sendMessage(message);
                         }
                     }

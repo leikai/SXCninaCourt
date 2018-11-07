@@ -81,6 +81,9 @@ public class CabinetActivity extends AppCompatActivity implements View.OnClickLi
     private List respsDeposot = null;
     private List respsReverse = null;
     private String s = "";
+    private UserNewBean user;
+    private String employeeId;
+
 
 
     public static final int SHOW_RESPONSE_AUTHENTICATION = 0;
@@ -115,10 +118,18 @@ public class CabinetActivity extends AppCompatActivity implements View.OnClickLi
         tvWaitAssignAmount = (TextView) findViewById(R.id.tv_wait_assign_amount);
         tvWaitPickupAmount = (TextView)findViewById(R.id.tv_wait_pickup_amount);
 
-        final UserNewBean user = CApplication.getInstance().getCurrentUser();
-        new Thread(runGetData).start();
-        tvName.setText(user.getUserName());
+        user = CApplication.getInstance().getCurrentUser();
+        employeeId = CApplication.getInstance().getCurrentEmployeeID();
+        tvName.setText(user.getEmpname());
         tvDepartment.setText("山西省晋中市人民法院--"+user.getDeptname());
+
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        new Thread(runGetData).start();
+
         File path1 = new File(Environment.getExternalStorageDirectory().getPath()+"/Json");
         if (!path1.exists()) {
             //若不存在，创建目录
@@ -154,8 +165,8 @@ public class CabinetActivity extends AppCompatActivity implements View.OnClickLi
                         }
                         tvWaitPickupAmount.setText(String.valueOf(waitPickupAmount));
                         break;
-                        default:
-                            break;
+                    default:
+                        break;
                 }
             }
         };
@@ -167,12 +178,15 @@ public class CabinetActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
     }
+
     Runnable runGetData = new Runnable() {
         @Override
         public void run() {
-            UserNewBean user = CApplication.getInstance().getCurrentUser();
-            final SoapParams soapParamsDeposit = new SoapParams().put("arg0",String.valueOf ( user.getOaid() )).put("arg1",1);
-            final SoapParams soapParamsEmployeePickUp = new SoapParams().put("arg0", String.valueOf ( user.getOaid() )).put("arg1",1);
+            //
+
+            final SoapParams soapParamsDeposit = new SoapParams().put("EmployeeID",employeeId).put("pageindex",1);
+            final SoapParams soapParamsEmployeePickUp = new SoapParams().put("EmployeeID",employeeId ).put("pageindex",1);
+
             WebServiceUtil.getInstance().GetEmployeeDeposit(soapParamsDeposit, new SoapClient.ISoapUtilCallback() {
                 @Override
                 public void onSuccess(SoapSerializationEnvelope envelope) throws Exception {
@@ -279,9 +293,8 @@ public class CabinetActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             }
             case R.id.btn_deposit: {
-                final UserNewBean user = CApplication.getInstance().getCurrentUser();
-                String str = String.valueOf ( user.getOaid() );
-                final SoapParams soapParams = new SoapParams().put("arg0",str);
+
+                final SoapParams soapParams = new SoapParams().put("EmployeeID",employeeId );
 
                 GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
                     @Override

@@ -130,8 +130,6 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
      */
     private HomePageManagerFragment mHomePageManagerFragment;
     private AppsFragment mAppsFragment;
-    private MsgFragment mMsgFragment;
-    private MsgManagerFragment mMsgManagerFragment;
     private SettingManagerFragment mSettingManagerFragment;
     private BaseFragment mCurrentFragment;
     /**
@@ -143,19 +141,6 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
      */
     private CustomActionBar mActionBarView;
     private UpdateManager mUpdateManager;
-
-    /**
-     * 获取联系人分组的请求
-     */
-    private RefreshGroupTask mRefreshGroupTask;
-    /**
-     * 联系人分组集合
-     */
-    public static  List<DepartmentBean> mDepartments;
-    /**
-     * 联系人集合
-     */
-    public static List<UserNewBean> mUsers;
     String alias = null;
     boolean isAliasAction = false;
     int action = -1;
@@ -271,9 +256,6 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
 
 
         }
-        mRefreshGroupTask = new RefreshGroupTask(null);
-        mRefreshGroupTask.execute();
-
     }
 
     /**
@@ -448,7 +430,6 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
     private void hideAllFragment() {
         hideFragment(mHomePageManagerFragment);
         hideFragment(mAppsFragment);
-        hideFragment(mMsgManagerFragment);
         hideFragment(mContactsNewManagerFragment);
         hideFragment(mSettingManagerFragment);
     }
@@ -500,48 +481,6 @@ public class TabsActivity extends AppCompatActivity implements BottomNavigationB
     }
 
 
-
-    @SuppressLint("HandlerLeak")
-    private Handler mUpdateGroupsListHandler = new Handler() {
-        @Override
-        public void dispatchMessage(Message msg) {
-            mDepartments = (List<DepartmentBean>) msg.obj;
-        }
-    };
-
-    /**
-     * 请求联系人分组的数据
-     */
-    private class RefreshGroupTask extends AsyncTask<Void, Void, List<DepartmentBean>> {
-        String mDepartmentName;
-
-        RefreshGroupTask(String department) {
-            this.mDepartmentName = department;
-        }
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected List<DepartmentBean> doInBackground(Void... params) {
-            List<DepartmentBean> departments = WebServiceUtil.getInstance().getDepartmentList(null);
-            return departments;
-        }
-
-        @Override
-        protected void onPostExecute(List<DepartmentBean> departments) {
-            if (departments != null) {
-                Message msg = mUpdateGroupsListHandler.obtainMessage();
-                msg.obj = departments;
-                mUpdateGroupsListHandler.sendMessage(msg);
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-        }
-    }
     @Override
     protected void onResume() {
         isForeground = true;

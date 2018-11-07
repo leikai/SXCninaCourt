@@ -68,7 +68,7 @@ public class EmployeeActivity extends Activity {
                                 public void run() {
                                     EmployeeBean Recipient = (EmployeeBean)resps.get(i);
                                     final UserNewBean user = CApplication.getInstance().getCurrentUser();
-                                    final SoapParams soapParams = new SoapParams().put("arg0",SerialNo).put("arg1",user.getOaid()).put("arg2",Recipient.getEmployeeID());
+                                    final SoapParams soapParams = new SoapParams().put("SerialNo",SerialNo).put("InitiatorID",employeeId).put("RecipientID",Recipient.getEmployeeID());
                                     //指派
                                     WebServiceUtil.getInstance().FileStateInReverse(soapParams, new SoapClient.ISoapUtilCallback() {
                                         @Override
@@ -183,6 +183,7 @@ public class EmployeeActivity extends Activity {
     public static final int SHOW_RESPONSE_EMPLOYEE = 0;
     private  Button btnBacktoDepartment;
     public  String SerialNo = "";
+    private String employeeId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -194,6 +195,7 @@ public class EmployeeActivity extends Activity {
         Log.e("departmentId",""+departmentId);
         SerialNo = bundle.getString("SerialNo");
         Log.e("SerialNo",""+SerialNo);
+        employeeId = CApplication.getInstance().getCurrentEmployeeID();
         initdata(departmentId);
         btnBacktoDepartment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,7 +214,7 @@ public class EmployeeActivity extends Activity {
      */
     private void initdata(String departmentId) {
         UserNewBean user = CApplication.getInstance().getCurrentUser();
-        final SoapParams soapParams = new SoapParams().put("arg0",departmentId);
+        final SoapParams soapParams = new SoapParams().put("Departmentid",departmentId);
         GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
             public void run() {

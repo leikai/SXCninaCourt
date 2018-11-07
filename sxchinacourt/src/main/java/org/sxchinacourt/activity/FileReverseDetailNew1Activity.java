@@ -49,13 +49,13 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
- *
+ * 待取件列表
  * @author 殇冰无恨
  * @date 2017/11/9
  */
 
 public class FileReverseDetailNew1Activity extends Activity{
-    private static final String TAG = "lzx";
+    private static final String TAG = "待取件列表";
 
     /**
      * 如果服务器没有返回总数据或者总页数，这里设置为最大值比如10000，什么时候没有数据了根据接口返回判断
@@ -72,7 +72,7 @@ public class FileReverseDetailNew1Activity extends Activity{
      * 已经获取到多少条数据了
      */
     private static int mCurrentCounter = 0;
-    private boolean isRefresh = false;
+    private boolean isRefresh = true;
 
     private LRecyclerView mRecyclerView = null;
 
@@ -88,6 +88,10 @@ public class FileReverseDetailNew1Activity extends Activity{
 
     private TextView tvNodata;
     private Button btnBack;
+    /**
+     * 当前用户的employeeId
+     */
+    private String employeeId;
 
     public int index = 1;
     public static final int SHOW_RESPONSE_FILEREVERSEDETSIL = 0;
@@ -102,6 +106,9 @@ public class FileReverseDetailNew1Activity extends Activity{
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.sample_ll_activity_reverse);
+
+        employeeId = CApplication.getInstance().getCurrentEmployeeID();
+
         tvNodata = (TextView) findViewById(R.id.tv_nodata);
         btnBack = (Button) findViewById(R.id.btn_file_reverse_detail_back);
         mRecyclerView = (LRecyclerView) findViewById(R.id.list);
@@ -169,10 +176,11 @@ public class FileReverseDetailNew1Activity extends Activity{
             @Override
             public void onRefresh() {
                 mDataAdapter.clear();
+                waitpickupList.clear();
                 tvNodata.setVisibility(View.GONE);
                 mLRecyclerViewAdapter.notifyDataSetChanged();//fix bug:crapped or attached views may not be recycled. isScrap:false isAttached:true
                 mCurrentCounter = 0;
-                isRefresh = true;
+
                 requestData();
             }
         });
@@ -316,7 +324,7 @@ public class FileReverseDetailNew1Activity extends Activity{
      * 请求网络
      */
     private void requestData() {
-        Log.d(TAG, "requestData");
+        TLog.log(TAG,"requestData");
         GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
             public void run() {
@@ -354,7 +362,7 @@ public class FileReverseDetailNew1Activity extends Activity{
     private void startThread(int i) {
         UserNewBean user = CApplication.getInstance().getCurrentUser();
         final SoapParams soapParams = new SoapParams().put("SerialNo","17091215332720");
-        final SoapParams soapParamsEmployeePickUp = new SoapParams().put("arg0", String.valueOf ( user.getOaid() )).put("arg1",i);
+        final SoapParams soapParamsEmployeePickUp = new SoapParams().put("EmployeeID",employeeId ).put("pageindex",1);
 
         GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
@@ -370,6 +378,7 @@ public class FileReverseDetailNew1Activity extends Activity{
                                 waitpickupList.add(resps.getData().get(i));
                             }
                         }
+
                         Message message = new Message();
                         message.what = SHOW_RESPONSE_FILEREVERSEDETSIL_NEXT;
                         message.obj = waitpickupList;

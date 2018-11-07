@@ -74,8 +74,9 @@ public class TotoWebActivity extends AppCompatActivity {
         mCustomProgress = (CustomProgress)findViewById(R.id.loading);
         initWebView();
         ceshi = CApplication.getInstance().getCurrentToken();
+        Log.e("ceshi","http://192.168.1.120:8087/mcourtoa/moffice/sign/list_daiban.html?token="+ceshi);
 
-        webView.loadUrl("http://111.53.181.200:8087/mcourtoa/moffice/sign/list_daiban.html?token="+ceshi);
+        webView.loadUrl("http://172.16.3.48:8087/mcourtoa/moffice/sign/list_daiban.html?token="+ceshi);
     }
     private void initWebView() {
         WebSettings settings = webView.getSettings();
@@ -372,6 +373,11 @@ public class TotoWebActivity extends AppCompatActivity {
             String filePath = FileAccessUtil.getDirBasePath(FileAccessUtil.FILE_DIR+mFileName);
             File file = new File(filePath);
             intent = FileOpenHelper.getImageFileIntent(this,file);
+        }
+        else if (mFileName.endsWith(".zip")){
+            Toast.makeText(TotoWebActivity.this, "压缩文件手机端无法查看，请于电脑端查看", Toast.LENGTH_SHORT).show();
+        } else if (mFileName.endsWith(".rar")){
+            Toast.makeText(TotoWebActivity.this, "压缩文件手机端无法查看，请于电脑端查看", Toast.LENGTH_SHORT).show();
         }
         if (intent != null) {
             startActivity(intent);

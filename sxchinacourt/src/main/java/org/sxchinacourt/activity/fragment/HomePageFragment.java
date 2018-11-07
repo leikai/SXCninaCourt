@@ -51,6 +51,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.sxchinacourt.util.WebServiceUtil.BASE_SERVER_URL_NEWS_IMG_BANNER;
+
 /**
  *
  * @author 殇冰无恨
@@ -95,10 +97,7 @@ public class HomePageFragment extends BaseFragment {
      * 常见应用内容
      */
     private LinearLayout llCommonAppsContent;
-    /**
-     * 晋中中院轮播图地址
-     */
-    private static String BASE_SERVER_URL_NEWS = "http://111.53.181.200:6688/mserver/upfile/webimg/";
+
 
 
     /**
@@ -217,8 +216,6 @@ public class HomePageFragment extends BaseFragment {
             public void onClick(View view) {
                 Intent jumptoCabinet = new Intent(getContext(), CabinetActivity.class);
                 startActivity(jumptoCabinet);
-
-
             }
         });
         machine.setOnClickListener(new View.OnClickListener() {
@@ -368,7 +365,6 @@ public class HomePageFragment extends BaseFragment {
     public class LocalImageHolderView implements Holder<BannerBean> {
 
         private ImageView imageView;
-
         @Override
         public View createView(Context context) {
             View view = View.inflate(context, R.layout.view_imageview, null);
@@ -378,7 +374,7 @@ public class HomePageFragment extends BaseFragment {
 
         @Override
         public void UpdateUI(final Context context, int position, final BannerBean bean) {
-            Glide.with(context).load(BASE_SERVER_URL_NEWS+bean.getAttname()).into(imageView);
+            Glide.with(context).load(BASE_SERVER_URL_NEWS_IMG_BANNER+bean.getAttname()).into(imageView);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

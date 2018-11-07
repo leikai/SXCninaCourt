@@ -132,10 +132,11 @@
                     >
                     <TextView
                         android:id="@+id/tv_wait_assign_amount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:text="0"
                         android:textColor="#ffffff"
+                        android:gravity="center"
                         android:background="@drawable/circle_red"
                         android:layout_above="@+id/btn_wait_assign"
                         android:layout_centerInParent="true"
@@ -164,10 +165,11 @@
                     >
                     <TextView
                         android:id="@+id/tv_wait_pickup_amount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:text="0"
                         android:textColor="#ffffff"
+                        android:gravity="center"
                         android:background="@drawable/circle_red"
                         android:layout_above="@+id/btn_wait_pickup"
                         android:layout_centerInParent="true"

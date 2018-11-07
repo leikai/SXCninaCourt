@@ -24,12 +24,17 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 
+import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.sxchinacourt.CApplication;
 import org.sxchinacourt.R;
+import org.sxchinacourt.bean.CabinetUser;
+import org.sxchinacourt.bean.DepositRootBean;
 import org.sxchinacourt.bean.TokenRoot;
 import org.sxchinacourt.bean.UserNewBean;
 import org.sxchinacourt.common.Contstants;
 import org.sxchinacourt.util.PinYin.SharedPreferencesUtil;
+import org.sxchinacourt.util.SoapClient;
+import org.sxchinacourt.util.SoapParams;
 import org.sxchinacourt.util.WebServiceUtil;
 import org.sxchinacourt.widget.CustomProgress;
 
@@ -78,6 +83,8 @@ public class LoginActivity extends Activity {
     private Context _context;
 
     private String name1 = "";
+    private String cabinetPwd = "123456";
+    private String employeeId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -284,8 +291,28 @@ public class LoginActivity extends Activity {
                             String ceshi = userInfo.getOrgid();
                             Log.e("ceshi",""+ceshi);
                             user.copyUserInfo(userInfo);
+                            SoapParams soapParamsEmployeeId = new SoapParams().put("UserName","140700"+user.getUserName()).put("Pwd",cabinetPwd);
+                            WebServiceUtil.getInstance().LgoinIndex(soapParamsEmployeeId, new SoapClient.ISoapUtilCallback() {
+                                @Override
+                                public void onSuccess(SoapSerializationEnvelope envelope) throws Exception {
+                                    String response = envelope.getResponse().toString();
+                                    CabinetUser cabinetUser = JSON.parseObject(response,CabinetUser.class);
+                                    employeeId = String.valueOf(cabinetUser.getEmployeeID());
+
+
+                                    Log.e("employeeId",""+employeeId);
+                                }
+
+                                @Override
+                                public void onFailure(Exception e) {
+
+                                }
+                            });
+
+
                             CApplication.getInstance().setUser(user);
                             CApplication.getInstance().setToken(token);
+                            CApplication.getInstance().setEmployeeID(employeeId);
                             return true;
                         }
                         mMessage = resps.getMsg();

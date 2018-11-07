@@ -81,6 +81,7 @@ public class AssignActivity extends Activity{
     public static final int SHOW_RESPONSE_COURT = 0;
     private Button btnBacktoFileDeposit;
     public  String SerialNo = "";
+    private String employeeId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +91,7 @@ public class AssignActivity extends Activity{
         Bundle bundle = intentGetDataForFileDepositDetail.getExtras();
         SerialNo = bundle.getString("SerialNo");
         Log.e("SerialNo",""+SerialNo);
+        employeeId = CApplication.getInstance().getCurrentEmployeeID();
         initdata();
         jump();
 
@@ -116,8 +118,7 @@ public class AssignActivity extends Activity{
     }
     private void startThread() {
         UserNewBean user = CApplication.getInstance().getCurrentUser();
-        final SoapParams soapParams = new SoapParams().put("arg0",String.valueOf ( user.getOaid()));
-
+        final SoapParams soapParams = new SoapParams().put("EmployeeID",employeeId);
         GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
             public void run() {

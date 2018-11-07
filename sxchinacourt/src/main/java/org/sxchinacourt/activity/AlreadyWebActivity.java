@@ -74,7 +74,7 @@ public class AlreadyWebActivity extends AppCompatActivity {
         ceshi = CApplication.getInstance().getCurrentToken();
         initWebView();
 
-        webView.loadUrl("http://111.53.181.200:8087/mcourtoa/moffice/sign/list_yiban.html?token="+ceshi);
+        webView.loadUrl("http://192.168.1.120:8080/mcourtoa/moffice/sign/list_yiban.html?token="+ceshi);
     }
     private void initWebView() {
         WebSettings settings = webView.getSettings();

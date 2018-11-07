@@ -279,6 +279,19 @@
 
         <activity android:name=".activity.NotificationActivity" />
         <activity android:name=".activity.UserDetailInfodActivity"></activity>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="cn.lovexiaoai.myapp.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/fileprovider" />
+        </provider>
+
+
+
     </application>
 
 </manifest>

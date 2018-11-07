@@ -9,8 +9,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.MarshalBase64;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpResponseException;
 import org.ksoap2.transport.HttpTransportSE;
 import org.ksoap2.transport.HttpsTransportSE;
 import org.sxchinacourt.bean.DepartmentBean;
@@ -28,7 +30,9 @@ import org.sxchinacourt.bean.ViewComponents;
 import org.sxchinacourt.cache.CSharedPreferences;
 import org.sxchinacourt.dataparser.ComponentParser;
 import org.sxchinacourt.dataparser.DataParser;
+import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -37,7 +41,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by baggio on 2017/2/4.
+ *
+ * @author baggio
+ * @date 2017/2/4
  */
 
 public class WebServiceUtil {
@@ -46,56 +52,79 @@ public class WebServiceUtil {
     public static String RESULT_PARAM_TASKS = "tasks";
     public static String RESULT_PARAM_DATAS = "datas";
 
-    //---------------------------------------------Formal-------------------------------//
-    public static String BASE_SERVER_URL = "http://111.53.181.200:6688/mserver/services/awsSvc?wsdl"; // http
-    public static String BASE_SERVER_URL_NEWS = "http://124.167.17.5:6688/mserver/services/awsSvc?wsdl"; // http 192.168.1.14:6688
+    public static String BASE_SERVER_URL = "http://111.53.181.200:6688/mserver/services/awsSvc?wsdl";
+    public static String BASE_SERVER_URL_NEWS = "http://124.167.17.5:6688/mserver/services/awsSvc?wsdl";
     public static String BASE_DOWNLOAD_URL = "http://111.53.181.200:6688/mserver";
     public static String BASE_SERVER_URL_NEW = "http://192.168.1.145:6688/mserver/services/awsSvc?wsdl";
-    public static String BASE_CABINET_URLDEPOSITINFO = "http://111.53.181.200:8087/Cloud/CloudAppPort?wsdl";
-    public static String BASE_CABINET_URLPICKUP="http://111.53.181.200:8087/Cloud/CloudAppPort?wsdl";
-    public static String BASE_CABINET_URL ="http://111.53.181.200:8087/Cloud/CloudAppPort?wsdl";//云柜
-    public static String BASE_CABINET_URLCOURT="http://111.53.181.200:8087/Cloud/CloudAppPort?wsdl";
-    public static String BASE_CABINET_URLEMPASSIGN="http://111.53.181.200:8087/Cloud/CloudAppPort?wsdl";
-    public static String BASE_CABINET_URLEMPLOYEE="http://111.53.181.200:8087/Cloud/CloudAppPort?wsdl";
-    public static String BASE_MESSAGE_URL ="http://111.53.181.200:8087/Cloud/CloudAppPort?wsdl";//留言机
 
-    //----------------------------------------------newOA-------------------------------------//
-//    public static String BASE_SERVER_URL_TOKEN = "http://172.16.3.48:6641/mserver/services/bwsSvc?wsdl"; // http
 
+    /**
+     * 百斯Cloud服务中的Url：http://111.53.181.200:8087/Cloud/CloudAppPort?wsdl
+     * 德启：http://111.53.181.200:8079/cabinetservice/GetEmployeeDepositInfo.asmx?WSDL
+     */
+    public static String BASE_CABINET_URLDEPOSITINFO = "http://111.53.181.200:8079/cabinetservice/GetEmployeeDepositInfo.asmx?WSDL";
+    public static String BASE_CABINET_URLPICKUP="http://111.53.181.200:8079/cabinetservice/GetEmployeePickupInfo.asmx?WSDL";
+
+    /**
+     * 取件
+     */
+    public static String BASE_CABINET_URLPICKUP_1 = "http://111.53.181.200:8079/cabinetservice/GetEmployeePickupInfo.asmx?WSDL";
+
+    /**
+     * 晋中中院轮播图地址
+     */
+    public static String BASE_SERVER_URL_NEWS_IMG_BANNER = "http://111.53.181.200:6688/mserver/upfile/webimg/";
+
+    /**
+     * 云柜请求地址
+     */
+    public static String BASE_CABINET_URL ="http://111.53.181.200:8079/cabinetservice/employee/QRCode.asmx?WSDL";
+
+
+//    public static String CABINET_URL_LOGIN = "http://111.53.181.200:8079/cabinetservice/Login.asmx/LgoinIndex?wsdl";
+
+    public static String CABINET_URL_QRCODE = "http://111.53.181.200:8079/cabinetservice/employee/QRCode.asmx?wsdl";
+    public static String CABINET_URL_LOGIN = "http://111.53.181.200:8079/cabinetservice/Login.asmx?wsdl";
+
+    /**
+     * 法院列表
+     */
+    public static String BASE_CABINET_URLCOURT="http://111.53.181.200:8079/cabinetservice/GetCourtInfoByEmployeeID.asmx?WSDL";
+    /**
+     * 部门列表
+     */
+    public static String BASE_CABINET_URLDEPARTMENT = "http://111.53.181.200:8079/cabinetservice/GetDepartmentListByCourtID.asmx?WSDL";
+    /**
+     * 指派
+     */
+    public static String BASE_CABINET_URLEMPASSIGN="http://111.53.181.200:8079/cabinetservice/ChangeFileStateToReverse2.asmx?WSDL";
+    public static String BASE_CABINET_URLEMPLOYEE="http://111.53.181.200:8079/cabinetservice/GetEmployeeListbyDepartmentID.asmx?WSDL";
+    /**
+     * 留言机请求地址
+     */
+    public static String BASE_MESSAGE_URL ="http://111.53.181.200:8087/Cloud/CloudAppPort?wsdl";
+    /**
+     * 本机IP：172.16.3.48:6641
+     * 晋中IP：111.53.181.200:8087
+     * 左权投标IP：172.16.3.120:8087
+     */
     public static String BASE_SERVER_URL_TOKEN = "http://111.53.181.200:8087/mserver/services/bwsSvc?wsdl";
-    //---------------------------------------------finish------------------------------------//
-
-//    //----------------------------------------------newOA——测试-------------------------------------//
-//    public static String BASE_SERVER_URL_TOKEN = "http://192.168.1.114:40/mserver/services/bwsSvc?wsdl"; // http
-//    //---------------------------------------------finish------------------------------------//
-
-
-
-
 
     private static final boolean IS_HTTP = true;
-    // port 6688
+
     private static WebServiceUtil mInstance;
 
     private static final String NAMESPACE_TOKEN = "http://bws.courtoa.zt.com";
     private final String NAMESPACE = "http://maws.courtoa.zt.com";
     private final String NAMESPACECABINET = "http://action.cloud/";
     private final String NAMESPACECABINETORIGINAL = "http://tempuri.org/";
-    //    public static final String BASE_SERVER_URL = BASE_URL + "/services/";
-//    public static final String AWSSVC = "awsSvc?wsdl";
-//    private final String AWSORGSVC = "awsOrgSvc";
-
-    //---------------------Formal----------------------//
-    private String mHost = "111.53.181.200";//223.12.199.236
-    //----------------------finish--------------------//
 
 
-//    //-----------------ceshi---------------------//
-//    private String mHost = "192.168.1.145";//223.12.199.236
-//    //------------------finish----------------//
+    private String mHost = "111.53.181.200";
 
 
-    private String mCompany = "132.24.3.40";   //
+
+    private String mCompany = "132.24.3.40";
     private int mPort = 7443;
     private final String WS_OPS = "/mserver/services/awsSvc?wsdl";
     private final int TIMEOUT = 20000;
@@ -116,7 +145,10 @@ public class WebServiceUtil {
         }
         return mInstance;
     }
-    //网络请求的地址
+
+    /**
+     * 网络请求的地址
+     */
     public void initServerInfo() {
         try {
             JSONObject json = CSharedPreferences.getInstance().getServerInfo();
@@ -128,9 +160,9 @@ public class WebServiceUtil {
                     mHost = json.getString("host");
                     if (IS_HTTP) {
                         BASE_SERVER_URL = "http://" + mHost + ":"+mPort+"/mserver/services/awsSvc?wsdl";
-                        BASE_DOWNLOAD_URL = "http://" + mHost + ":"+mPort+"/mserver";//6688
+                        BASE_DOWNLOAD_URL = "http://" + mHost + ":"+mPort+"/mserver";
                     } else {
-                        BASE_DOWNLOAD_URL = "https://" + mHost + ":"+mPort+"/mserver";//7445
+                        BASE_DOWNLOAD_URL = "https://" + mHost + ":"+mPort+"/mserver";
                     }
                 }
 
@@ -269,7 +301,7 @@ public class WebServiceUtil {
         String methodName = "getUserInfo";
         UserBean newUser = null;
         SoapObject request = new SoapObject(NAMESPACE, methodName);
-        JSONObject json = new JSONObject();//18129925301   分管院领导签批  院领导手写签批
+        JSONObject json = new JSONObject();
         try {
             json.put("userId", user.getUserId());
         } catch (JSONException e) {
@@ -664,7 +696,13 @@ public class WebServiceUtil {
         }
         return hash;
     }
-    //得到炎黄通讯录的数据 2017-8-23
+
+    /**
+     * 得到炎黄通讯录的数据 2017-8-23
+     * @param userName
+     * @param departmentId
+     * @return
+     */
     public List<UserBean> getUserList(String userName, String departmentId) {
         List<UserBean> users = null;
         Hashtable<String, Object> hash = new Hashtable<>();
@@ -753,19 +791,9 @@ public class WebServiceUtil {
                 SoapObject result = (SoapObject) envelope.bodyIn;
                 String resultStr = result.getPropertyAsString("return");
                 if (resultIsNotEmpty(resultStr)) {
-
                     List<UserNewBean> resps=new ArrayList<UserNewBean>(com.alibaba.fastjson.JSONArray.parseArray(resultStr,UserNewBean.class));
                     Log.e("人员数据",""+resps.get(0));
-
                     return resps;
-//                    JSONArray array = new JSONArray(resultStr);
-//                    users = new ArrayList<>();
-//                    for (int i = 0; i < array.length(); i++) {
-//                        JSONObject jsonObj = array.getJSONObject(i);
-//                        UserBean user = (UserBean) DataParser.factory(DataParser.PARSER_TYPE_USER)
-//                                .parser(jsonObj);
-//                        users.add(user);
-//                    }
                 }
             }
         } catch (Exception e) {
@@ -832,7 +860,13 @@ public class WebServiceUtil {
         return null;
     }
 
-
+    /**
+     * 修改密码
+     * @param userLoginName
+     * @param userPwd
+     * @param changePWD
+     * @return
+     */
     public boolean changeUserPWD(String userLoginName, String userPwd, String changePWD) {
         String methodName = "changeUserPWD";
         SoapObject request = new SoapObject(NAMESPACE_TOKEN, methodName);
@@ -915,98 +949,6 @@ public class WebServiceUtil {
 
 
 
-
-/*
-    public UserBean getUserInfo(String userId) {
-        UserBean user = null;
-//        String serviceUrl = BASE_SERVER_URL + AWSSVC;
-        String methodName = "getUserInfo";
-        SoapObject request = new SoapObject(NAMESPACE, methodName);
-        JSONObject json = new JSONObject();
-        try {
-            json.put("userId", userId);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        request.addProperty("jsonstr", json.toString());
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-        envelope.bodyOut = request;
-        envelope.dotNet = true;
-        HttpTransportSE ht;
-        if (IS_HTTP) {
-            ht = new HttpTransportSE(BASE_SERVER_URL);
-        } else {
-            ht = new HttpsTransportSE(mHost, mPort,
-                    WS_OPS, TIMEOUT);
-        }
-        try {
-            ht.call(NAMESPACE + methodName, envelope);
-            if (envelope.getResponse() != null) {
-                SoapObject result = (SoapObject) envelope.bodyIn;
-                String resultStr = result.getPropertyAsString("return");
-                if (resultIsNotEmpty(resultStr)) {
-                    user = (UserBean) UserParser.factory(DataParser.PARSER_TYPE_USER).parser(new
-                            JSONObject(resultStr));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return user;
-    }
-
-
-    */
-
-
-//    /**
-//     * 获取个人详情页
-//     *  @param username
-//     * @param userOid
-//     * @return
-//     */
-//    public UserNewBean getUserInfo(String username, String userOid) {
-//        UserNewBean user = null;
-//        String methodName = "getUserInfo";
-//        SoapObject request = new SoapObject(NAMESPACE_TOKEN, methodName);
-//        JSONObject json = new JSONObject();
-//        try {
-//            if (username != null){
-//                json.put("userName", username);
-//            }
-//            if (userOid != null){
-//                json.put("userOid", userOid);
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        request.addProperty("jsonstr", json.toString());
-//        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-//        envelope.bodyOut = request;
-//        envelope.dotNet = true;
-//        HttpTransportSE ht;
-//        if (IS_HTTP) {
-//            ht = new HttpTransportSE(BASE_SERVER_URL_TOKEN);
-//        } else {
-//            ht = new HttpsTransportSE(mHost, mPort,
-//                    WS_OPS, TIMEOUT);
-//        }
-//        try {
-//            ht.call(NAMESPACE_TOKEN + methodName, envelope);
-//            if (envelope.getResponse() != null) {
-//                SoapObject result = (SoapObject) envelope.bodyIn;
-//                String resultStr = result.getPropertyAsString("return");
-//                Log.e("resultStr",""+resultStr);
-//                user = JSON.parseObject(resultStr,UserNewBean.class);
-//                user.copyUserInfo(user);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return user;
-//    }
-
-
     public DepartmentBean getUserDepartmentInfo(String userId) {
         DepartmentBean department = null;
 //        String serviceUrl = BASE_SERVER_URL + AWSSVC;
@@ -1083,7 +1025,12 @@ public class WebServiceUtil {
         }
         return false;
     }
-    //请求联系人分组
+
+    /**
+     * 请求联系人分组
+     * @param departmentNo
+     * @return
+     */
     public List<DepartmentBean> getDepartmentList(String departmentNo) {
         List<DepartmentBean> departments = null;
         String methodName = "getDepartmentList";
@@ -1164,19 +1111,9 @@ public class WebServiceUtil {
                 SoapObject result = (SoapObject) envelope.bodyIn;
                 String resultStr = result.getPropertyAsString("return");
                 if (resultIsNotEmpty(resultStr)) {
-
-
                     List<DepartmentNewBean> resps=new ArrayList<DepartmentNewBean>(com.alibaba.fastjson.JSONArray.parseArray(resultStr,DepartmentNewBean.class));
                     Log.e("部门数据",""+resps.get(0));
-
                     return resps;
-//                    departments = new ArrayList<>();
-//                    JSONArray array = new JSONArray(resultStr);
-//                    for (int i = 0; i < array.length(); i++) {
-//                        DepartmentBean department = (DepartmentBean) DataParser.factory(DataParser
-//                                .PARSER_TYPE_DEPARTMENT).parser(array.getJSONObject(i));
-//                        departments.add(department);
-//                    }
                 }
             }
         } catch (Exception e) {
@@ -1256,18 +1193,17 @@ public class WebServiceUtil {
         }
         return hash;
     }
-    //banner请求
+
+    /**
+     * banner请求
+     * @param nums
+     * @return
+     */
     public String getWebImgs(String nums){
         String dataWebImgs = null;
         String methodName = "getWebImgs";
         SoapObject request = new SoapObject(NAMESPACE, methodName);
-        /* JSONObject json = new JSONObject();*/
-      /*  try{
-            json.put("nums", nums);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }*/
-        request.addProperty("jsonstr", nums);//json.toString()
+        request.addProperty("jsonstr", nums);
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.bodyOut = request;
         envelope.dotNet = true;
@@ -1709,10 +1645,7 @@ public class WebServiceUtil {
     }
 
 
-    public Hashtable<String, Object> getOaWorkMngs(String brzid, int brzoaid, String type, int start,
-                                                   int limit)
-            throws
-            JSONException {
+    public Hashtable<String, Object> getOaWorkMngs(String brzid, int brzoaid, String type, int start, int limit) throws JSONException {
         Hashtable<String, Object> hash = new Hashtable<>();
         String methodName = "getOaWorkMngs";
         SoapObject request = new SoapObject(NAMESPACE, methodName);
@@ -1763,10 +1696,7 @@ public class WebServiceUtil {
         return hash;
     }
 
-    public Hashtable<String, Object> getOaWorkMngDetailss(String brzid, int brzoaid, String type, int start,
-                                                          int limit)
-            throws
-            JSONException {
+    public Hashtable<String, Object> getOaWorkMngDetailss(String brzid, int brzoaid, String type, int start, int limit) throws JSONException {
         Hashtable<String, Object> hash = new Hashtable<>();
         String methodName = "getOaWorkMngDetailss";
         SoapObject request = new SoapObject(NAMESPACE, methodName);
@@ -2057,7 +1987,12 @@ public class WebServiceUtil {
         return 0;
     }
 
-    //获取服务器上apk 的地址
+
+    /**
+     * 获取服务器上apk 的地址
+     * @param versionCode
+     * @return
+     */
     public String getAndroidVersion(int versionCode) {
         String path = null;
         String methodName = "getAndroidVersion";
@@ -2148,17 +2083,9 @@ public class WebServiceUtil {
             envelope.setOutputSoapObject(request);
             envelope.dotNet = true;
             HttpTransportSE httpTransportSE = new HttpTransportSE(BASE_SERVER_URL, 8 * 1000);
-            //            httpTransportSE.debug = true;
-            //            ArrayList<HeaderProperty> headerPropertyArrayList = new ArrayList<HeaderProperty>();
-            //            headerPropertyArrayList.add(new HeaderProperty("Connection", "close"));
+
 
             httpTransportSE.call(NAMESPACE + methodName, envelope);
-
-            //            httpTransportSE.call(null, envelope, headerPropertyArrayList);
-            //            System.setProperty("http.keepAlive", "false");
-            // SoapObject bodyIn = (SoapObject) envelope.bodyIn;
-            // result = bodyIn.getProperty(0).toString();
-            //            LogUtil.i("SoapClient", envelope.getResponse().toString());
             iSoapUtilCallback.onSuccess(envelope);
             Log.e("wrz", "返回结果--->" + envelope.getResponse().toString());
 
@@ -2191,23 +2118,9 @@ public class WebServiceUtil {
             envelope.setOutputSoapObject(request);
             envelope.dotNet = true;
             HttpTransportSE httpTransportSE = new HttpTransportSE(BASE_SERVER_URL, 8 * 1000);
-            //            httpTransportSE.debug = true;
-            //            ArrayList<HeaderProperty> headerPropertyArrayList = new ArrayList<HeaderProperty>();
-            //            headerPropertyArrayList.add(new HeaderProperty("Connection", "close"));
-
             httpTransportSE.call(NAMESPACE + methodName, envelope);
-
-
-            //            httpTransportSE.call(null, envelope, headerPropertyArrayList);
-            //            System.setProperty("http.keepAlive", "false");
-            // SoapObject bodyIn = (SoapObject) envelope.bodyIn;
-            // result = bodyIn.getProperty(0).toString();
-            //            LogUtil.i("SoapClient", envelope.getResponse().toString());
             iSoapUtilCallback.onSuccess(envelope);
             Log.e("wrz", "返回结果--->" + envelope.getResponse().toString());
-
-
-
         } catch (Exception e) {
             iSoapUtilCallback.onFailure(e);
             Log.e("wrz error", params.getParamsList().get("action") + "报错--->" + e.toString());
@@ -2215,11 +2128,53 @@ public class WebServiceUtil {
         }
         return null;
     }
+
+
+    public String LgoinIndex(SoapParams params, SoapClient.ISoapUtilCallback iSoapUtilCallback) {
+        try {
+            String dataDynamicCode = null;
+            String methodName = "LgoinIndex";
+            SoapObject request = new SoapObject(NAMESPACECABINETORIGINAL, methodName);
+            // 传递参数
+            LinkedHashMap<String, Object> paramsList = params.getParamsList();
+            Iterator<Map.Entry<String, Object>> iter = paramsList.entrySet().iterator();
+            while (iter.hasNext()) {
+                Map.Entry<String, Object> entry = iter.next();
+                Log.e("wrz", "请求参数--->Key:" + entry.getKey() + ",Value:" + entry.getValue());
+                request.addProperty(entry.getKey(), entry.getValue());
+            }
+            //生成调用WebService方法的SOAP请求信息，并制定SOAP的版本
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
+            //设置SOAP节点的消息体
+            envelope.bodyOut = request;
+            envelope.dotNet = true;
+            envelope.implicitTypes = true;
+            envelope.setOutputSoapObject(request);
+            (new MarshalBase64()).register(envelope);
+            HttpTransportSE httpTransportSE = new HttpTransportSE(CABINET_URL_LOGIN, 8 * 1000);
+            //打开调试信息，这应该就是日志开关
+            httpTransportSE.debug = true;
+            httpTransportSE.call(NAMESPACECABINETORIGINAL + methodName, envelope);
+            //--------------------------------------//
+            iSoapUtilCallback.onSuccess(envelope);
+            Log.e("wrz", "返回结果--->" + envelope.getResponse().toString());
+
+        } catch (Exception e) {
+            iSoapUtilCallback.onFailure(e);
+            Log.e("wrz error", params.getParamsList().get("action") + "报错--->" + e.toString());
+        }
+        return null;
+    }
+
+
+
+
+
     public String GetEmployeeDeposit(SoapParams params, SoapClient.ISoapUtilCallback iSoapUtilCallback) {
         try {
             String dataDynamicCode = null;
             String methodName = "GetEmployeeDeposit";
-            SoapObject request = new SoapObject(NAMESPACECABINET, methodName);
+            SoapObject request = new SoapObject(NAMESPACECABINETORIGINAL, methodName);
             // 传递参数
             LinkedHashMap<String, Object> paramsList = params.getParamsList();
             Iterator<Map.Entry<String, Object>> iter = paramsList.entrySet().iterator();
@@ -2232,25 +2187,14 @@ public class WebServiceUtil {
             SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
             //envelope.bodyOut = request;
             // 等价于envelope.bodyOut=rpc;
+            envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
             HttpTransportSE httpTransportSE = new HttpTransportSE(BASE_CABINET_URLDEPOSITINFO, 8 * 1000);
-            //            httpTransportSE.debug = true;
-            //            ArrayList<HeaderProperty> headerPropertyArrayList = new ArrayList<HeaderProperty>();
-            //            headerPropertyArrayList.add(new HeaderProperty("Connection", "close"));
 
             httpTransportSE.call(NAMESPACECABINETORIGINAL + methodName, envelope);
 
-
-            //            httpTransportSE.call(null, envelope, headerPropertyArrayList);
-            //            System.setProperty("http.keepAlive", "false");
-            // SoapObject bodyIn = (SoapObject) envelope.bodyIn;
-            // result = bodyIn.getProperty(0).toString();
-            //            LogUtil.i("SoapClient", envelope.getResponse().toString());
             iSoapUtilCallback.onSuccess(envelope);
             Log.e("wrz", "返回结果--->" + envelope.getResponse().toString());
-
-
-
         } catch (Exception e) {
             iSoapUtilCallback.onFailure(e);
             Log.e("wrz error", params.getParamsList().get("action") + "报错--->" + e.toString());
@@ -2262,7 +2206,7 @@ public class WebServiceUtil {
         try {
             String dataDynamicCode = null;
             String methodName = "GetEmployeePickup";
-            SoapObject request = new SoapObject(NAMESPACECABINET, methodName);
+            SoapObject request = new SoapObject(NAMESPACECABINETORIGINAL, methodName);
             // 传递参数
             LinkedHashMap<String, Object> paramsList = params.getParamsList();
             Iterator<Map.Entry<String, Object>> iter = paramsList.entrySet().iterator();
@@ -2275,9 +2219,10 @@ public class WebServiceUtil {
             SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
             //envelope.bodyOut = request;
             // 等价于envelope.bodyOut=rpc;
+            envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
-            HttpTransportSE httpTransportSE = new HttpTransportSE(BASE_CABINET_URLPICKUP, 8 * 1000);
-            httpTransportSE.call(NAMESPACECABINET + methodName, envelope);
+            HttpTransportSE httpTransportSE = new HttpTransportSE(BASE_CABINET_URLPICKUP_1, 8 * 1000);
+            httpTransportSE.call(NAMESPACECABINETORIGINAL + methodName, envelope);
             iSoapUtilCallback.onSuccess(envelope);
             Log.e("wrz", "返回结果--->" + envelope.getResponse().toString());
         } catch (Exception e) {
@@ -2292,7 +2237,7 @@ public class WebServiceUtil {
         try {
             String dataDynamicCode = null;
             String methodName = "GetQRCode";
-            SoapObject request = new SoapObject(NAMESPACECABINET, methodName);
+            SoapObject request = new SoapObject(NAMESPACECABINETORIGINAL, methodName);
             // 传递参数
             LinkedHashMap<String, Object> paramsList = params.getParamsList();
             Iterator<Map.Entry<String, Object>> iter = paramsList.entrySet().iterator();
@@ -2305,14 +2250,11 @@ public class WebServiceUtil {
             SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
             //envelope.bodyOut = request;
             // 等价于envelope.bodyOut=rpc;
+            envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
+
             HttpTransportSE httpTransportSE = new HttpTransportSE(BASE_CABINET_URL, 8 * 1000);
-//            //-------------------------------ceshi------------------------//
-//            HttpTransportSE httpTransportSE = new HttpTransportSE("http://192.168.2.110:8080/Cloud/CloudAppPort?wsdl", 8 * 1000);
-//            //--------------------------------------//
-//            httpTransportSE.call(null, envelope);
-            //-------------------------------ceshi------------------------//
-            httpTransportSE.call(NAMESPACECABINET + methodName, envelope);
+            httpTransportSE.call(NAMESPACECABINETORIGINAL + methodName, envelope);
             //--------------------------------------//
             iSoapUtilCallback.onSuccess(envelope);
             Log.e("wrz", "返回结果--->" + envelope.getResponse().toString());
@@ -2327,7 +2269,7 @@ public class WebServiceUtil {
         try {
             String dataDynamicCode = null;
             String methodName = "GetDepartment";
-            SoapObject request = new SoapObject(NAMESPACECABINET, methodName);
+            SoapObject request = new SoapObject(NAMESPACECABINETORIGINAL, methodName);
             // 传递参数
             LinkedHashMap<String, Object> paramsList = params.getParamsList();
             Iterator<Map.Entry<String, Object>> iter = paramsList.entrySet().iterator();
@@ -2341,25 +2283,13 @@ public class WebServiceUtil {
             //envelope.bodyOut = request;
             // 等价于envelope.bodyOut=rpc;
             envelope.setOutputSoapObject(request);
-//            envelope.dotNet = true;
-            HttpTransportSE httpTransportSE = new HttpTransportSE(BASE_CABINET_URLCOURT, 8 * 1000);
-            //            httpTransportSE.debug = true;
-            //            ArrayList<HeaderProperty> headerPropertyArrayList = new ArrayList<HeaderProperty>();
-            //            headerPropertyArrayList.add(new HeaderProperty("Connection", "close"));
+            envelope.dotNet = true;
+            HttpTransportSE httpTransportSE = new HttpTransportSE(BASE_CABINET_URLDEPARTMENT, 8 * 1000);
 
-            httpTransportSE.call(NAMESPACECABINET + methodName, envelope);
+            httpTransportSE.call(NAMESPACECABINETORIGINAL + methodName, envelope);
 
-
-            //            httpTransportSE.call(null, envelope, headerPropertyArrayList);
-            //            System.setProperty("http.keepAlive", "false");
-            // SoapObject bodyIn = (SoapObject) envelope.bodyIn;
-            // result = bodyIn.getProperty(0).toString();
-            //            LogUtil.i("SoapClient", envelope.getResponse().toString());
             iSoapUtilCallback.onSuccess(envelope);
             Log.e("wrz", "返回结果--->" + envelope.getResponse().toString());
-
-
-
         } catch (Exception e) {
             iSoapUtilCallback.onFailure(e);
             Log.e("wrz error", params.getParamsList().get("action") + "报错--->" + e.toString());
@@ -2371,7 +2301,7 @@ public class WebServiceUtil {
         try {
             String dataDynamicCode = null;
             String methodName = "FileStateInReverse";
-            SoapObject request = new SoapObject(NAMESPACECABINET, methodName);
+            SoapObject request = new SoapObject(NAMESPACECABINETORIGINAL, methodName);
             // 传递参数
             LinkedHashMap<String, Object> paramsList = params.getParamsList();
             Iterator<Map.Entry<String, Object>> iter = paramsList.entrySet().iterator();
@@ -2385,20 +2315,9 @@ public class WebServiceUtil {
             //envelope.bodyOut = request;
             // 等价于envelope.bodyOut=rpc;
             envelope.setOutputSoapObject(request);
-//            envelope.dotNet = true;
+            envelope.dotNet = true;
             HttpTransportSE httpTransportSE = new HttpTransportSE(BASE_CABINET_URLEMPASSIGN, 8 * 1000);
-            //            httpTransportSE.debug = true;
-            //            ArrayList<HeaderProperty> headerPropertyArrayList = new ArrayList<HeaderProperty>();
-            //            headerPropertyArrayList.add(new HeaderProperty("Connection", "close"));
-
-            httpTransportSE.call(NAMESPACECABINET + methodName, envelope);
-
-
-            //            httpTransportSE.call(null, envelope, headerPropertyArrayList);
-            //            System.setProperty("http.keepAlive", "false");
-            // SoapObject bodyIn = (SoapObject) envelope.bodyIn;
-            // result = bodyIn.getProperty(0).toString();
-            //            LogUtil.i("SoapClient", envelope.getResponse().toString());
+            httpTransportSE.call(NAMESPACECABINETORIGINAL + methodName, envelope);
             iSoapUtilCallback.onSuccess(envelope);
             Log.e("wrz", "返回结果--->" + envelope.getResponse().toString());
         } catch (Exception e) {
@@ -2428,22 +2347,9 @@ public class WebServiceUtil {
             envelope.setOutputSoapObject(request);
 //            envelope.dotNet = true;
             HttpTransportSE httpTransportSE = new HttpTransportSE(BASE_CABINET_URLEMPASSIGN, 8 * 1000);
-            //            httpTransportSE.debug = true;
-            //            ArrayList<HeaderProperty> headerPropertyArrayList = new ArrayList<HeaderProperty>();
-            //            headerPropertyArrayList.add(new HeaderProperty("Connection", "close"));
-
             httpTransportSE.call(NAMESPACECABINET + methodName, envelope);
-
-
-            //            httpTransportSE.call(null, envelope, headerPropertyArrayList);
-            //            System.setProperty("http.keepAlive", "false");
-            // SoapObject bodyIn = (SoapObject) envelope.bodyIn;
-            // result = bodyIn.getProperty(0).toString();
-            //            LogUtil.i("SoapClient", envelope.getResponse().toString());
             iSoapUtilCallback.onSuccess(envelope);
             Log.e("wrz", "返回结果--->" + envelope.getResponse().toString());
-
-
         } catch (Exception e) {
             iSoapUtilCallback.onFailure(e);
             Log.e("wrz error", params.getParamsList().get("action") + "报错--->" + e.toString());
@@ -2500,18 +2406,7 @@ public class WebServiceUtil {
             envelope.setOutputSoapObject(request);
 //            envelope.dotNet = true;
             HttpTransportSE httpTransportSE = new HttpTransportSE(BASE_CABINET_URLEMPASSIGN, 8 * 1000);
-            //            httpTransportSE.debug = true;
-            //            ArrayList<HeaderProperty> headerPropertyArrayList = new ArrayList<HeaderProperty>();
-            //            headerPropertyArrayList.add(new HeaderProperty("Connection", "close"));
-
             httpTransportSE.call(NAMESPACECABINET + methodName, envelope);
-
-
-            //            httpTransportSE.call(null, envelope, headerPropertyArrayList);
-            //            System.setProperty("http.keepAlive", "false");
-            // SoapObject bodyIn = (SoapObject) envelope.bodyIn;
-            // result = bodyIn.getProperty(0).toString();
-            //            LogUtil.i("SoapClient", envelope.getResponse().toString());
             iSoapUtilCallback.onSuccess(envelope);
             Log.e("wrz", "返回结果--->" + envelope.getResponse().toString());
 
@@ -2527,7 +2422,7 @@ public class WebServiceUtil {
         try {
             String dataDynamicCode = null;
             String methodName = "GetEmployee";
-            SoapObject request = new SoapObject(NAMESPACECABINET, methodName);
+            SoapObject request = new SoapObject(NAMESPACECABINETORIGINAL, methodName);
             // 传递参数
             LinkedHashMap<String, Object> paramsList = params.getParamsList();
             Iterator<Map.Entry<String, Object>> iter = paramsList.entrySet().iterator();
@@ -2542,24 +2437,13 @@ public class WebServiceUtil {
             // 等价于envelope.bodyOut=rpc;
 
             envelope.setOutputSoapObject(request);
-//            envelope.dotNet = true;
+            envelope.dotNet = true;
             HttpTransportSE httpTransportSE = new HttpTransportSE(BASE_CABINET_URLEMPLOYEE, 8 * 1000);
-            //            httpTransportSE.debug = true;
-            //            ArrayList<HeaderProperty> headerPropertyArrayList = new ArrayList<HeaderProperty>();
-            //            headerPropertyArrayList.add(new HeaderProperty("Connection", "close"));
 
-            httpTransportSE.call(NAMESPACECABINET + methodName, envelope);
+            httpTransportSE.call(NAMESPACECABINETORIGINAL + methodName, envelope);
 
-
-            //            httpTransportSE.call(null, envelope, headerPropertyArrayList);
-            //            System.setProperty("http.keepAlive", "false");
-            // SoapObject bodyIn = (SoapObject) envelope.bodyIn;
-            // result = bodyIn.getProperty(0).toString();
-            //            LogUtil.i("SoapClient", envelope.getResponse().toString());
             iSoapUtilCallback.onSuccess(envelope);
             Log.e("wrz", "返回结果--->" + envelope.getResponse().toString());
-
-
 
         } catch (Exception e) {
             iSoapUtilCallback.onFailure(e);
@@ -2572,7 +2456,7 @@ public class WebServiceUtil {
         try {
             String dataDynamicCode = null;
             String methodName = "GetCourtInfo";
-            SoapObject request = new SoapObject(NAMESPACECABINET, methodName);
+            SoapObject request = new SoapObject(NAMESPACECABINETORIGINAL, methodName);
             // 传递参数
             LinkedHashMap<String, Object> paramsList = params.getParamsList();
             Iterator<Map.Entry<String, Object>> iter = paramsList.entrySet().iterator();
@@ -2586,20 +2470,11 @@ public class WebServiceUtil {
             //envelope.bodyOut = request;
             // 等价于envelope.bodyOut=rpc;
             envelope.setOutputSoapObject(request);
-//            envelope.dotNet = true;
+            envelope.dotNet = true;
             HttpTransportSE httpTransportSE = new HttpTransportSE(BASE_CABINET_URLCOURT, 8 * 1000);
-            //            httpTransportSE.debug = true;
-            //            ArrayList<HeaderProperty> headerPropertyArrayList = new ArrayList<HeaderProperty>();
-            //            headerPropertyArrayList.add(new HeaderProperty("Connection", "close"));
 
-            httpTransportSE.call(NAMESPACECABINET + methodName, envelope);
+            httpTransportSE.call(NAMESPACECABINETORIGINAL + methodName, envelope);
 
-
-            //            httpTransportSE.call(null, envelope, headerPropertyArrayList);
-            //            System.setProperty("http.keepAlive", "false");
-            // SoapObject bodyIn = (SoapObject) envelope.bodyIn;
-            // result = bodyIn.getProperty(0).toString();
-            //            LogUtil.i("SoapClient", envelope.getResponse().toString());
             iSoapUtilCallback.onSuccess(envelope);
             Log.e("wrz", "返回结果--->" + envelope.getResponse().toString());
 
@@ -2760,37 +2635,6 @@ public class WebServiceUtil {
         return null;
     }
 
-
-
-//    public String getOaAnswerMessages(SoapParams params, SoapClient.ISoapUtilCallback iSoapUtilCallback) {
-//        try {
-//            String dataDynamicCode = null;
-//            String methodName = "getOaAnswerMessages";
-//            SoapObject request = new SoapObject(NAMESPACE_TOKEN, methodName);
-//            // 传递参数
-//            LinkedHashMap<String, Object> paramsList = params.getParamsList();
-//            Iterator<Map.Entry<String, Object>> iter = paramsList.entrySet().iterator();
-//            while (iter.hasNext()) {
-//                Map.Entry<String, Object> entry = iter.next();
-//                Log.e("wrz", "请求参数--->Key:" + entry.getKey() + ",Value:" + entry.getValue());
-//                request.addProperty(entry.getKey(), entry.getValue());
-//            }
-//            //生成调用WebService方法的SOAP请求信息，并制定SOAP的版本
-//            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-//            //envelope.bodyOut = request;
-//            // 等价于envelope.bodyOut=rpc;
-//            envelope.setOutputSoapObject(request);
-//            HttpTransportSE httpTransportSE = new HttpTransportSE(BASE_SERVER_URL_TOKEN, 8 * 1000);
-//            httpTransportSE.call(null, envelope);
-//            iSoapUtilCallback.onSuccess(envelope);
-//            Log.e("wrz", "返回结果--->" + envelope.getResponse().toString());
-//
-//        } catch (Exception e) {
-//            iSoapUtilCallback.onFailure(e);
-//            Log.e("wrz error", params.getParamsList().get("action") + "报错--->" + e.toString());
-//        }
-//        return null;
-//    }
     /**
      * 获取留言信息列表
      *
@@ -2800,13 +2644,6 @@ public class WebServiceUtil {
     public  String getOaAnswerMessages(String userOid) {
         String methodName = "getOaAnswerMessages";
         SoapObject request = new SoapObject(NAMESPACE_TOKEN, methodName);
-//        JSONObject json = new JSONObject();
-//        try {
-//            json.put("judge_id", userOid);
-//            json.put("del_flag","0");
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
         request.addProperty("jsonstr", userOid.toString());
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.bodyOut = request;
@@ -3007,10 +2844,6 @@ public class WebServiceUtil {
         }
         return null;
     }
-
-
-
-
     private boolean resultIsNotEmpty(String resultStr) {
         return !TextUtils.isEmpty(resultStr) && !resultStr.equals("anyType{}");
     }

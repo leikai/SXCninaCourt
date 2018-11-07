@@ -35,6 +35,7 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.sxchinacourt.CApplication;
 import org.sxchinacourt.R;
 import org.sxchinacourt.adapter.SwipeMenuReverseAdapter;
+import org.sxchinacourt.bean.DepositDataBean;
 import org.sxchinacourt.bean.FileReverseDetailBean;
 import org.sxchinacourt.bean.FileReverseDetailDataBean;
 import org.sxchinacourt.bean.UserNewBean;
@@ -49,13 +50,13 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
- *
+ * 取件记录列表
  * @author 殇冰无恨
  * @date 2017/11/9
  */
 
 public class FileReverseDataActivity extends Activity{
-    private static final String TAG = "lzx";
+    private static final String TAG = "取件记录列表";
 
     /**
      * 如果服务器没有返回总数据或者总页数，这里设置为最大值比如10000，什么时候没有数据了根据接口返回判断
@@ -72,7 +73,7 @@ public class FileReverseDataActivity extends Activity{
      * 已经获取到多少条数据了
      */
     private static int mCurrentCounter = 0;
-    private boolean isRefresh = false;
+    private boolean isRefresh = true;
 
     private LRecyclerView mRecyclerView = null;
 
@@ -88,6 +89,11 @@ public class FileReverseDataActivity extends Activity{
 
     private TextView tvNodata;
     private Button btnBack;
+    /**
+     * 当前用户的employeeId
+     */
+    private String employeeId;
+
 
     public int index = 1;
     public static final int SHOW_RESPONSE_FILEREVERSEDETSIL = 0;
@@ -105,6 +111,7 @@ public class FileReverseDataActivity extends Activity{
         tvNodata = (TextView) findViewById(R.id.tv_nodata);
         btnBack = (Button) findViewById(R.id.btn_file_reverse_detail_back);
         mRecyclerView = (LRecyclerView) findViewById(R.id.list);
+        employeeId = CApplication.getInstance().getCurrentEmployeeID();
         dataList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             FileReverseDetailDataBean fileReverseDetailDataBean = new FileReverseDetailDataBean();
@@ -170,6 +177,7 @@ public class FileReverseDataActivity extends Activity{
             @Override
             public void onRefresh() {
                 mDataAdapter.clear();
+                pickedupList.clear();
                 tvNodata.setVisibility(View.GONE);
                 mLRecyclerViewAdapter.notifyDataSetChanged();//fix bug:crapped or attached views may not be recycled. isScrap:false isAttached:true
                 mCurrentCounter = 0;
@@ -213,7 +221,6 @@ public class FileReverseDataActivity extends Activity{
 
             @Override
             public void onScrollStateChanged(int state) {
-
             }
 
         });
@@ -279,7 +286,6 @@ public class FileReverseDataActivity extends Activity{
                             super.handleMessage(msg);
                             switch (msg.what){
                                 case SHOW_RESPONSE_FILEREVERSEDETSIL_NEXT:
-
                                     newList = (ArrayList)msg.obj;
                                     if (newList.size() !=0 ){
                                         tvNodata.setVisibility(View.GONE);
@@ -357,10 +363,9 @@ public class FileReverseDataActivity extends Activity{
         }
         return true;
     }
-    private void startThread(int i) {
-        UserNewBean user = CApplication.getInstance().getCurrentUser();
-        final SoapParams soapParams = new SoapParams().put("SerialNo","17091215332720");
-        final SoapParams soapParamsEmployeePickUp = new SoapParams().put("arg0", String.valueOf ( user.getOaid() )).put("arg1",i);
+    private void startThread(final int i) {
+        final SoapParams soapParamsEmployeePickUp = new SoapParams().put("EmployeeID",employeeId ).put("pageindex",1);
+        final ArrayList<FileReverseDetailDataBean> otherPageDataList = new ArrayList<>();
         GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
             public void run() {
@@ -369,16 +374,34 @@ public class FileReverseDataActivity extends Activity{
                     public void onSuccess(SoapSerializationEnvelope envelope) throws Exception {
                         String response = envelope.getResponse().toString();
                         FileReverseDetailBean resps = JSON.parseObject(response,FileReverseDetailBean.class);
-                        //对数据进行处理,将待指派的数据过滤出去
-                        for (int i = 0;i<resps.getData().size();i++){
-                            if (resps.getData().get(i).getFileState() == 3){
-                                pickedupList.add(resps.getData().get(i));
+
+                        if (i == 1){
+                            //对数据进行处理,将待指派的数据过滤出去
+                            for (int i = 0;i<resps.getData().size();i++){
+                                if (resps.getData().get(i).getFileState() == 3){
+                                    pickedupList.add(resps.getData().get(i));
+                                }
                             }
+                            Message message = new Message();
+                            message.what = SHOW_RESPONSE_FILEREVERSEDETSIL_NEXT;
+                            message.obj = pickedupList;
+                            handlerNext.sendMessage(message);
+                        }else {
+                            //对数据进行处理,将待指派的数据过滤出去
+                            for (int i = 0;i<resps.getData().size();i++){
+                                if (resps.getData().get(i).getFileState() == 3){
+                                    otherPageDataList.add(resps.getData().get(i));
+                                }
+                            }
+                            Message message = new Message();
+                            message.what = SHOW_RESPONSE_FILEREVERSEDETSIL_NEXT;
+                            message.obj = otherPageDataList;
+                            handlerNext.sendMessage(message);
                         }
-                        Message message = new Message();
-                        message.what = SHOW_RESPONSE_FILEREVERSEDETSIL_NEXT;
-                        message.obj = pickedupList;
-                        handlerNext.sendMessage(message);
+
+
+
+
                     }
                     @Override
                     public void onFailure(Exception e) {

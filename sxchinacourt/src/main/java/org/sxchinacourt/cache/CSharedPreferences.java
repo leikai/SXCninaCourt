@@ -23,6 +23,8 @@ public class CSharedPreferences {
     private static final CSharedPreferences mInstance = new CSharedPreferences();
     private static final String FIELD_CURRENTUSER = "currentUser";
     private static final String FIELD_CURRENTTOKEN = "currentToken";
+    private static final String FIELD_CURRENTEMPLOYEEID = "currentEmployeeID";
+
     private static final String FIELD_CURSERVERINFO = "curserverinfo";
 
     private CSharedPreferences() {
@@ -99,6 +101,31 @@ public class CSharedPreferences {
         }
         return token;
     }
+
+    public void setEmployeeID(String employeeID) {
+        if (!TextUtils.isEmpty(employeeID)) {
+            SharedPreferences sps = CApplication.getInstance()
+                    .getSharedPreferences(FILENAME, Context.MODE_PRIVATE);
+            Editor editor = sps.edit();
+            editor.putString(FIELD_CURRENTEMPLOYEEID, employeeID);
+            editor.commit();
+        }
+    }
+
+    public String getEmployeeID() {
+        SharedPreferences sps = CApplication.getInstance()
+                .getSharedPreferences(FILENAME, Context.MODE_PRIVATE);
+        if (!sps.contains(FIELD_CURSERVERINFO)) {
+            return null;
+        }
+        String employeeID = sps.getString(FIELD_CURRENTTOKEN, null);
+        if (TextUtils.isEmpty(employeeID)) {
+            return null;
+        }
+        return employeeID;
+    }
+
+
 
     public void saveServerInfo(String json) {
         if (!TextUtils.isEmpty(json)) {

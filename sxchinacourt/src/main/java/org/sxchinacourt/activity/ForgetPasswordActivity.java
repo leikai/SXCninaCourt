@@ -113,6 +113,7 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
                 UserNewBean user = CApplication.getInstance().getCurrentUser();
                 user.setUserPassword(mNewPwd1);
                 CApplication.getInstance().setUser(user);
+                finish();
             } else {
                 Toast.makeText(ForgetPasswordActivity.this, "修改密码失败", Toast.LENGTH_LONG).show();
             }

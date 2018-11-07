@@ -8,11 +8,11 @@
     <string name="error_invalid_username">用户名无效</string>
     <string name="error_invalid_password">密码太短</string>
     <string name="error_incorrect_password">密码不正确</string>
-    <string name="error_field_required">This field is required</string>
+    <string name="error_field_required">帐号不能为空</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="app_name">人民法院移动办公系统</string>
+    <string name="app_name">左权法院移动办公系统</string>
     <string name="folder_isEmpty">文件夹为空</string>
 
     <string name="hello_world">Hello world!</string>

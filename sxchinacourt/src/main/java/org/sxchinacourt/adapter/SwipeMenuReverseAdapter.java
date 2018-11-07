@@ -163,9 +163,8 @@ public class SwipeMenuReverseAdapter extends ListBaseAdapter<FileReverseDetailDa
             @SuppressLint("HandlerLeak")
             @Override
             public void onClick(final View view) {
-                final UserNewBean user = CApplication.getInstance().getCurrentUser();
-                String str = String.valueOf ( user.getOaid() );
-                final SoapParams soapParams = new SoapParams().put("arg0",str);
+                String employeeId = CApplication.getInstance().getCurrentEmployeeID();
+                final SoapParams soapParams = new SoapParams().put("EmployeeID",employeeId);
 
                 GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
                     @Override

@@ -63,15 +63,15 @@ public class FileOpenHelper {
         intent.addCategory("android.intent.category.DEFAULT");
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Uri uri=null;
-        if (Build.VERSION.SDK_INT >= 24) {
-            uri = FileProvider.getUriForFile(context.getApplicationContext(), "com.bs.lk.newoamvptest.fileprovider", new File(String.valueOf(file)));
-        } else {
-            uri = Uri.fromFile(new File(String.valueOf(file)));
-        }
+//        if (Build.VERSION.SDK_INT >= 24) {
+//            uri = FileProvider.getUriForFile(context.getApplicationContext(), "com.bs.lk.newoamvptest.fileprovider", new File(String.valueOf(file)));
+//        } else {
+//            uri = Uri.fromFile(new File(String.valueOf(file)));
+//        }
 
 
 
-//        Uri uri = Uri.fromFile(file);
+        uri = Uri.fromFile(file);
         intent.setDataAndType(uri, "text/plain");
         return intent;
     }
@@ -115,13 +115,13 @@ public class FileOpenHelper {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         Uri uri=null;
-        if (Build.VERSION.SDK_INT >= 24) {
-            uri = FileProvider.getUriForFile(context.getApplicationContext(), "com.bs.lk.newoamvptest.fileprovider", new File(String.valueOf(file)));
-        } else {
-            uri = Uri.fromFile(new File(String.valueOf(file)));
-        }
+//        if (Build.VERSION.SDK_INT >= 24) {
+//            uri = FileProvider.getUriForFile(context.getApplicationContext(), "com.bs.lk.newoamvptest.fileprovider", new File(String.valueOf(file)));
+//        } else {
+//            uri = Uri.fromFile(new File(String.valueOf(file)));
+//        }
 
-//        Uri uri = Uri.fromFile(file);
+        uri = Uri.fromFile(file);
         intent.setDataAndType(uri, "application/msword");
         return intent;
     }
@@ -132,14 +132,14 @@ public class FileOpenHelper {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         Uri uri=null;
-        if (Build.VERSION.SDK_INT >= 24) {
-            uri = FileProvider.getUriForFile(context.getApplicationContext(), "com.bs.lk.newoamvptest.fileprovider", new File(String.valueOf(file)));
-        } else {
-            uri = Uri.fromFile(new File(String.valueOf(file)));
-        }
+//        if (Build.VERSION.SDK_INT >= 24) {
+//            uri = FileProvider.getUriForFile(context.getApplicationContext(), "com.bs.lk.newoamvptest.fileprovider", new File(String.valueOf(file)));
+//        } else {
+//            uri = Uri.fromFile(new File(String.valueOf(file)));
+//        }
 
 
-//        Uri uri = Uri.fromFile(file);
+        uri = Uri.fromFile(file);
         intent.setDataAndType(uri, "application/vnd.ms-excel");
         return intent;
     }

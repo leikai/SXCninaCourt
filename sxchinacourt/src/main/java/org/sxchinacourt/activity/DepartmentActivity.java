@@ -19,6 +19,7 @@ import com.geek.thread.ThreadType;
 import com.geek.thread.task.GeekRunnable;
 
 import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.sxchinacourt.CApplication;
 import org.sxchinacourt.R;
 import org.sxchinacourt.adapter.DepartmentForCabinetAdapter;
 import org.sxchinacourt.bean.DepartmentForCabinetBean;
@@ -76,6 +77,7 @@ public class DepartmentActivity extends Activity{
     public static final int SHOW_RESPONSE_DEPARTMENT = 0;
     private Button backToCourt;
     public  String SerialNo = "";
+    private String employeeId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +88,7 @@ public class DepartmentActivity extends Activity{
         String courtId = bundle.getString("courtId");
         SerialNo = bundle.getString("SerialNo");
         Log.e("courtId",""+courtId);
+        employeeId = CApplication.getInstance().getCurrentEmployeeID();
         initdata(courtId);
         jump();
 
@@ -104,7 +107,7 @@ public class DepartmentActivity extends Activity{
 
     private void initdata(String courtId) {
 
-        final SoapParams soapParams = new SoapParams().put("arg0",courtId);
+        final SoapParams soapParams = new SoapParams().put("CourtID",courtId);
 
         GeekThreadManager.getInstance().execute(new GeekRunnable(ThreadPriority.NORMAL) {
             @Override
